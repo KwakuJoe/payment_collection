@@ -1,0 +1,64 @@
+<template>
+  <div class="flex flex-col w-full">
+    <div class="flex flex-col items-start w-full gap-y-2">
+      <p class="text-sm font-semibold">
+        {{ field.field_label }} {{ props.field.is_readonly }}
+        <span v-html="showAsteric"></span>
+      </p>
+      <InputText
+        :readonly="readonly"
+        class="bg-yellow-500 border border-amber-600"
+        fluid
+        type="text"
+        v-model="prepareFormFields[`${field.field_name}`]"
+        :maxlength="maxlength"
+        v-bind:oninput="make_input_number"
+        :disabled="readonly"
+        @blur="onBlur"
+      />
+    </div>
+
+
+  </div>
+</template>
+<script setup lang="ts">
+import type { FormField } from "~/types";
+
+const props = defineProps<{
+  field: FormField;
+  prepareFormFields: any;
+}>();
+
+const defaultValue = ref(props.field.default_value || "");
+const readonly = ref(props.field.is_readonly || false);
+const maxlength = ref(props.field.field_length);
+const is_amount = ref(props.field.is_amount || false);
+const is_required = ref(props.field.is_required || false);
+
+const make_input_number = ref("");
+const showAsteric = ref("");
+
+const applyFieldValidation = (field: FormField) => {
+  props.prepareFormFields[field.field_name] = defaultValue;
+
+  if (props.field.is_amount) {
+    make_input_number.value = "this.value = this.value.replace(/[^0-9.]/g, '')";
+  }
+
+  if (!props.prepareFormFields[`${props.field.is_required}`]) {
+    showAsteric.value = `<span class="text-red-600 ">*</span>`;
+  }
+};
+
+onMounted(async () => {
+  await applyFieldValidation(props.field ?? {});
+});
+
+const showError = ref("");
+function onBlur() {
+  if (props.prepareFormFields[`${props.field.field_name}`] == "" && props.prepareFormFields[`${props.field.is_required}`]) {
+    showError.value = `<p class="mt-2 text-sm font-semibold text-red-600">Field is required</p>`;
+  }
+}
+</script>
+<style></style>
