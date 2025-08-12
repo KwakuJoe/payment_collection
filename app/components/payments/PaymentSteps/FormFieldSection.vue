@@ -2,6 +2,7 @@
     <div>
         <div class="flex flex-wrap w-full gap-5">
             <!-- filed -->
+
             <div v-for="field in form_fields" :key="field.id"
                 class="flex flex-col lg:w-[48%] gap-5 w-full">
                 <!-- text Box -->
@@ -16,7 +17,7 @@
                     v-else-if="field.field_type.code === 3" />
 
                 <!-- radio button -->
-                <RadioButtomField :prepare-form-fields="prepareFormFields" :field="field"
+                <RadioButtonField :prepare-form-fields="prepareFormFields" :field="field"
                     v-else-if="field.field_type.code === 4" />
 
                 <!-- multi select -->
@@ -28,7 +29,7 @@
                     v-else-if="field.field_type.code === 6" />
 
                 <!-- file -->
-                <TextBox :prepare-form-fields="prepareFormFields" :field="field"
+                <FilePicker :prepare-form-fields="prepareFormFields" :field="field"
                     v-else-if="field.field_type.code === 7" />
 
                 <!-- other -->

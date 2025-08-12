@@ -11,34 +11,19 @@
 
                 <div
                     class="flex flex-col w-full p-4 border border-gray-100 rounded-md dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900">
-                    <div class="flex items-center justify-between ">
-                        <p class="text-sm">Phone Number</p>
-                        <p class="text-sm font-bold">0553410199</p>
-                    </div>
+
+                    <div v-for="preview in paymentStore.previewDataItem" :key="preview.key" class="flex flex-col">
+                        <div class="flex items-center justify-between ">
+                            <p class="text-sm">{{ preview.key }}</p>
+                            <p class="text-sm font-bold">{{ preview.value }}</p>
+                        </div>
 
                     <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
-
-                    <div class="flex items-center justify-between ">
-                        <p class="text-sm">Meter Number</p>
-                        <p class="text-sm font-bold">7374662636</p>
                     </div>
-
-                    <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
-
-                    <div class="flex items-center justify-between ">
-                        <p class="text-sm">Customer Name</p>
-                        <p class="text-sm font-bold">0553410199</p>
-                    </div>
-
-                    <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
-
-                    <div class="flex items-center justify-between ">
-                        <p class="text-sm">Balance</p>
-                        <p class="text-sm font-bold">4.500</p>
-                    </div>
+       
                 </div>
             </div>
-
+            
             <FormFieldSection :prepareFormFields="prepareFormFields" :service="service"
                 :verification_form_fields="verification_form_fields" :submission_form_fields="submission_form_fields"
                 :form_fields="submission_form_fields" />
@@ -60,10 +45,7 @@
 <script setup lang="ts">
 import { usePaymentStepsStore } from '~/store/payment'
 import type { FormField, FormFieldForPosting, Service } from "~/types";
-
-const formErrors = ref<Record<string, string[]> | null>(null);
 const paymentStore = usePaymentStepsStore();
-const { currentStep } = storeToRefs(paymentStore)
 
 
 const props = defineProps<{

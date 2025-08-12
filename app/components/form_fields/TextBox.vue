@@ -2,7 +2,7 @@
   <div class="flex flex-col w-full">
     <div class="flex flex-col items-start w-full gap-y-2">
       <p class="text-sm font-semibold">
-        {{ field.field_label }} {{ props.field.is_readonly }}
+        {{ field.field_label }} 
         <span v-html="showAsteric"></span>
       </p>
       <InputText

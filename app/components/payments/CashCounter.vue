@@ -17,7 +17,7 @@
                     class="flex items-start bg-gray-50 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray-100 dark:border-zinc-800 lg:w-[32%] p-5">
                     <Icon class="w-12 h-12 text-5xl" name="hugeicons:money-bag-01" />
                     <div class=" flex-1 flex flex-col">
-                        <p class="text-primary">Currency</p>
+                        <p class="text-primary">Amount</p>
                         <p class="text-xl font-bold">{{ formatCurrency(1200, 'GHS') }}</p>
                     </div>
                 </div>
@@ -34,9 +34,9 @@
             </div>
         <div class="flex justify-between items-center border-y border-gray-100 dark:border-zinc-800 py-3">
             <h2 class="text-lg font-bold">Cash Counter</h2>
-            <!-- <Button @click="clearAll" variant="outline" size="sm">
+            <Button @click="clearAll" variant="outline" size="small">
                 Clear All
-            </Button> -->
+            </Button>
         </div>
 
         <form @submit.prevent="onSubmit">
@@ -63,14 +63,11 @@
                                 GHS{{ note.denomination }}
                             </div>
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800">
-                                <!-- <NumberField :model-value="note.quantity"
-                                    @update:model-value="(value) => updateNoteQuantity(index, value)" :min="0"
-                                    class="w-full">
-                                    <NumberFieldContent>
-                                        <NumberFieldInput class="h-10 text-center"
-                                            :class="{ 'border-red-600 border-2': errors[`notes[${index}].quantity` as keyof typeof errors] }" />
-                                    </NumberFieldContent>
-                                </NumberField> -->
+
+
+                                <InputNumber fluid v-model="note.quantity" :min="0" class=""
+                                    @update:model-value="(value) => updateNoteQuantity(index, value)"
+                                    :class="{ 'border-red-600 border-2': errors[`notes[${index}].quantity` as keyof typeof errors] }" />
                                 <p v-if="errors[`notes[${index}].quantity` as keyof typeof errors]"
                                     class="text-xs text-red-600 mt-1">
                                     {{ errors[`notes[${index}].quantity` as keyof typeof errors] }}
@@ -116,14 +113,10 @@
                                 GHS{{ coin.denomination }} coin
                             </div>
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800">
-                                <!-- <NumberField :model-value="coin.quantity"
-                                    @update:model-value="(value) => updateCoinQuantity(index, value)" :min="0"
-                                    class="w-full">
-                                    <NumberFieldContent>
-                                        <NumberFieldInput class="h-10 text-center"
-                                            :class="{ 'border-red-600 border-2': errors[`coins[${index}].quantity` as keyof typeof errors] }" />
-                                    </NumberFieldContent>
-                                </NumberField> -->
+
+                                <InputNumber fluid v-model="coin.quantity" :min="0" class=""
+                                    @update:model-value="(value) => updateCoinQuantity(index, value)"
+                                    :class="{ 'border-red-600 border-2': errors[`coins[${index}].quantity` as keyof typeof errors] }" />
                                 <p v-if="errors[`coins[${index}].quantity` as keyof typeof errors]"
                                     class="text-xs text-red-600 mt-1">
                                     {{ errors[`coins[${index}].quantity` as keyof typeof errors] }}
@@ -154,12 +147,14 @@
 
         <!-- amount -->
         <div class="flex gap-x-5 lg:flex-row flex-col max-w-full mt-6 justify-end">
-            <!-- <Button variant="secondary"  size="lg" @click="paymentStore.previousStep()">
+        <div class="flex gap-x-5 gap-y-2 lg:flex-row flex-col max-w-full justify-end">
+            <Button severity="secondary" class="lg:w-1/2 w-full" size="lg" @click="paymentStore.previousStep()">
                 GO BACK
             </Button>
-            <Button      size="lg" @click="onSubmit()">
+            <Button size="lg" class="lg:w-1/2 w-full"  @click="onSubmit()">
                 PROCEED TO MAKE PAYMENT
-            </Button> -->
+            </Button>
+        </div>
         </div>
 
             <!-- Action Buttons -->

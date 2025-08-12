@@ -48,7 +48,7 @@
           >
             <Avatar label="E" size="xlarge" shape="circle" />
             <div class="flex flex-col flex-1">
-              <p class="text-sm text-gray-500 ">Instituion</p>
+              <p class="text-sm text-gray-500 ">Institution</p>
               <p class="font-bold font-lg ">{{serviceResource?.data?.[0]?.institution.name}}</p>
             </div>
           </div>
@@ -57,10 +57,6 @@
 
       </div>
 
-       {{ prepareFormFields }}
-
-       <form @submit.prevent="onSubmit()" class="flex flex-col w-full p-10 bg-white rounded-md gap-y-5 dark:bg-black/20 dark:border-zinc-800">
-      <!-- right side -->
       <div
         class="flex flex-col w-full p-5 bg-white border border-gray-100 rounded-md dark:border-zinc-800 dark:bg-black/20"
       >
@@ -75,8 +71,7 @@
           <StepPanels>
             <StepPanel class="" v-slot="{ activateCallback }" value="1">
               <!-- payment detail section -->
-              <div class="flex bg-white dark:bg-black/20">
-                <PaymentDetailSection
+               <PaymentDetailSection
                 :prepareFormFields="prepareFormFields"
                 :form_fields="verification_form_fields"
                 :submission_form_fields="submission_form_fields"
@@ -84,7 +79,6 @@
                   :service="serviceResource?.data?.[0] ?? null"
                   v-if="currentStep === 1"
                 />
-              </div>
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="2">
               <!-- Verify payment -->
@@ -106,19 +100,18 @@
           </StepPanels>
         </Stepper>
       </div>
-
-     </form>
     </div>
   </div>
 
-
+<Toast />
 </template>
 
 <script setup lang="ts">
 import { institutionModule } from "~/repository/modules/institution_module";
 import { usePaymentStepsStore } from "~/store/payment";
 import type { FormField, FormFieldForPosting, ResourceListResponse, Service } from "~/types";
-import { toast } from "vue-sonner";
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
 
 const paymentStore = usePaymentStepsStore();
 const { currentStep } = storeToRefs(paymentStore);
@@ -127,6 +120,8 @@ const isServicesLoading = ref(false);
 const isFetchServicesError = ref(false);
 const serviceResource = ref<ResourceListResponse<Service> | undefined>();
 const prepareFormFields = ref({} as FormFieldForPosting[]);
+const toast = useToast();
+
 
 const steps = [
   {
@@ -174,7 +169,7 @@ async function getServiceById() {
 
     serviceResource.value = res;
     console.log("Service data loaded:", res);
-    console.log("First service structure:", res?.data?.[0]?.form_field); // Debug log
+    console.log("First service structure:", res?.data); // Debug log
     let verification_form_fields_ = res?.data?.[0]?.form_field as FormField[];
     let submission_form_fields_ = res?.data?.[0]?.form_field as FormField[];
 
@@ -195,14 +190,12 @@ async function getServiceById() {
     isFetchServicesError.value = true;
     console.error("Failed to fetch services:", error);
 
-    toast("Server Error", {
-      description: error.response?.data?.message ?? error.message,
-      class: "bg-red-500 text-white",
-      action: {
-        label: "Retry",
-        onClick: () => getServiceById(),
-      },
-    });
+        toast.add({
+            severity: "error",
+            detail: error.response?.data?.message ?? error.message,
+            summary:
+                error.response?.status == 401 ? "Unauthenticated" : "Server error",
+        });
   } finally {
     isServicesLoading.value = false;
   }
@@ -225,9 +218,6 @@ function getObjectsRequiredForVerification(
   );
 }
 
-const onSubmit = (async () => {
-    
-    // paymentStore.currentStep = 1;
-});
+
 
 </script>

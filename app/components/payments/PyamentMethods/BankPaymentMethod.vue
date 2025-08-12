@@ -50,14 +50,15 @@
 
 
 
+        <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
         <!-- amount -->
-        <div class="flex gap-x-5 gap-y-2 lg:flex-row flex-col max-w-full mt-6 justify-end">
-            <!-- <Button variant="secondary" size="lg" @click="paymentStore.previousStep()">
+        <div class="flex gap-x-5 gap-y-2 lg:flex-row flex-col max-w-full justify-end">
+            <Button severity="secondary" class="lg:w-1/2 w-full" size="lg" @click="paymentStore.previousStep()">
                 GO BACK
             </Button>
-            <Button size="lg" @click="onSubmit()">
+            <Button size="lg" class="lg:w-1/2 w-full"  @click="onSubmit()">
                 PROCEED TO MAKE PAYMENT
-            </Button> -->
+            </Button>
         </div>
 
 

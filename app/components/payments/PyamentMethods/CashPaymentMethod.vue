@@ -3,7 +3,6 @@
     <div class="flex flex-col">
 
         <!-- cash counter -->
-            <!-- cash counter -->
     <CashCounter @submit="handleCashCountSubmit" @dataUpdate="handleDataUpdate" ref="cashCounterRef" />
     </div>
 

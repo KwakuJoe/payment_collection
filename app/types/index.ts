@@ -1,14 +1,16 @@
 
 export interface ResourceFetchResponse<T> {
-  status?: string,
+  status?: boolean | number,
   message: string,
+  error?: any,
   data: T,
 }
 
 export interface ResourceListResponse<T> {
-  status?: string,
+  status?: boolean | number,
   message: string,
-  data: T[],
+  error?: any,
+  data:   [],
   meta?: ResourceListResponsePagination,
 }
 
@@ -132,10 +134,46 @@ export interface User {
   first_name: string;
   last_name: string;
   full_name: string;
-  email: string;
-  phone: string;
-  username: string;
-  created_at: Date;
-  updated_at: Date;
+  email: string | null;
+  phone: string | null;
+  username: string | null;
+  created_at: Date | null;
+  updated_at: Date | null;
 }
+
+export interface VerifyFieldsPayload  {
+  service_id: string
+  form_data: Record<string, any>
+  channel_reference: string | null
+  branch_user: BranchUser
+}
+
+export interface SubmitFieldsPayload  {
+  service_id: string
+  form_data: Record<string, any>
+  channel_reference: string | null
+  branch_user: BranchUser
+}
+
+export interface BranchUser {
+  branch: Branch
+  user: ApplicationUser
+}
+
+export interface Branch {
+  branch_name: string | null
+  branch_code: string | null
+  branch_email: string | null
+}
+
+export interface ApplicationUser {
+  user_name: string | null
+  email: string | null
+}
+
+export interface PreviewDataItem {
+  key: string
+  value: string | number | boolean
+}
+
 

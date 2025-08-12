@@ -6,18 +6,8 @@
         <!-- select payment methods -->
         <div class="flex flex-col items-start w-full p-5 border border-gray-100 gap-y-2 dark:border-zinc-800 ">
             <p class="text-sm font-semibold">Select Field</p>
-            <!-- <Select v-model="selectedPaymentMethod">
-                <SelectTrigger class="w-full">
-                    <SelectValue placeholder="Select a payment method" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectItem v-for="(option, index) in paymentMethodsOptions" :key="index" :value="option.id">
-                            {{ option.label }}
-                        </SelectItem>
-                    </SelectGroup>
-                </SelectContent>
-            </Select> -->
+                      <Select fluid filter v-model="selectedPaymentMethod" :options="paymentMethodsOptions" option-label="label" option-value="id" placeholder="Select a payment method"
+            class="w-full md:w-56" />
         </div>
 
         <!-- depositor info -->
@@ -28,7 +18,7 @@
                     <div class="flex flex-col w-full lg:w-1/2">
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <p class="text-sm font-semibold">Depositor name</p>
-                            <Input v-model="depositor_name" placeholder="Eg. John Doe" v-bind="depositor_nameAttrs"
+                            <InputText fluid v-model="depositor_name" placeholder="Eg. John Doe" v-bind="depositor_nameAttrs"
                                 :class="{ 'border-red-600 border-2': !!(errors.depositor_name || formErrors?.depositor_name) }" />
                         </div>
                         <p v-if="!!(errors.depositor_name || formErrors?.depositor_name)"
@@ -41,7 +31,7 @@
                     <div class="flex flex-col w-full lg:w-1/2">
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <p class="text-sm font-semibold">Phone number</p>
-                            <Input v-model="depositor_phone" placeholder="Eg: 01234343202" v-bind="depositor_phoneAttrs"
+                            <InputText fluid v-model="depositor_phone" placeholder="Eg: 01234343202" v-bind="depositor_phoneAttrs"
                                 :class="{ 'border-red-600 border-2': !!(errors.depositor_phone || formErrors?.depositor_phone) }" />
                         </div>
                         <p v-if="!!(errors.depositor_phone || formErrors?.depositor_phone)"
@@ -60,14 +50,6 @@
 
         <BankPaymentMethod v-if="selectedPaymentMethod === 'bank'" />
 
-                    <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
-        <div class="flex w-full gap-x-5">
-            <Button size="lg" severity="secondary" class="w-full lg:w-1/2" @click="backStepper()">
-                BACK
-            </Button>
-            <Button size="lg" class="w-full lg:w-1/2" @click="nextStepper()">VERIFY</Button>
-
-        </div>
         
     </div>
 </template>

@@ -4,12 +4,12 @@
     <PaymentCollectionList/>
   </div>
 
+<!-- toast initialization -->
+<Toast />
 
 </template>
 <script setup lang="ts">
-
-import 'vue-sonner/style.css' // vue-sonner v2 requires this import
-
+import Toast from 'primevue/toast';
 definePageMeta({
   layout: 'admin'
 })

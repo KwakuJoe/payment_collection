@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import type { PreviewDataItem } from '~/types';
 
 export const usePaymentStepsStore = defineStore('paymentSteps', () => {
   // State
   const currentStep = ref(1)
   const totalSteps = 4;
+  const previewDataItem = ref<PreviewDataItem[]>([]);
 
   const selectedPaymentService = ref({} as any);
 
@@ -36,6 +38,8 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
     nextStep,
     previousStep,
     resetSteps,
-    selectedPaymentService
+    selectedPaymentService,
+    previewDataItem
+
   }
 })

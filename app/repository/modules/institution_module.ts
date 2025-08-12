@@ -2,7 +2,7 @@
 
 import abortControllerManager from '~/repository/abort_controller'
 import axiosInstance from '~/repository/axios_instance';
-import type { Category, Institution, ResourceListResponse, Service } from '~/types';
+import type { Category, Institution, ResourceFetchResponse, ResourceListResponse, Service, SubmitFieldsPayload, VerifyFieldsPayload } from '~/types';
 import axios, { AxiosError } from "axios";
 
 class InstitutionModule {
@@ -10,6 +10,8 @@ class InstitutionModule {
     private INSTITUTION_SERVICE_RESOURCE = '/institution/services';
     private CATEGORY_RESOURCE = '/categories';
     private SERVICE_RESOURCE = '/services';
+    private VERIFY_FORM_FIELDS_RESOURCE = '/general/verify';
+    private SUBMIT_FORM_FIELDS_RESOURCE = '/general/process';
     private abortManager = abortControllerManager;
 
     async getInstitutions(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Institution> | undefined> {
@@ -215,27 +217,14 @@ class InstitutionModule {
         }
     }
 
-    async postRequireVeFieldsrification(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> | undefined> {
+    async postFieldForVerification(payload: VerifyFieldsPayload): Promise<ResourceFetchResponse<any> | undefined> {
         // Convert params object to query string
-        const url = `${this.SERVICE_RESOURCE}`;
-        const { abortKey = 'getServices', enableAbort = true } = options;
+        const url = `${this.VERIFY_FORM_FIELDS_RESOURCE}`;
 
-        let controller: AbortController | undefined;
-        if (enableAbort) {
-            if (requestSource === 'mount') {
-                console.log('no abort needed')
-            } else {
-                controller = this.abortManager.createController(abortKey);
-            }
-        }
 
         try {
-            const res = await axiosInstance.post<ResourceListResponse<Service>>(
-                url,
-                {
-                    signal: controller?.signal,
-                    params
-                });
+            const res = await axiosInstance.post<ResourceFetchResponse<any>>(
+                url, payload);
             return res.data;
         } catch (error: unknown) {
             console.log(error);
@@ -249,12 +238,33 @@ class InstitutionModule {
             }
 
             throw error; // Re-throw the error for further handling
-        } finally {
-            if (enableAbort && abortKey) {
-                this.abortManager.cleanup(abortKey);
-            }
-        }
+        } 
     }
+
+    async postFieldForSubmission(payload: SubmitFieldsPayload): Promise<ResourceFetchResponse<any> | undefined> {
+        // Convert params object to query string
+        const url = `${this.SUBMIT_FORM_FIELDS_RESOURCE}`;
+
+
+        try {
+            const res = await axiosInstance.post<ResourceFetchResponse<any>>(
+                url, payload);
+            return res.data;
+        } catch (error: unknown) {
+            console.log(error);
+            if (axios.isCancel(error)) {
+                console.log('Request cancelled:', url);
+                return;
+            } else if (error instanceof AxiosError) {
+                console.error('Error fetching transaction overview:', error.response?.data || error.message);
+            } else {
+                console.error('Unexpected error:', error);
+            }
+
+            throw error; // Re-throw the error for further handling
+        } 
+    }
+
 
 
     // Public methods for request management
