@@ -1,91 +1,89 @@
 <template>
-    <div class="flex flex-col w-full gap-y-5  border border-gray-100 dark:border-zinc-800  p-6">
+    <div class="flex flex-col w-full p-6 border border-gray-100 gap-y-5 dark:border-zinc-800">
 
                 <!-- cards -->
-            <div class="flex w-full items-center mt-8 gap-x-5">
+            <div class="flex items-center w-full mt-8 gap-x-5">
 
                 <div
-                    class="flex items-start bg-gray-50 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray-100 dark:border-zinc-800 lg:w-[32%] p-5">
+                    class="flex items-start bg-gray-50 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray-100 dark:border-zinc-800 lg:w-[25%] p-5">
                     <Icon class="w-12 h-12 text-5xl" name="material-symbols-light:universal-currency-alt-outline" />
-                    <div class=" flex-1 flex flex-col">
+                    <div class="flex flex-col flex-1 ">
                         <p class="text-primary">Currency</p>
-                        <p class="text-xl font-bold">Ghana Cedis</p>
+                        <p class="text-xl font-bold">{{ paymentStore.selectedPaymentService?.currency  }}</p>
                     </div>
                 </div>
 
                 <div
-                    class="flex items-start bg-gray-50 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray-100 dark:border-zinc-800 lg:w-[32%] p-5">
+                    class="flex items-start bg-gray-50 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray-100 dark:border-zinc-800 lg:w-[34%] p-5">
                     <Icon class="w-12 h-12 text-5xl" name="hugeicons:money-bag-01" />
-                    <div class=" flex-1 flex flex-col">
+                    <div class="flex flex-col flex-1 ">
                         <p class="text-primary">Amount</p>
-                        <p class="text-xl font-bold">{{ formatCurrency(1200, 'GHS') }}</p>
+                        <p class="text-xl font-bold">1,000,000</p>
                     </div>
                 </div>
 
-                <div class="flex items-start bg-primary/10 gap-x-3 border rounded-sm  border-primary/20  lg:w-[32%] p-5">
-                    <Icon class="w-12 h-12 text-5xl"
+                <div class="flex items-start bg-primary/10 gap-x-3 border rounded-sm  border-primary/20  lg:w-[34%] p-5">
+                    <Icon class="w-12 h-12 text-3xl"
                         name="streamline:money-cash-coins-stack-accounting-billing-payment-stack-cash-coins-currency-money-finance" />
-                    <div class=" flex-1 flex flex-col">
+                    <div class="flex flex-col flex-1 ">
                         <p class="text-primary">Currency</p>
-                        <p class="text-2xl text-primary font-bold">{{ formatCurrency(grandTotal, 'GHS') }}</p>
+                        <p class="text-2xl font-bold text-primary">{{ formatCurrency(grandTotal, paymentStore.selectedPaymentService?.currency) }}</p>
                     </div>
                 </div>
 
             </div>
-        <div class="flex justify-between items-center border-y border-gray-100 dark:border-zinc-800 py-3">
+        <div class="flex items-center justify-between py-3 border-gray-100 border-y dark:border-zinc-800">
             <h2 class="text-lg font-bold">Cash Counter</h2>
-            <Button @click="clearAll" variant="outline" size="small">
+            <Button variant="outline" size="small">
                 Clear All
             </Button>
         </div>
 
-        <form @submit.prevent="onSubmit">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+       
+
+        <!-- <p>{{ paymentStore.selectedCurrencyDenomination }}</p> -->
+
+        <form >
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
                 <!-- Notes Section -->
                 <div class="flex flex-col gap-y-4">
                     <h3 class="text-base font-semibold text-gray-700 dark:text-gray-300">Notes</h3>
 
-                    <div class="border border-gray-100 dark:border-zinc-800 overflow-hidden">
+                    <div class="overflow-hidden border border-gray-100 dark:border-zinc-800">
                         <!-- Header -->
                         <div
-                            class="grid grid-cols-3 bg-gray-50 dark:bg-zinc-900 border-b border-gray-100 dark:border-zinc-800">
-                            <div class="p-3 font-semibold text-sm">Title</div>
-                            <div class="p-3 font-semibold text-sm border-l border-gray-100 dark:border-zinc-800">Enter
-                                Quantity</div>
-                            <div class="p-3 font-semibold text-sm border-l border-gray-100 dark:border-zinc-800">Sum
+                            class="grid grid-cols-3 border-b border-gray-100 bg-gray-50 dark:bg-zinc-900 dark:border-zinc-800">
+                            <div class="p-3 text-sm font-semibold">Denom</div>
+                            <div class="p-3 text-sm font-semibold border-l border-gray-100 dark:border-zinc-800"> Quantity</div>
+                            <div class="p-3 text-sm font-semibold border-l border-gray-100 dark:border-zinc-800">Amount
                             </div>
                         </div>
 
                         <!-- Notes Rows -->
-                        <div v-for="(note, index) in notesData" :key="note.denomination"
+                        <div v-for="(note, index) in notesData" :key="note.code"
                             class="grid grid-cols-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0">
-                            <div class="p-3 flex items-center font-medium">
-                                GHS{{ note.denomination }}
+                            <div class="flex items-center p-3 font-medium">
+                                {{ note.code }}
                             </div>
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800">
 
 
-                                <InputNumber fluid v-model="note.quantity" :min="0" class=""
-                                    @update:model-value="(value) => updateNoteQuantity(index, value)"
-                                    :class="{ 'border-red-600 border-2': errors[`notes[${index}].quantity` as keyof typeof errors] }" />
-                                <p v-if="errors[`notes[${index}].quantity` as keyof typeof errors]"
-                                    class="text-xs text-red-600 mt-1">
-                                    {{ errors[`notes[${index}].quantity` as keyof typeof errors] }}
-                                </p>
+                                <InputNumber fluid v-model="note.quantity" @update:modelValue="updateTotals" />
+                               
                             </div>
-                            <div class="p-3 border-l border-gray-100 dark:border-zinc-800 flex items-center font-bold">
-                                {{ formatCurrency(note.total) }}
+                            <div class="flex items-center p-3 font-bold border-l border-gray-100 dark:border-zinc-800">
+                               {{ note.amount.toFixed(2) }}
                             </div>
                         </div>
 
                         <!-- Notes Total -->
                         <div
-                            class="grid grid-cols-3 bg-gray-50 dark:bg-zinc-900 border-t border-gray-100 dark:border-zinc-800">
+                            class="grid grid-cols-3 border-t border-gray-100 bg-gray-50 dark:bg-zinc-900 dark:border-zinc-800">
                             <div class="p-3 font-bold">Total Notes</div>
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800"></div>
                             <div
-                                class="p-3 border-l border-gray-100 dark:border-zinc-800 font-bold text-lg text-primary">
-                                {{ formatCurrency(notesTotal) }}
+                                class="p-3 text-lg font-bold border-l border-gray-100 dark:border-zinc-800 text-primary">
+                                {{ totalNotes.toFixed(2) }}
                             </div>
                         </div>
                     </div>
@@ -95,46 +93,39 @@
                 <div class="flex flex-col gap-y-4">
                     <h3 class="text-base font-semibold text-gray-700 dark:text-gray-300">Coins</h3>
 
-                    <div class="border border-gray-100 dark:border-zinc-800  overflow-hidden">
+                    <div class="overflow-hidden border border-gray-100 dark:border-zinc-800">
                         <!-- Header -->
                         <div
-                            class="grid grid-cols-3 bg-gray-50 dark:bg-zinc-900 border-b border-gray-100 dark:border-zinc-800">
-                            <div class="p-3 font-semibold text-sm">Title</div>
-                            <div class="p-3 font-semibold text-sm border-l border-gray-100 dark:border-zinc-800">Enter
-                                Quantity</div>
-                            <div class="p-3 font-semibold text-sm border-l border-gray-100 dark:border-zinc-800">Sum
+                            class="grid grid-cols-3 border-b border-gray-100 bg-gray-50 dark:bg-zinc-900 dark:border-zinc-800">
+                            <div class="p-3 text-sm font-semibold">Denom</div>
+                            <div class="p-3 text-sm font-semibold border-l border-gray-100 dark:border-zinc-800"> Quantity</div>
+                            <div class="p-3 text-sm font-semibold border-l border-gray-100 dark:border-zinc-800">Amount
                             </div>
                         </div>
 
                         <!-- Coins Rows -->
-                        <div v-for="(coin, index) in coinsData" :key="coin.denomination"
+                        <div v-for="(coin, index) in coinsData" :key="coin.code"
                             class="grid grid-cols-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0">
-                            <div class="p-3 flex items-center font-medium">
-                                GHS{{ coin.denomination }} coin
+                            <div class="flex items-center p-3 font-medium">
+                               {{ coin.code }}  
                             </div>
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800">
+                                <InputNumber fluid v-model="coin.quantity" @update:modelValue="updateTotals" />
 
-                                <InputNumber fluid v-model="coin.quantity" :min="0" class=""
-                                    @update:model-value="(value) => updateCoinQuantity(index, value)"
-                                    :class="{ 'border-red-600 border-2': errors[`coins[${index}].quantity` as keyof typeof errors] }" />
-                                <p v-if="errors[`coins[${index}].quantity` as keyof typeof errors]"
-                                    class="text-xs text-red-600 mt-1">
-                                    {{ errors[`coins[${index}].quantity` as keyof typeof errors] }}
-                                </p>
                             </div>
-                            <div class="p-3 border-l border-gray-100 dark:border-zinc-800 flex items-center font-bold">
-                                {{ formatCurrency(coin.total) }}
+                            <div class="flex items-center p-3 font-bold border-l border-gray-100 dark:border-zinc-800">
+                                 {{ coin.amount.toFixed(2) }}
                             </div>
                         </div>
 
                         <!-- Coins Total -->
                         <div
-                            class="grid grid-cols-3 bg-gray-50 dark:bg-zinc-900 border-t border-gray-100 dark:border-zinc-800">
+                            class="grid grid-cols-3 border-t border-gray-100 bg-gray-50 dark:bg-zinc-900 dark:border-zinc-800">
                             <div class="p-3 font-bold">Total Coins</div>
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800"></div>
                             <div
-                                class="p-3 border-l border-gray-100 dark:border-zinc-800 font-bold text-lg text-primary">
-                                {{ formatCurrency(coinsTotal) }}
+                                class="p-3 text-lg font-bold border-l border-gray-100 dark:border-zinc-800 text-primary">
+                               {{ totalCoins.toFixed(2) }}
                             </div>
                         </div>
                     </div>
@@ -143,16 +134,16 @@
 
 
 
-                 <div class="border-t border-dashed border-gray-300 dark:border-zinc-700 my-4"></div>
+                 <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
 
         <!-- amount -->
-        <div class="flex gap-x-5 lg:flex-row flex-col max-w-full mt-6 justify-end">
-        <div class="flex gap-x-5 gap-y-2 lg:flex-row flex-col max-w-full justify-end">
-            <Button severity="secondary" class="lg:w-1/2 w-full" size="lg" @click="paymentStore.previousStep()">
+        <div class="flex flex-col justify-end max-w-full mt-6 gap-x-5 lg:flex-row">
+        <div class="flex flex-col justify-end max-w-full gap-x-5 gap-y-2 lg:flex-row">
+            <Button severity="secondary" class="w-full lg:w-1/2" size="lg" @click="paymentStore.previousStep()">
                 GO BACK
             </Button>
-            <Button size="lg" class="lg:w-1/2 w-full"  @click="onSubmit()">
-                PROCEED TO MAKE PAYMENT
+            <Button size="lg" class="w-full lg:w-1/2" >
+                COMPLETE PAYMENT
             </Button>
         </div>
         </div>
@@ -169,9 +160,9 @@
         </form>
 
         <!-- Debug Output (remove in production) -->
-        <!-- <div v-if="showDebug" class="mt-6 p-4 bg-gray-100 dark:bg-zinc-900 rounded-lg">
-            <h4 class="font-bold mb-2">Debug Output:</h4>
-            <pre class="text-xs overflow-auto">{{ JSON.stringify(countData, null, 2) }}</pre>
+        <!-- <div v-if="showDebug" class="p-4 mt-6 bg-gray-100 rounded-lg dark:bg-zinc-900">
+            <h4 class="mb-2 font-bold">Debug Output:</h4>
+            <pre class="overflow-auto text-xs">{{ JSON.stringify(countData, null, 2) }}</pre>
         </div> -->
     </div>
 </template>
@@ -185,175 +176,93 @@ import { usePaymentStepsStore } from '~/store/payment'
 
 // Types
 interface DenominationData {
+    is_note: boolean | number
+    currency: string
+    code: number
     denomination: number
     quantity: number
-    total: number
+    amount: number
 }
 
-interface CountData {
-    notes: Array<{ denomination: number; quantity: number; total: number }>
-    coins: Array<{ denomination: number; quantity: number; total: number }>
-    notesTotal: number
-    coinsTotal: number
-    grandTotal: number
-    timestamp: string
-}
 
-// Emit events
-const emit = defineEmits<{
-    submit: [data: CountData]
-    dataUpdate: [data: CountData]
-}>()
 
 // Debug flag (set to false in production)
 const showDebug = ref(true)
+
 const paymentStore = usePaymentStepsStore();
+const notesData = ref(reactive<DenominationData[]>([]));
+const coinsData = ref(reactive<DenominationData[]>([]));
+ 
+
+onMounted( async () => {
+    let denomination = await splitNotesAndCoins(paymentStore.selectedPaymentService?.currency_denomination);
+    notesData.value = denomination.notes;
+    coinsData.value = denomination.coins;
+});
 
 
-// Initial data
-const notesData = reactive<DenominationData[]>([
-    { denomination: 200, quantity: 0, total: 0 },
-    { denomination: 100, quantity: 0, total: 0 },
-    { denomination: 50, quantity: 0, total: 0 },
-    { denomination: 20, quantity: 0, total: 0 },
-    { denomination: 10, quantity: 0, total: 0 },
-    { denomination: 5, quantity: 0, total: 0 },
-    { denomination: 2, quantity: 0, total: 0 },
-    { denomination: 1, quantity: 0, total: 0 }
-])
+function splitNotesAndCoins(data:any) {
+    const notes = [] as DenominationData[];
+    const coins = [] as DenominationData[];
 
-const coinsData = reactive<DenominationData[]>([
-    { denomination: 2, quantity: 0, total: 0 },
-    { denomination: 1, quantity: 0, total: 0 },
-    { denomination: 0.50, quantity: 0, total: 0 },
-    { denomination: 0.20, quantity: 0, total: 0 },
-    { denomination: 0.10, quantity: 0, total: 0 },
-    { denomination: 0.05, quantity: 0, total: 0 },
-    { denomination: 0.01, quantity: 0, total: 0 }
-])
+    data.forEach((item:any) => {
+        const denomination = parseFloat(item.denomination); // convert string to number
+        const formattedItem = {
+                is_note: item.is_note,
+                denomination: parseFloat(item.denomination),
+                currency: item.currency,
+                code: item.code,
+                quantity: parseFloat(item.quantity),
+                amount: parseFloat(item.amount)
+            
+        };
 
-// Validation schema
-const validationSchema = yup.object({
-    notes: yup.array().of(
-        yup.object({
-            quantity: yup.number()
-                .min(0, 'Quantity must be positive')
-                .integer('Quantity must be a whole number')
-                .required('Quantity is required')
-        })
-    ),
-    coins: yup.array().of(
-        yup.object({
-            quantity: yup.number()
-                .min(0, 'Quantity must be positive')
-                .integer('Quantity must be a whole number')
-                .required('Quantity is required')
-        })
-    )
-})
+        if (denomination > 1) {
+            notes.push(formattedItem);
+        } else {
+            coins.push(formattedItem);
+        }
+    });
 
-// Form setup
-const { errors, handleSubmit, setFieldValue, validate } = useForm({
-    validationSchema,
-    initialValues: {
-        notes: notesData.map(note => ({ quantity: note.quantity })),
-        coins: coinsData.map(coin => ({ quantity: coin.quantity }))
-    }
-})
-
-// Update functions
-const updateNoteQuantity = (index: number, value: number | undefined) => {
-    const quantity = value || 0
-    const note = notesData[index]
-    if (note) {
-        note.quantity = quantity
-        note.total = quantity * note.denomination
-        setFieldValue(`notes[${index}].quantity` as any, quantity)
-    }
+    console.log('Note', notes);
+    console.log('coins', coins);
+    return { notes, coins };
 }
 
-const updateCoinQuantity = (index: number, value: number | undefined) => {
-    const quantity = value || 0
-    const coin = coinsData[index]
-    if (coin) {
-        coin.quantity = quantity
-        coin.total = quantity * coin.denomination
-        setFieldValue(`coins[${index}].quantity` as any, quantity)
-    }
+
+// Update total for each row when quantity changes
+function updateTotals() {
+  notesData.value.forEach(note => {
+    note.amount = note.quantity * note.denomination
+    note.amount = note.amount
+  })
+  coinsData.value.forEach(coin => {
+    coin.amount = coin.quantity * coin.denomination
+    coin.amount = coin.amount
+  })
+
+paymentStore.selectedCurrencyDenomination  = mergeNotesAndCoins(coinsData.value, notesData.value)
 }
 
-// Computed totals
-const notesTotal = computed(() =>
-    notesData.reduce((sum, note) => sum + note.total, 0)
+// Computed: Total Notes
+const totalNotes = computed(() =>
+  notesData.value.reduce((sum, note) => sum + note.amount, 0)
 )
 
-const coinsTotal = computed(() =>
-    coinsData.reduce((sum, coin) => sum + coin.total, 0)
+// Computed: Total Coins
+const totalCoins = computed(() =>
+  coinsData.value.reduce((sum, coin) => sum + coin.amount, 0)
 )
 
-const grandTotal = computed(() => notesTotal.value + coinsTotal.value)
-
-// Computed count data
-const countData = computed<CountData>(() => ({
-    notes: notesData.map(note => ({
-        denomination: note.denomination,
-        quantity: note.quantity,
-        total: note.total
-    })),
-    coins: coinsData.map(coin => ({
-        denomination: coin.denomination,
-        quantity: coin.quantity,
-        total: coin.total
-    })),
-    notesTotal: notesTotal.value,
-    coinsTotal: coinsTotal.value,
-    grandTotal: grandTotal.value,
-    timestamp: new Date().toISOString()
-}))
-
-// Watch for changes and emit updates
-watch(countData, (newData) => {
-    emit('dataUpdate', newData)
-}, { deep: true })
-
-
-
-const clearAll = () => {
-    notesData.forEach((note, index) => {
-        if (note) {
-            note.quantity = 0
-            note.total = 0
-            setFieldValue(`notes[${index}].quantity` as any, 0)
-        }
-    })
-
-    coinsData.forEach((coin, index) => {
-        if (coin) {
-            coin.quantity = 0
-            coin.total = 0
-            setFieldValue(`coins[${index}].quantity` as any, 0)
-        }
-    })
+function mergeNotesAndCoins(notes:DenominationData[], coins:DenominationData[]) {
+     return [...coins, ...notes]
 }
 
-const getCountData = () => {
-    console.log('Current Count Data:', countData.value)
-    return countData.value
-}
 
-// Form submission
-const onSubmit = handleSubmit(async (values) => {
-    console.log('Form submitted with values:', values)
-    console.log('Count data:', countData.value)
-    emit('submit', countData.value)
 
-    paymentStore.currentStep = 4; // Move to the next step after submission
+// Computed: Grand Total
+const grandTotal = computed(() => {
+    return  totalNotes.value + totalCoins.value
 })
 
-// Expose methods for parent component
-defineExpose({
-    getCountData,
-    clearAll,
-    countData: computed(() => countData.value)
-})
 </script>

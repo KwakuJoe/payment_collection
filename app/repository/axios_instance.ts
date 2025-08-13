@@ -5,7 +5,7 @@ import { useAuthStore } from '~/store/auth';
 const config = useRuntimeConfig();
 const axiosInstance = axios.create({
   // baseURL: config.apiBaseUrl || 'https://localhost:8000',
-  baseURL: config.public.apiBaseUrl || 'http://localhost:3000/api',
+  baseURL: config.public.apiBaseUrl ,
   // timeout: 10000,
 });
 

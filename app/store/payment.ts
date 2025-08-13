@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { PreviewDataItem } from '~/types';
+import type { PreviewDataItem, Service, DenominationData  } from '~/types';
 
 export const usePaymentStepsStore = defineStore('paymentSteps', () => {
   // State
   const currentStep = ref(1)
   const totalSteps = 4;
   const previewDataItem = ref<PreviewDataItem[]>([]);
+  const selectedPaymentService = ref<Service>();
+  const selectedCurrencyDenomination = ref<DenominationData[]>();
 
-  const selectedPaymentService = ref({} as any);
+  // const selectedPaymentService = ref({} as any);
 
   // Getters
   const isFirstStep = computed(() => currentStep.value === 1)
@@ -39,7 +41,8 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
     previousStep,
     resetSteps,
     selectedPaymentService,
-    previewDataItem
+    previewDataItem,
+    selectedCurrencyDenomination
 
   }
 })

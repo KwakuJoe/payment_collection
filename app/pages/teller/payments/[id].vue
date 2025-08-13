@@ -34,7 +34,7 @@
 
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500">service</p>
-              <p class="text-lg font-bold ">{{serviceResource?.data?.[0]?.name}}</p>
+              <p class="text-lg font-bold ">{{paymentStore.selectedPaymentService?.name}}</p>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
             <Avatar label="E" size="xlarge" shape="circle" />
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500 ">Institution</p>
-              <p class="font-bold font-lg ">{{serviceResource?.data?.[0]?.institution.name}}</p>
+              <p class="font-bold font-lg ">{{paymentStore.selectedPaymentService?.institution.name}}</p>
             </div>
           </div>
         </div>
@@ -167,11 +167,14 @@ async function getServiceById() {
       { abortKey: "get-service-by-id", enableAbort: false }
     );
 
-    serviceResource.value = res;
+    // serviceResource.value = res;
     console.log("Service data loaded:", res);
     console.log("First service structure:", res?.data); // Debug log
-    let verification_form_fields_ = res?.data?.[0]?.form_field as FormField[];
-    let submission_form_fields_ = res?.data?.[0]?.form_field as FormField[];
+
+    let verification_form_fields_ = res?.data[0].form_field as FormField[];
+    let submission_form_fields_ = res?.data[0].form_field as FormField[];
+
+    paymentStore.selectedPaymentService = res?.data[0];
 
     verification_form_fields.value = getObjectsRequiredForVerification(
       verification_form_fields_,
@@ -201,8 +204,8 @@ async function getServiceById() {
   }
 }
 
-onMounted(() => {
-  getServiceById();
+onMounted( async () => {
+await  getServiceById();
 });
 
 definePageMeta({

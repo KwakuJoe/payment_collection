@@ -6,12 +6,16 @@ import type { Category, Institution, ResourceFetchResponse, ResourceListResponse
 import axios, { AxiosError } from "axios";
 
 class InstitutionModule {
-    private INSTITUTIONS_RESOURCE = '/institutions';
-    private INSTITUTION_SERVICE_RESOURCE = '/institution/services';
-    private CATEGORY_RESOURCE = '/categories';
-    private SERVICE_RESOURCE = '/services';
-    private VERIFY_FORM_FIELDS_RESOURCE = '/general/verify';
-    private SUBMIT_FORM_FIELDS_RESOURCE = '/general/process';
+
+  private config = useRuntimeConfig();
+
+  private INSTITUTIONS_RESOURCE = this.config.public.institutionsResource;
+  private INSTITUTION_SERVICE_RESOURCE = this.config.public.institutionServicesResource;
+  private CATEGORY_RESOURCE = this.config.public.categoriesResource;
+  private SERVICE_RESOURCE = this.config.public.servicesResource;
+  private VERIFY_FORM_FIELDS_RESOURCE = this.config.public.verifyFormFieldsResource;
+  private SUBMIT_FORM_FIELDS_RESOURCE = this.config.public.submitFormFieldsResource;
+  
     private abortManager = abortControllerManager;
 
     async getInstitutions(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Institution> | undefined> {
@@ -137,7 +141,7 @@ class InstitutionModule {
         }
     }
 
-    async getServiceById(service_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> | undefined> {
+    async getServiceById(service_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> > {
         // Convert params object to query string
         const url = `${this.SERVICE_RESOURCE}/${service_id}`;
         const { abortKey = 'getServiceById', enableAbort = true } = options;
@@ -157,6 +161,7 @@ class InstitutionModule {
                 {
                     signal: controller?.signal,
                 });
+                console.log('Kwabena', res.data)
             return res.data;
         } catch (error: unknown) {
             console.log(error);

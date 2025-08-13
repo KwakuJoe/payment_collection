@@ -10,7 +10,7 @@ export interface ResourceListResponse<T> {
   status?: boolean | number,
   message: string,
   error?: any,
-  data:   [],
+  data:   [T],
   meta?: ResourceListResponsePagination,
 }
 
@@ -65,7 +65,9 @@ export interface Service {
   rank: string
   institution: Institution
   account_number: any
-  verification_endpoint: string
+  currency: string
+  currency_denomination: DenominationData[]
+  verification_endpoint?: string
   process_endpoint: string
   merchant_code: string
   biller_id: any
@@ -177,3 +179,13 @@ export interface PreviewDataItem {
 }
 
 
+
+
+export interface DenominationData {
+    is_note: boolean | number
+    currency: string
+    code: number
+    denomination: number
+    quantity: number
+    amount: number
+}
