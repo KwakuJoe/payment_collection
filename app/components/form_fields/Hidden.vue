@@ -1,25 +1,5 @@
 <template>
-  <div class="flex flex-col w-full">
-    <div class="flex flex-col items-start w-full gap-y-2">
-      <p class="text-sm font-semibold">
-        {{ field.field_label }} 
-        <span v-html="showAsteric"></span>
-      </p>
-      <InputText
-        :readonly="readonly"
-        class="bg-yellow-500 border border-amber-600"
-        fluid
-        type="text"
-        v-model="prepareFormFields[`${field.field_name}`]"
-        :maxlength="maxlength"
-        v-bind:oninput="make_input_number"
-        :disabled="readonly"
-        @blur="onBlur"
-      />
-    </div>
 
-
-  </div>
 </template>
 <script setup lang="ts">
 import type { FormField } from "~/types";
@@ -51,7 +31,8 @@ const applyFieldValidation = (field: FormField) => {
 };
 
 onMounted(async () => {
-  await applyFieldValidation(props.field ?? {});
+  props.prepareFormFields[`${props.field.field_name}`] = null
+  // await applyFieldValidation(props.field ?? {});
 });
 
 const showError = ref("");

@@ -48,6 +48,10 @@ const props = defineProps<{
     form_fields: FormField[]
 }>();
 
+onMounted( async () => {
+  paymentStore.selectedPaymentServiceFormField! = props.form_fields;
+});
+
 // data
 const loading = ref(true);
 
@@ -73,6 +77,7 @@ const verifyFieldsPayload = ref<VerifyFieldsPayload>({
     }
 
 })
+const submission_form_fields_ = ref<FormField[]>();
 
 // get services from the institution
 async function postFieldForVerification() {
@@ -100,9 +105,10 @@ async function postFieldForVerification() {
 
             let update_FormFieldsWithPreview =  updateFormFieldsWithPreview(preview, props.form_fields)
             
+            paymentStore.selectedPaymentServiceFormField = update_FormFieldsWithPreview;
+            // props.prepareFormFields[field.field_name] = defaultValue.value;
 
-
-            console.log("Preview data:", update_FormFieldsWithPreview);
+            console.log("updated form data:", update_FormFieldsWithPreview);
 
 
             toast.add({
@@ -169,23 +175,31 @@ function updateFormFieldsWithPreview(previewData:PreviewDataItem[], formFields:F
 
     // Loop and update formFields
     return formFields.map(field => {
+        
         if (previewMap.hasOwnProperty(field.field_name)) {
             return {
                 ...field,
-                field_type: {
-                    ...field.field_type,
-                    code: 1
-                },
-                field_data_type: {
-                    ...field.field_data_type,
-                    code: 1
-                },
-                is_readonly: 1,
-                default_value: previewMap[field.field_name]
+                // field_type: {
+                //     ...field.field_type,
+                //     code: 1
+                // },
+                // field_data_type: {
+                //     ...field.field_data_type,
+                //     code: 1
+                // },
+                // is_readonly: 1,
+                default_value: field.is_amount == true ? parseFloat(previewMap[field.field_name]) : previewMap[field.field_name]
             };
+        }else{
+            if(field.require_verification){
+                // field.field_type.code = 1
+                field.is_visible = false
+                field.is_readonly = true
+            }
         }
         return field; // unchanged
-    });
+    }).sort((a:any, b:any) => (a.rank ?? 0) - (b.rank ?? 0))
+    ;
 }
 
 

@@ -95,18 +95,18 @@ export interface FormField {
   field_type: FieldType
   field_data_type: FieldDataType
   list_of_options: any[]
-  is_required: boolean | number
+  is_required: boolean | number 
   rank: string
-  default_value: any
+  default_value: string
   list_of_values: any
-  is_thirdparty: boolean | number
+  is_thirdparty: boolean | number 
   thirdparty_endpoint: string
-  is_visible: boolean
-  is_amount: boolean | number
-  require_verification: boolean
-  is_readonly: boolean | number
-  show_on_receipt: boolean | number
-  in_remark: boolean | number
+  is_visible: boolean | number
+  is_amount: boolean | number 
+  require_verification: boolean | number
+  is_readonly: boolean | number 
+  show_on_receipt: boolean | number 
+  in_remark: boolean | number 
 }
 
 export interface FieldType {

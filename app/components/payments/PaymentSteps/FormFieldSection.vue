@@ -6,7 +6,7 @@
             <div v-for="field in form_fields" :key="field.id"
                 class="flex flex-col lg:w-[48%] gap-5 w-full">
                 <!-- text Box -->
-                <TextBox :field="field" v-if="field.field_type.code === 1" :prepare-form-fields="prepareFormFields" />
+                <TextBox :field="field" v-if="field.field_type.code === 1 && field.is_visible === 1" :prepare-form-fields="prepareFormFields" />
 
                 <!-- select -->
                 <ListOfValues :prepare-form-fields="prepareFormFields" v-else-if="field.field_type.code === 2"
@@ -30,7 +30,7 @@
 
                 <!-- file -->
                 <FilePicker :prepare-form-fields="prepareFormFields" :field="field"
-                    v-else-if="field.field_type.code === 7" />
+                    v-else-if="field.field_type.code === 7 && field.is_visible === 1" />
 
                 <!-- other -->
                 <TextBox :prepare-form-fields="prepareFormFields" :field="field"
@@ -57,7 +57,8 @@
                     v-else-if="field.field_type.code === 13" />
 
                 <!-- default -->
-                <TextBox :prepare-form-fields="prepareFormFields" :field="field" v-else />
+                 <span v-else></span>
+                <!-- <Hidden :prepare-form-fields="prepareFormFields" :field="field"  /> -->
             </div>
         </div>
 

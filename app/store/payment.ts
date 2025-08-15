@@ -9,6 +9,7 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
   const previewDataItem = ref<PreviewDataItem[]>([]);
   const selectedPaymentService = ref<Service>();
   const selectedPaymentServiceFormField = ref<FormField[]>();
+  const selectedPaymentServiceFormFieldRefreshed = ref<FormField[]>();
   const selectedCurrencyDenomination = ref<DenominationData[]>();
 
   const selectedPaymentServiceFormFieldIsAmount = ref<FormField[]>();
@@ -49,6 +50,7 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
     previewDataItem,
     selectedCurrencyDenomination,
     selectedPaymentServiceFormField,
+    selectedPaymentServiceFormFieldRefreshed,
     selectedPaymentServiceFormFieldIsAmount,
 selectedPaymentServiceCompletedFieldValues
   }

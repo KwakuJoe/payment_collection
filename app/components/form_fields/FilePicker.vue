@@ -1,7 +1,7 @@
 <template>
 
-    <div class="flex flex-col w-full">
-        <div class="flex flex-col w-full items-start gap-y-2">
+    <div class="flex flex-col w-full" v-if="field.is_visible">
+        <div class="flex flex-col items-start w-full gap-y-2">
             <p class="text-sm font-semibold">{{ field.field_label }}</p>
             <FileUpload @select="onFileSelect" ref="fileupload" mode="basic" name="demo[]"
                 :accept="fileAcceptedExtensions.toString()" :maxFileSize="5242880" />

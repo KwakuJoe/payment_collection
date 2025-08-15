@@ -74,7 +74,7 @@
               <!-- payment detail section -->
                <PaymentDetailSection
                 :prepareFormFields="prepareFormFields"
-                :form_fields="paymentStore.selectedPaymentServiceFormField!"
+                :form_fields="formfields!"
                 :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
                   :service="paymentStore.selectedPaymentService!"
@@ -85,7 +85,7 @@
               <!-- Verify payment -->
               <VerifyPaymentDetail   
                               :prepareFormFields="prepareFormFields"
-              :form_fields="submission_form_fields"
+              :form_fields="paymentStore.selectedPaymentServiceFormField!"
               :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
                   :service="paymentStore.selectedPaymentService!" v-if="currentStep === 2" />
@@ -128,6 +128,7 @@ const isFetchServicesError = ref(false);
 // const serviceResource = ref<ResourceListResponse<Service>();
 const prepareFormFields = ref({} as FormFieldForPosting);
 const toast = useToast();
+const formfields = ref<FormField[]>();
 
 
 const steps = [
@@ -178,26 +179,28 @@ async function getServiceById() {
     console.log("Service data loaded:", res);
     console.log("First service structure:", res?.data); // Debug log
 
-    let form_fields_ = res?.data[0].form_field as FormField[];
+     formfields.value = res?.data[0].form_field as FormField[];
 
+      paymentStore.selectedPaymentServiceFormFieldRefreshed = res?.data[0].form_field;
+     
     paymentStore.selectedPaymentService = res?.data[0];
 
     paymentStore.selectedPaymentServiceFormField = res?.data[0].form_field as FormField[];
 
     // get is_amount field
     paymentStore.selectedPaymentServiceFormFieldIsAmount = getFieldIsAmount(
-      form_fields_,
+      formfields.value,
     );
 
     //get verification fields
     verification_form_fields.value = getObjectsRequiredForVerification(
-      form_fields_,
+      formfields.value,
       1
     );
 
     //get other fields not require for verification
     submission_form_fields.value = getObjectsRequiredForVerification(
-      form_fields_,
+      formfields.value,
       0
     );
 
@@ -221,7 +224,9 @@ async function getServiceById() {
 }
 
 onMounted( async () => {
+  paymentStore.selectedPaymentServiceFormField = ref<FormField[]>();
 await  getServiceById();
+
 });
 
 definePageMeta({
@@ -233,7 +238,7 @@ function getObjectsRequiredForVerification(
   require_verification: number | boolean
 ) {
   return data.filter(
-    (item) => item && item.require_verification === require_verification
+    (item) => item && item.require_verification === require_verification && item.is_visible == true
   );
 }
 
