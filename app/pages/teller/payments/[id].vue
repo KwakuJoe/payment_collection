@@ -57,6 +57,7 @@
 
       </div>
 
+ {{ prepareFormFields }}
       <div
         class="flex flex-col w-full p-5 bg-white border border-gray-100 rounded-md dark:border-zinc-800 dark:bg-black/20"
       >
@@ -73,10 +74,10 @@
               <!-- payment detail section -->
                <PaymentDetailSection
                 :prepareFormFields="prepareFormFields"
-                :form_fields="verification_form_fields"
+                :form_fields="paymentStore.selectedPaymentServiceFormField!"
                 :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
-                  :service="serviceResource?.data?.[0] ?? null"
+                  :service="paymentStore.selectedPaymentService!"
                   v-if="currentStep === 1"
                 />
             </StepPanel>
@@ -87,15 +88,21 @@
               :form_fields="submission_form_fields"
               :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
-                  :service="serviceResource?.data?.[0] ?? null" v-if="currentStep === 2" />
+                  :service="paymentStore.selectedPaymentService!" v-if="currentStep === 2" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="3">
               <!-- make payment -->
-              <PaymentMethod v-if="currentStep === 3" />
+              <PaymentMethod
+                :prepareFormFields="prepareFormFields"
+              :form_fields="submission_form_fields"
+              :submission_form_fields="submission_form_fields"
+                :verification_form_fields="verification_form_fields"
+                  :service="paymentStore.selectedPaymentService!"
+              v-if="currentStep === 3" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="4">
               <!-- payment receipt -->
-              <PaymentReceipt v-if="currentStep === 4" :service="serviceResource?.data?.[0] ?? null"  />
+              <PaymentReceipt v-if="currentStep === 4" :service="paymentStore.selectedPaymentService!"  />
             </StepPanel>
           </StepPanels>
         </Stepper>
@@ -118,8 +125,8 @@ const { currentStep } = storeToRefs(paymentStore);
 const route = useRoute();
 const isServicesLoading = ref(false);
 const isFetchServicesError = ref(false);
-const serviceResource = ref<ResourceListResponse<Service> | undefined>();
-const prepareFormFields = ref({} as FormFieldForPosting[]);
+// const serviceResource = ref<ResourceListResponse<Service>();
+const prepareFormFields = ref({} as FormFieldForPosting);
 const toast = useToast();
 
 
@@ -171,18 +178,26 @@ async function getServiceById() {
     console.log("Service data loaded:", res);
     console.log("First service structure:", res?.data); // Debug log
 
-    let verification_form_fields_ = res?.data[0].form_field as FormField[];
-    let submission_form_fields_ = res?.data[0].form_field as FormField[];
+    let form_fields_ = res?.data[0].form_field as FormField[];
 
     paymentStore.selectedPaymentService = res?.data[0];
 
+    paymentStore.selectedPaymentServiceFormField = res?.data[0].form_field as FormField[];
+
+    // get is_amount field
+    paymentStore.selectedPaymentServiceFormFieldIsAmount = getFieldIsAmount(
+      form_fields_,
+    );
+
+    //get verification fields
     verification_form_fields.value = getObjectsRequiredForVerification(
-      verification_form_fields_,
+      form_fields_,
       1
     );
 
+    //get other fields not require for verification
     submission_form_fields.value = getObjectsRequiredForVerification(
-      submission_form_fields_,
+      form_fields_,
       0
     );
 
@@ -194,6 +209,7 @@ async function getServiceById() {
     console.error("Failed to fetch services:", error);
 
         toast.add({
+          life: 5000,
             severity: "error",
             detail: error.response?.data?.message ?? error.message,
             summary:
@@ -219,6 +235,28 @@ function getObjectsRequiredForVerification(
   return data.filter(
     (item) => item && item.require_verification === require_verification
   );
+}
+
+function getFieldIsAmount(
+  data: FormField[]
+) {
+  let isAmountField:FormField[];
+
+  data.forEach((item)=>{
+      
+  })
+  
+   isAmountField = data.filter(
+    (item) => 
+    { 
+      if(item && item.is_amount === 1){
+      return  item 
+      }
+      
+    }
+  );
+
+  return isAmountField;
 }
 
 

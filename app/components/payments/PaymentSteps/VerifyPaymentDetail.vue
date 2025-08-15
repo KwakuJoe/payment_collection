@@ -1,13 +1,20 @@
 <template>
     <div
         class="flex flex-col w-full p-10 bg-white border border-gray-100 rounded-md gap-y-5 dark:bg-black/20 dark:border-zinc-800">
-
-
+{{ prepareFormFields }}
         <div class="flex flex-col w-full gap-y-5">
 
             <!-- details -->
             <div class="flex flex-col w-full gap-y-5 ">
                 <p class="text-xl font-bold">Verified </p>
+
+                 {{validationErrors.length}}
+
+              <Message v-if="validationErrors.length" severity="error">
+                  <ul>
+                      <li v-for="(error, index) in validationErrors" :key="index">{{ index + 1 }}. {{ error }}</li>
+                  </ul>
+              </Message>              
 
                 <div
                     class="flex flex-col w-full p-4 border border-gray-100 rounded-md dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900">
@@ -45,23 +52,22 @@
 <script setup lang="ts">
 import { usePaymentStepsStore } from '~/store/payment'
 import type { FormField, FormFieldForPosting, Service } from "~/types";
-const paymentStore = usePaymentStepsStore();
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
 
+const paymentStore = usePaymentStepsStore();
+const toast = useToast();
 
 const props = defineProps<{
-    prepareFormFields: FormFieldForPosting[];
-    service: Service | null;
+    prepareFormFields: FormFieldForPosting;
+    service: Service ;
     verification_form_fields: FormField[];
     submission_form_fields: FormField[];
     form_fields: FormField[];
 }>();
 
+const validationErrors = ref<any[]>([]);
 
-
-const nextStepper = (async () => {
-    console.log('Going home')
-    paymentStore.currentStep++;
-});
 
 const backStepper = (async () => {
     console.log('Going home')
@@ -73,5 +79,91 @@ const backStepper = (async () => {
     }
 
 });
+
+
+
+const nextStepper = (async () => {
+
+     let validation_error = validateRequiredFields(props.prepareFormFields, props.form_fields)
+
+    if(validation_error.length == 0) // change to (validation_error.length > 0)
+{
+
+    validationErrors.value = validation_error;
+     toast.add({
+          life: 5000,
+            severity: "error",
+            summary: 'Some field are mandatory',
+            detail: 'Check the form'
+               
+        });
+return ;
+}
+
+
+   let has_amount_field = await checkAmountAmountField()
+
+   if(!has_amount_field)
+   {
+    
+    paymentStore.currentStep++;
+   }else{
+
+     toast.add({
+          life: 10000,
+            severity: "error",
+            summary: 'Field has not been configures',
+            detail: 'Contact Adminstrator'
+               
+        });
+return ;
+            
+
+        return false;
+   }
+   
+    
+});
+function checkAmountAmountField()
+{
+    if(paymentStore.selectedPaymentServiceFormFieldIsAmount!?.length > 0)
+{
+
+    return true;
+}else{
+    return false;
+}
+
+}
+
+
+function validateRequiredFields(formObject:FormFieldForPosting, formFields:FormField[]) {
+    const errors:any[] = [];
+
+    formFields.forEach(field => {
+        if (field.is_required === 1) {
+            const fieldName = field.field_name;
+            const fieldDescription = field.field_label;
+            const value = formObject[fieldName];
+
+            // Check if value is missing, empty, null, or undefined
+            if (
+                value === undefined ||
+                value === null ||
+                value === '' ||
+                (typeof value === 'string' && value.trim() === '')
+            ) {
+                errors.push(`${fieldDescription} field is required`);
+            }
+        }
+    });
+
+    return errors;
+}
+
+
+
+
+
 
 </script>

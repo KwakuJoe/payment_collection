@@ -78,8 +78,8 @@ import { goHome } from "~/utils/index";
 import Slider from "primevue/slider";
 // props
 const props = defineProps<{
-        prepareFormFields: FormFieldForPosting[];
-    service: Service | null;
+        prepareFormFields: FormFieldForPosting;
+    service: Service ;
     verification_form_fields: FormField[];
     submission_form_fields: FormField[];
     form_fields: FormField[];

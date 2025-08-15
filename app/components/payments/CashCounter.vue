@@ -18,11 +18,13 @@
                     <Icon class="w-12 h-12 text-5xl" name="hugeicons:money-bag-01" />
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary">Amount</p>
-                        <p class="text-xl font-bold">1,000,000</p>
+                        <p class="text-xl font-bold">
+                            {{ parseFloat( prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]).toFixed(2) ?? null  }}
+</p>
                     </div>
                 </div>
 
-                <div class="flex items-start bg-primary/10 gap-x-3 border rounded-sm  border-primary/20  lg:w-[34%] p-5">
+                <div class="flex items-start bg-primary/10 gap-x-3 border rounded-sm  border-primary/20  lg:w-[34%] p-5 " :class="compareAmountToCashAmount">
                     <Icon class="w-12 h-12 text-3xl"
                         name="streamline:money-cash-coins-stack-accounting-billing-payment-stack-cash-coins-currency-money-finance" />
                     <div class="flex flex-col flex-1 ">
@@ -173,6 +175,11 @@ import * as yup from 'yup'
 import { useForm } from 'vee-validate'
 import { formatCurrency } from '~/utils/index'
 import { usePaymentStepsStore } from '~/store/payment'
+import type { FormFieldForPosting } from '~/types'
+
+const props = defineProps<{
+    prepareFormFields: FormFieldForPosting;
+}>();
 
 // Types
 interface DenominationData {
@@ -192,7 +199,7 @@ const showDebug = ref(true)
 const paymentStore = usePaymentStepsStore();
 const notesData = ref(reactive<DenominationData[]>([]));
 const coinsData = ref(reactive<DenominationData[]>([]));
- 
+ const prepareFormFields = ref(props.prepareFormFields);
 
 onMounted( async () => {
     let denomination = await splitNotesAndCoins(paymentStore.selectedPaymentService?.currency_denomination);
@@ -258,6 +265,17 @@ function mergeNotesAndCoins(notes:DenominationData[], coins:DenominationData[]) 
      return [...coins, ...notes]
 }
 
+const compareAmountToCashAmount = computed(() =>{
+   if (
+    parseFloat(props.prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]) ===
+    parseFloat(grandTotal.value.toFixed(2))
+   )
+    {
+        return 'bg-green-300'
+    }else{
+        return 'bg-red-300';
+    }
+});
 
 
 // Computed: Grand Total

@@ -2,21 +2,21 @@
   <div class="flex flex-col w-full p-5 rounded-lg max-w-7xl">
     <!-- header -->
     <div
-      class="flex w-full items-center border border-gray-100 dark:border-zinc-800 rounded-tr-md rounded-tl-md p-3 bg-white dark:bg-black/20">
-      <div class="flex w-full justify-between">
+      class="flex items-center w-full p-3 bg-white border border-gray-100 dark:border-zinc-800 rounded-tr-md rounded-tl-md dark:bg-black/20">
+      <div class="flex justify-between w-full">
         <div class="flex flex-col">
           <p class="font-bold ">Institutions</p>
-          <p class="text-gray-500 text-sm">Browse and search through our partner institutions</p>
+          <p class="text-sm text-gray-500">Browse and search through our partner institutions</p>
         </div>
 
-        <div class="flex items-center gap-x-3 flex-wrap">
+        <div class="flex flex-wrap items-center gap-x-3">
           <!-- search -->
           <div class="flex flex-col">
-            <div class="relative w-full max-w-sm items-center">
+            <div class="relative items-center w-full max-w-sm">
               <!-- <Input v-model="search" placeholder="Search institution ..." class="pl-10 w-[370px]" /> -->
               <InputText v-model="search" class="pl-10 w-[370px] text-sm" placeholder="Search" />
 
-              <span class="absolute end-0 inset-y-0 flex items-center justify-center px-3">
+              <span class="absolute inset-y-0 flex items-center justify-center px-3 end-0">
                 <Icon class="text-lg " name="iconamoon:search-light" />
               </span>
             </div>
@@ -48,11 +48,11 @@
 
       <!-- Empty State -->
       <div v-else-if="!isInstitutionsLoading && !isFetchInstitutionsError && filteredInstitutions.length === 0"
-        class="text-center py-12">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
+        class="py-12 text-center">
+        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full dark:bg-zinc-800">
           <Icon name="iconamoon:search-light" class="w-6 h-6 text-gray-400" />
         </div>
-        <h3 class="text-lg font-semibold mb-2">No institutions found</h3>
+        <h3 class="mb-2 text-lg font-semibold">No institutions found</h3>
         <p class="text-gray-500">Try adjusting your search or filter criteria</p>
       </div>
 
@@ -87,7 +87,7 @@
           <DialogTitle>Payment Collection Detail</DialogTitle>
         </DialogHeader>
 
-        <div class="overflow-y-auto flex-1 px-6">
+        <div class="flex-1 px-6 overflow-y-auto">
           <div class="flex flex-col justify-between  h-[300dvh]">
             <PaymentCollectionServiceList :institution="selectedInstitution" />
           </div>

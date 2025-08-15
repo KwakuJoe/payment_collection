@@ -167,7 +167,7 @@ class InstitutionModule {
             console.log(error);
             if (axios.isCancel(error)) {
                 console.log('Request cancelled:', url);
-                return;
+                // return;
             } else if (error instanceof AxiosError) {
                 console.error('Error fetching transaction overview:', error.response?.data || error.message);
             } else {
@@ -182,7 +182,7 @@ class InstitutionModule {
         }
     }
 
-    async getServicesByInstitution(institutions_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> | undefined> {
+    async getServicesByInstitution(institutions_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> > {
         // Convert params object to query string
         const url = `${this.INSTITUTION_SERVICE_RESOURCE}/${institutions_id}`;
         const { abortKey = 'getServices', enableAbort = true } = options;
@@ -207,7 +207,7 @@ class InstitutionModule {
             console.log(error);
             if (axios.isCancel(error)) {
                 console.log('Request cancelled:', url);
-                return;
+                // return;
             } else if (error instanceof AxiosError) {
                 console.error('Error fetching transaction overview:', error.response?.data || error.message);
             } else {

@@ -89,7 +89,7 @@ import type { Service } from '~/types';
 const paymentStore = usePaymentStepsStore();
 
 const props = defineProps<{
-    service: Service | null;
+    service: Service;
 }>()
 
 function printDiv(divId: string) {

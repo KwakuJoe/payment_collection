@@ -95,18 +95,18 @@ export interface FormField {
   field_type: FieldType
   field_data_type: FieldDataType
   list_of_options: any[]
-  is_required: boolean
+  is_required: boolean | number
   rank: string
   default_value: any
   list_of_values: any
-  is_thirdparty: boolean
+  is_thirdparty: boolean | number
   thirdparty_endpoint: string
   is_visible: boolean
-  is_amount: boolean
+  is_amount: boolean | number
   require_verification: boolean
-  is_readonly: boolean
-  show_on_receipt: boolean
-  in_remark: boolean
+  is_readonly: boolean | number
+  show_on_receipt: boolean | number
+  in_remark: boolean | number
 }
 
 export interface FieldType {
@@ -144,7 +144,7 @@ export interface User {
 }
 
 export interface VerifyFieldsPayload  {
-  service_id: string
+  service_id: string | undefined
   form_data: Record<string, any>
   channel_reference: string | null
   branch_user: BranchUser

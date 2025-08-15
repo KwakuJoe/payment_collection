@@ -46,9 +46,9 @@
         </div>
 
         <!-- cash -->
-        <CashPaymentMethod v-if="selectedPaymentMethod === 'cash'" />
+        <CashPaymentMethod :prepareFormFields="prepareFormFields" v-if="selectedPaymentMethod === 'cash'" />
 
-        <BankPaymentMethod v-if="selectedPaymentMethod === 'bank'" />
+        <BankPaymentMethod :prepareFormFields="prepareFormFields" v-if="selectedPaymentMethod === 'bank'" />
 
         
     </div>
@@ -60,10 +60,19 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import BankPaymentMethod from "../PyamentMethods/BankPaymentMethod.vue";
 import { usePaymentStepsStore } from "~/store/payment";
+import type { FormField, FormFieldForPosting, Service } from "~/types";
 
 const paymentStore = usePaymentStepsStore();
 const { currentStep } = storeToRefs(paymentStore)
 // data
+
+const props = defineProps<{
+    prepareFormFields: FormFieldForPosting;
+    service: Service ;
+    verification_form_fields: FormField[];
+    submission_form_fields: FormField[];
+    form_fields: FormField[];
+}>();
 
 const paymentMethodsOptions = reactive([
     {

@@ -3,14 +3,20 @@
     <div class="flex flex-col">
 
         <!-- cash counter -->
-    <CashCounter @submit="handleCashCountSubmit" @dataUpdate="handleDataUpdate" ref="cashCounterRef" />
+    <CashCounter @submit="handleCashCountSubmit" :prepareFormFields="prepareFormFields" @dataUpdate="handleDataUpdate" ref="cashCounterRef" />
     </div>
 
 
 
 </template>
 <script setup lang="ts">
+import type { FormFieldForPosting, Service } from '~/types';
 
+
+
+const props = defineProps<{
+    prepareFormFields: FormFieldForPosting;
+}>();
 
 const handleCashCountSubmit = (data: any) => {
     console.log('Submitted data:', data)

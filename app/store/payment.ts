@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { PreviewDataItem, Service, DenominationData  } from '~/types';
+import type { PreviewDataItem, Service, DenominationData, FormField  } from '~/types';
 
 export const usePaymentStepsStore = defineStore('paymentSteps', () => {
   // State
@@ -8,7 +8,12 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
   const totalSteps = 4;
   const previewDataItem = ref<PreviewDataItem[]>([]);
   const selectedPaymentService = ref<Service>();
+  const selectedPaymentServiceFormField = ref<FormField[]>();
   const selectedCurrencyDenomination = ref<DenominationData[]>();
+
+  const selectedPaymentServiceFormFieldIsAmount = ref<FormField[]>();
+
+  const selectedPaymentServiceCompletedFieldValues = ref({} as any);
 
   // const selectedPaymentService = ref({} as any);
 
@@ -42,7 +47,9 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
     resetSteps,
     selectedPaymentService,
     previewDataItem,
-    selectedCurrencyDenomination
-
+    selectedCurrencyDenomination,
+    selectedPaymentServiceFormField,
+    selectedPaymentServiceFormFieldIsAmount,
+selectedPaymentServiceCompletedFieldValues
   }
 })

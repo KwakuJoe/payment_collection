@@ -2,9 +2,10 @@
     <div
         class="flex flex-col w-full p-10 bg-white border border-gray-100 rounded-md gap-y-5 dark:bg-black/20 dark:border-zinc-800">
 
-
         <div class="flex flex-col w-full gap-y-5">
             <p class="text-xl font-bold">Payment Details</p>
+
+           
 
             <Message v-if="validationErrors.length" severity="error">
                 <ul>
@@ -40,10 +41,11 @@ import { useToast } from "primevue/usetoast";
 import { institutionModule } from "~/repository/modules/institution_module";
 // props
 const props = defineProps<{
-    prepareFormFields: FormFieldForPosting[];
-    service: Service | null;
+    prepareFormFields: FormFieldForPosting;
+    service: Service ;
     verification_form_fields: FormField[];
     submission_form_fields: FormField[];
+    form_fields: FormField[]
 }>();
 
 // data
@@ -53,8 +55,9 @@ const paymentStore = usePaymentStepsStore();
 const toast = useToast();
 const isVerificationLoading = ref(false)
 const validationErrors = ref<any[]>([]);
+const service = ref(props.service);
 const verifyFieldsPayload = ref<VerifyFieldsPayload>({
-    service_id: props.service?.id ?? '',
+    service_id: paymentStore.selectedPaymentService?.id.toString(),
     channel_reference: null,
     form_data: props.prepareFormFields,
     branch_user: {
@@ -86,18 +89,24 @@ async function postFieldForVerification() {
             paymentStore.currentStep++;
 
             // Extract and convert preview_data
-            const preview: PreviewDataItem[] = res.data.preview_data.map((item:any) => {
-                const [key, value] = item.split(":").map((str:any) => str.trim());
-                return { key: key, value: value };
-            });
+            // const preview: PreviewDataItem[] = res.data.preview_data.map((item:any) => {
+            //     const [key, value] = item.split(":").map((str:any) => str.trim());
+            //     return { key: key, value: value };
+            // });
+
+            const preview: PreviewDataItem[] = res.data.preview_data
 
             paymentStore.previewDataItem = preview;
 
+            let update_FormFieldsWithPreview =  updateFormFieldsWithPreview(preview, props.form_fields)
+            
 
-            console.log("Preview data:", preview);
+
+            console.log("Preview data:", update_FormFieldsWithPreview);
 
 
             toast.add({
+                          life: 5000,
                 severity: "success",
                 detail: "Fields verified successfully",
                 summary: res?.message
@@ -116,6 +125,7 @@ async function postFieldForVerification() {
 
 
             toast.add({
+                
                 severity: "error",
                 life: 5000,
                 detail: res?.message ?? "Failed to verify fields",
@@ -147,6 +157,39 @@ const nextStepper = (async () => {
     await postFieldForVerification()
 
 });
+
+
+
+function updateFormFieldsWithPreview(previewData:PreviewDataItem[], formFields:FormField[]) {
+    // Convert previewData array to an object for faster lookup
+    const previewMap = previewData.reduce((map:any, item:any) => {
+        map[item.key] = item.value;
+        return map;
+    }, {});
+
+    // Loop and update formFields
+    return formFields.map(field => {
+        if (previewMap.hasOwnProperty(field.field_name)) {
+            return {
+                ...field,
+                field_type: {
+                    ...field.field_type,
+                    code: 1
+                },
+                field_data_type: {
+                    ...field.field_data_type,
+                    code: 1
+                },
+                is_readonly: 1,
+                default_value: previewMap[field.field_name]
+            };
+        }
+        return field; // unchanged
+    });
+}
+
+
+
 
 </script>
 <style></style>
