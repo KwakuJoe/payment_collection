@@ -74,7 +74,7 @@ const backStepper = (async () => {
     console.log('Going home')
 
     if (paymentStore.currentStep > 1 && (props.verification_form_fields.length > 0)) {
-        paymentStore.selectedPaymentServiceFormField = paymentStore.selectedPaymentServiceFormFieldRefreshed
+        paymentStore.selectedPaymentServiceFormField = paymentStore.selectedPaymentServiceFormFieldRefreshed!
         paymentStore.currentStep--;
         // window.location.reload();
     } else {

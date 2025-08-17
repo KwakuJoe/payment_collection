@@ -34,7 +34,7 @@
 
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500">service</p>
-              <p class="text-lg font-bold ">{{paymentStore.selectedPaymentService?.name}}</p>
+              <p class="text-lg font-bold ">{{paymentStore.selectedPaymentService!.name}}</p>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
             <Avatar label="E" size="xlarge" shape="circle" />
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500 ">Institution</p>
-              <p class="font-bold font-lg ">{{paymentStore.selectedPaymentService?.institution.name}}</p>
+              <p class="font-bold font-lg ">{{paymentStore.selectedPaymentService?.institution?.name}}</p>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
                 :form_fields="formfields!"
                 :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
-                  :service="paymentStore.selectedPaymentService!"
+                  :service="paymentStore.selectedPaymentService"
                   v-if="currentStep === 1"
                 />
             </StepPanel>
@@ -88,21 +88,21 @@
               :form_fields="paymentStore.selectedPaymentServiceFormField!"
               :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
-                  :service="paymentStore.selectedPaymentService!" v-if="currentStep === 2" />
+                  :service="paymentStore.selectedPaymentService" v-if="currentStep === 2" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="3">
               <!-- make payment -->
               <PaymentMethod
                 :prepareFormFields="prepareFormFields"
-              :form_fields="submission_form_fields"
+              :form_fields="paymentStore.selectedPaymentServiceFormField!"
               :submission_form_fields="submission_form_fields"
                 :verification_form_fields="verification_form_fields"
-                  :service="paymentStore.selectedPaymentService!"
+                  :service="paymentStore.selectedPaymentService"
               v-if="currentStep === 3" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="4">
               <!-- payment receipt -->
-              <PaymentReceipt v-if="currentStep === 4" :service="paymentStore.selectedPaymentService!"  />
+              <PaymentReceipt v-if="currentStep === 4" :service="paymentStore.selectedPaymentService"  />
             </StepPanel>
           </StepPanels>
         </Stepper>
@@ -128,7 +128,7 @@ const isFetchServicesError = ref(false);
 // const serviceResource = ref<ResourceListResponse<Service>();
 const prepareFormFields = ref({} as FormFieldForPosting);
 const toast = useToast();
-const formfields = ref<FormField[]>();
+
 
 
 const steps = [
@@ -158,6 +158,7 @@ const steps = [
 // get service by id
 const verification_form_fields = ref([] as FormField[]);
 const submission_form_fields = ref([] as FormField[]);
+const formfields = ref([] as FormField[]);
 
 // get services from the institution
 async function getServiceById() {
@@ -179,9 +180,9 @@ async function getServiceById() {
     console.log("Service data loaded:", res);
     console.log("First service structure:", res?.data); // Debug log
 
-     formfields.value = res?.data[0].form_field as FormField[];
+    formfields.value = res?.data[0].form_field as FormField[];
 
-      paymentStore.selectedPaymentServiceFormFieldRefreshed = res?.data[0].form_field;
+    paymentStore.selectedPaymentServiceFormFieldRefreshed = res?.data[0].form_field;
      
     paymentStore.selectedPaymentService = res?.data[0];
 
@@ -224,7 +225,8 @@ async function getServiceById() {
 }
 
 onMounted( async () => {
-  paymentStore.selectedPaymentServiceFormField = ref<FormField[]>();
+    // paymentStore.selectedPaymentService = ref({} as Service);
+  // paymentStore.selectedPaymentServiceFormField = ref([] as FormField[]);
 await  getServiceById();
 
 });

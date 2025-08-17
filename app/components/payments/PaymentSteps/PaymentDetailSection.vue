@@ -60,7 +60,7 @@ const isVerificationLoading = ref(false)
 const validationErrors = ref<any[]>([]);
 const service = ref(props.service);
 const verifyFieldsPayload = ref<VerifyFieldsPayload>({
-    service_id: paymentStore.selectedPaymentService?.id.toString(),
+    service_id: paymentStore.selectedPaymentService?.id,
     channel_reference: null,
     form_data: props.prepareFormFields,
     branch_user: {

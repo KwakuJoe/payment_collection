@@ -12,14 +12,14 @@
 
         <!-- depositor info -->
         <div class="flex flex-col w-full p-5 border border-gray-100 gap-y-5 dark:border-zinc-800">
-            <form @submit.prevent="onSubmit()">
+         
                 <div class="flex w-full lg:flex-row fex-col gap-x-5">
 
                     <div class="flex flex-col w-full lg:w-2/4">
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <!-- <p class="text-sm font-semibold">Depositor name</p> -->
-                            <InputText fluid v-model="paymentStore.depositor.name" placeholder="Depositore Full Name" v-bind="depositor_nameAttrs"
-                                :class="{ 'border-red-600 border-2': !!(errors.depositor_name || formErrors?.depositor_name) }" aria-autocomplete="none"  autocomplete="off"/>
+                            <InputText fluid v-model="paymentStore.depositor!.name!" placeholder="Depositore Full Name" 
+                               aria-autocomplete="none"  autocomplete="off"/>
                         </div>
 
 
@@ -28,8 +28,8 @@
                     <div class="flex flex-col w-full lg:w-1/4">
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <!-- <p class="text-sm font-semibold">Phone number</p> -->
-                            <InputText fluid v-model="paymentStore.depositor.phone" placeholder="Phone" v-bind="depositor_phoneAttrs"
-                                :class="{ 'border-red-600 border-2': !!(errors.depositor_phone || formErrors?.depositor_phone) }" autocomplete="off" v-bind:oninput="make_input_number"/>
+                            <InputText fluid v-model="paymentStore.depositor!.phone!" placeholder="Phone" 
+                                  aria-autocomplete="none"  autocomplete="off" v-bind:oninput="make_input_number"/>
                         </div>
 
 
@@ -38,15 +38,15 @@
                                         <div class="flex flex-col w-full lg:w-2/4">
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <!-- <p class="text-sm font-semibold">Phone number</p> -->
-                            <InputText fluid v-model="paymentStore.depositor.email" placeholder="Email" v-bind="depositor_phoneAttrs"
-                                :class="{ 'border-red-600 border-2': !!(errors.depositor_phone || formErrors?.depositor_phone) }" autocomplete="off"/>
+                            <InputText fluid v-model="paymentStore.depositor!.email!" placeholder="Email" 
+                               aria-autocomplete="none"  autocomplete="off"/>
                         </div>
 
 
                     </div>
                 </div>
 
-            </form>
+   
         </div>
 
         <!-- cash -->
@@ -102,20 +102,6 @@ const paymentMethodsOptions = reactive([
 const selectedPaymentMethod = ref(paymentMethodsOptions[0]!.id)
 const formErrors = ref<Record<string, string[]> | null>(null);
 const paymentMethods = ref('')
-
-const { errors, handleSubmit, defineField } = useForm({
-    validationSchema: yup.object({
-        depositor_name: yup.string().required('Depositor name required'),
-        depositor_phone: yup.string().required('Depositor phone number is required'),
-    }),
-});
-
-const [depositor_name, depositor_nameAttrs] = defineField("depositor_name");
-const [depositor_phone, depositor_phoneAttrs] = defineField("depositor_phone");
-
-const onSubmit = handleSubmit(async (values) => {
-    console.log(values)
-});
 
 
 watch(selectedPaymentMethod, (newVal, oldVa) => {

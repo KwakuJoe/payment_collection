@@ -101,7 +101,7 @@ class InstitutionModule {
         }
     }
 
-    async getServices(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> | undefined> {
+    async getServices(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> > {
         // Convert params object to query string
         const url = `${this.SERVICE_RESOURCE}`;
         const { abortKey = 'getServices', enableAbort = true } = options;
