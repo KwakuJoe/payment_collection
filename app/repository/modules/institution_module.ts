@@ -2,7 +2,7 @@
 
 import abortControllerManager from '~/repository/abort_controller'
 import axiosInstance from '~/repository/axios_instance';
-import type { Category, Institution, ResourceFetchResponse, ResourceListResponse, Service, SubmitFieldsPayload, VerifyFieldsPayload } from '~/types';
+import type { Category, Institution, ResourceFetchResponse, ResourceListResponse, Service, SubmitFieldsPayload, VerifyBankTransferPaymentAccountPayload, VerifyFieldsPayload } from '~/types';
 import axios, { AxiosError } from "axios";
 
 class InstitutionModule {
@@ -15,6 +15,7 @@ class InstitutionModule {
   private SERVICE_RESOURCE = this.config.public.servicesResource;
   private VERIFY_FORM_FIELDS_RESOURCE = this.config.public.verifyFormFieldsResource;
   private SUBMIT_FORM_FIELDS_RESOURCE = this.config.public.submitFormFieldsResource;
+  private VERIFY_PAYMENT_ACCOUNT_NUMBER = this.config.public.verifyPaymentAccountNumberResource;
   
     private abortManager = abortControllerManager;
 
@@ -249,6 +250,30 @@ class InstitutionModule {
     async postFieldForSubmission(payload: SubmitFieldsPayload): Promise<ResourceFetchResponse<any> | undefined> {
         // Convert params object to query string
         const url = `${this.SUBMIT_FORM_FIELDS_RESOURCE}`;
+
+
+        try {
+            const res = await axiosInstance.post<ResourceFetchResponse<any>>(
+                url, payload);
+            return res.data;
+        } catch (error: unknown) {
+            console.log(error);
+            if (axios.isCancel(error)) {
+                console.log('Request cancelled:', url);
+                return;
+            } else if (error instanceof AxiosError) {
+                console.error('Error fetching transaction overview:', error.response?.data || error.message);
+            } else {
+                console.error('Unexpected error:', error);
+            }
+
+            throw error; // Re-throw the error for further handling
+        } 
+    }
+
+        async VerifyBankTransferPaymentAccount(payload: VerifyBankTransferPaymentAccountPayload): Promise<ResourceFetchResponse<any> | undefined> {
+        // Convert params object to query string
+        const url = `${this.VERIFY_PAYMENT_ACCOUNT_NUMBER}`;
 
 
         try {

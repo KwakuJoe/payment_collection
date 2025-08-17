@@ -15,29 +15,33 @@
             <form @submit.prevent="onSubmit()">
                 <div class="flex w-full lg:flex-row fex-col gap-x-5">
 
-                    <div class="flex flex-col w-full lg:w-1/2">
+                    <div class="flex flex-col w-full lg:w-2/4">
                         <div class="flex flex-col items-start w-full gap-y-2">
-                            <p class="text-sm font-semibold">Depositor name</p>
-                            <InputText fluid v-model="depositor_name" placeholder="Eg. John Doe" v-bind="depositor_nameAttrs"
-                                :class="{ 'border-red-600 border-2': !!(errors.depositor_name || formErrors?.depositor_name) }" />
+                            <!-- <p class="text-sm font-semibold">Depositor name</p> -->
+                            <InputText fluid v-model="paymentStore.depositor.name" placeholder="Depositore Full Name" v-bind="depositor_nameAttrs"
+                                :class="{ 'border-red-600 border-2': !!(errors.depositor_name || formErrors?.depositor_name) }" aria-autocomplete="none"  autocomplete="off"/>
                         </div>
-                        <p v-if="!!(errors.depositor_name || formErrors?.depositor_name)"
-                            class="mt-2 text-sm font-semibold text-red-600">{{
-                                formErrors?.depositor_name?.[0] ??
-                                errors.depositor_name }}</p>
+
 
                     </div>
 
-                    <div class="flex flex-col w-full lg:w-1/2">
+                    <div class="flex flex-col w-full lg:w-1/4">
                         <div class="flex flex-col items-start w-full gap-y-2">
-                            <p class="text-sm font-semibold">Phone number</p>
-                            <InputText fluid v-model="depositor_phone" placeholder="Eg: 01234343202" v-bind="depositor_phoneAttrs"
-                                :class="{ 'border-red-600 border-2': !!(errors.depositor_phone || formErrors?.depositor_phone) }" />
+                            <!-- <p class="text-sm font-semibold">Phone number</p> -->
+                            <InputText fluid v-model="paymentStore.depositor.phone" placeholder="Phone" v-bind="depositor_phoneAttrs"
+                                :class="{ 'border-red-600 border-2': !!(errors.depositor_phone || formErrors?.depositor_phone) }" autocomplete="off" v-bind:oninput="make_input_number"/>
                         </div>
-                        <p v-if="!!(errors.depositor_phone || formErrors?.depositor_phone)"
-                            class="mt-2 text-sm font-semibold text-red-600">{{
-                                formErrors?.depositor_phone?.[0] ??
-                                errors.depositor_phone }}</p>
+
+
+                    </div>
+
+                                        <div class="flex flex-col w-full lg:w-2/4">
+                        <div class="flex flex-col items-start w-full gap-y-2">
+                            <!-- <p class="text-sm font-semibold">Phone number</p> -->
+                            <InputText fluid v-model="paymentStore.depositor.email" placeholder="Email" v-bind="depositor_phoneAttrs"
+                                :class="{ 'border-red-600 border-2': !!(errors.depositor_phone || formErrors?.depositor_phone) }" autocomplete="off"/>
+                        </div>
+
 
                     </div>
                 </div>
@@ -60,7 +64,7 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import BankPaymentMethod from "../PyamentMethods/BankPaymentMethod.vue";
 import { usePaymentStepsStore } from "~/store/payment";
-import type { FormField, FormFieldForPosting, Service } from "~/types";
+import type { Depositor, FormField, FormFieldForPosting, Service } from "~/types";
 
 const paymentStore = usePaymentStepsStore();
 const { currentStep } = storeToRefs(paymentStore)
@@ -73,6 +77,16 @@ const props = defineProps<{
     submission_form_fields: FormField[];
     form_fields: FormField[];
 }>();
+
+const  make_input_number = ref( "this.value = this.value.replace(/[^0-9.]/g, '')");
+
+onMounted( async () => {
+    paymentStore.depositor = {
+        name: null,
+        phone: null,
+        email: null,
+    }
+});
 
 const paymentMethodsOptions = reactive([
     {

@@ -53,7 +53,6 @@ onMounted( async () => {
 });
 
 // data
-const loading = ref(true);
 
 const paymentStore = usePaymentStepsStore();
 const toast = useToast();
@@ -77,7 +76,7 @@ const verifyFieldsPayload = ref<VerifyFieldsPayload>({
     }
 
 })
-const submission_form_fields_ = ref<FormField[]>();
+
 
 // get services from the institution
 async function postFieldForVerification() {

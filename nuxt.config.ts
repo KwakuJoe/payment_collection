@@ -34,6 +34,7 @@ export default defineNuxtConfig({
       servicesResource: process.env.SERVICE_RESOURCE ,
       verifyFormFieldsResource:  process.env.VERIFY_FORM_FIELDS_RESOURCE ,
       submitFormFieldsResource: process.env.SUBMIT_FORM_FIELDS_RESOURCE ,
+      verifyPaymentAccountNumberResource: process.env.VERIFY_PAYMENT_ACCOUNT_NUMBER ,
     },
   },
   modules: [

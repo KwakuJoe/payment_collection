@@ -14,7 +14,7 @@
                 </div>
 
                 <div
-                    class="flex items-start bg-gray-50 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray-100 dark:border-zinc-800 lg:w-[34%] p-5">
+                    class="flex items-start bg-green-100 gap-x-3 dark:bg-zinc-900 border rounded-sm border-gray/20 dark:border-zinc-800 lg:w-[34%] p-5">
                     <Icon class="w-12 h-12 text-5xl" name="hugeicons:money-bag-01" />
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary">Amount</p>
@@ -41,7 +41,7 @@
             </Button>
         </div>
 
-       
+       <!-- {{ SubmitFieldsPayload }} -->
 
         <!-- <p>{{ paymentStore.selectedCurrencyDenomination }}</p> -->
 
@@ -70,7 +70,7 @@
                             <div class="p-3 border-l border-gray-100 dark:border-zinc-800">
 
 
-                                <InputNumber fluid v-model="note.quantity" @update:modelValue="updateTotals" />
+                                <InputNumber fluid v-model="note.quantity" @update:modelValue="updateTotals"  />
                                
                             </div>
                             <div class="flex items-center p-3 font-bold border-l border-gray-100 dark:border-zinc-800">
@@ -144,9 +144,9 @@
                 <Button size="lg" severity="secondary" class="w-full lg:w-1/2" @click="paymentStore.previousStep()">
                     BACK
                 </Button>
-                <Button size="lg" class="w-full lg:w-1/2" >
+                <Button size="lg" class="w-full lg:w-1/2" :loading="isVerificationLoading" @click="submitCashPayment()">
                      COMPLETE PAYMENT
-                </Button>
+                </Button> 
 
             </div>
 
@@ -163,7 +163,10 @@ import * as yup from 'yup'
 import { useForm } from 'vee-validate'
 import { formatCurrency } from '~/utils/index'
 import { usePaymentStepsStore } from '~/store/payment'
-import type { FormFieldForPosting } from '~/types'
+import type { FormFieldForPosting, SubmitFieldsPayload } from '~/types'
+import { useToast } from "primevue/usetoast";
+import { institutionModule } from "~/repository/modules/institution_module";
+
 
 const props = defineProps<{
     prepareFormFields: FormFieldForPosting;
@@ -188,6 +191,7 @@ const paymentStore = usePaymentStepsStore();
 const notesData = ref(reactive<DenominationData[]>([]));
 const coinsData = ref(reactive<DenominationData[]>([]));
  const prepareFormFields = ref(props.prepareFormFields);
+ const toast = useToast();
 
 onMounted( async () => {
     let denomination = await splitNotesAndCoins(paymentStore.selectedPaymentService?.currency_denomination);
@@ -259,9 +263,9 @@ const compareAmountToCashAmount = computed(() =>{
     parseFloat(grandTotal.value.toFixed(2))
    )
     {
-        return 'bg-green-300'
+        return 'bg-green-100'
     }else{
-        return 'bg-red-300';
+        return 'bg-red-100';
     }
 });
 
@@ -270,5 +274,111 @@ const compareAmountToCashAmount = computed(() =>{
 const grandTotal = computed(() => {
     return  totalNotes.value + totalCoins.value
 })
+
+const submitCashPayment = (async () => {
+    
+    if(!SubmitFieldsPayload.value.depositor_name || !SubmitFieldsPayload.value.depositor_phone ){
+            toast.add({
+                severity: "error",
+                life: 10000,
+                detail: '',
+                summary: "Depositor name and phone required",
+            });
+
+            return false;
+    }
+
+    // Verification API response is success
+    await postFieldForSubmission();
+
+});
+
+const isVerificationLoading = ref(false);
+
+const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
+    service_id: paymentStore.selectedPaymentService!.id.toString(),
+    form_data: props.prepareFormFields,
+        payment_type: 'CASH',
+    teller_account_number: null,
+    customer_account_number: null,
+    depositor_name: paymentStore.depositor.name,
+    depositor_phone: paymentStore.depositor.phone,
+    depositor_email: paymentStore.depositor.email!,
+    total_amount: parseFloat(props.prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]),
+    currency: paymentStore.selectedPaymentService!.currency,
+    currency_denomination: paymentStore.selectedCurrencyDenomination!,
+    channel_reference: null,
+    branch_user: {
+        branch: {
+            branch_name: null,
+            branch_code: null,
+            branch_email: null
+        },
+        user: {
+            user_name: null,
+            email: null
+        }
+    }
+
+})
+// get services from the institution
+async function postFieldForSubmission() {
+    isVerificationLoading.value = true;
+
+    try {
+        const res = await institutionModule.postFieldForSubmission(SubmitFieldsPayload.value);
+
+        console.log("Service data loaded:", res);
+        // console.log("First service structure:", res?.data?.[0]?.form_field); // Debug log
+
+        // next step
+        if (res?.status === true) {
+            // paymentStore.currentStep++;
+
+
+            toast.add({
+                          life: 5000,
+                severity: "success",
+                detail: "Fields verified successfully",
+                summary: res?.message
+            });
+        } else {
+
+            if (res?.error) {
+                const output = {
+                    error: Object.values(res.error).map(messages => ({
+                        error: (messages as string[])[0]
+                    }))
+                };
+                // validationErrors.value = output.error;
+                console.log(output);
+            }
+
+            toast.add({
+                
+                severity: "error",
+                life: 5000,
+                detail: res?.message ?? "Failed to verify fields",
+                summary: "Verification Error",
+            });
+        }
+
+
+
+    } catch (error: any) {
+        console.error("Failed to fetch services:", error);
+        toast.add({
+            severity: "error",
+            life: 5000,
+            detail: error.response?.data?.message ?? error.message,
+            summary: error.response?.status == 401 ? "Unauthenticated" : "Server error",
+        });
+    }
+
+    isVerificationLoading.value = false;
+
+}
+
+
 
 </script>

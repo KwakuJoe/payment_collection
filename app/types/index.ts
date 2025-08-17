@@ -150,7 +150,7 @@ export interface VerifyFieldsPayload  {
   branch_user: BranchUser
 }
 
-export interface SubmitFieldsPayload  {
+export interface SubmitFieldsPayload_old  {
   service_id: string
   form_data: Record<string, any>
   channel_reference: string | null
@@ -189,3 +189,44 @@ export interface DenominationData {
     quantity: number
     amount: number
 }
+
+
+export interface SubmitFieldsPayload {
+  service_id: string | null;
+  form_data: Record<string, any>;
+  payment_type: string;
+  teller_account_number: string | null;
+  customer_account_number: string | null;
+  depositor_name: string | null;
+  depositor_phone: string | null;
+  depositor_email: string | null;
+  total_amount: number;
+  currency: string | null;
+  currency_denomination?: DenominationData[];
+  channel_reference: string | null;
+  branch_user: {
+    branch: {
+      branch_name?: string | null;
+      branch_code?: string | null;
+      branch_email?: string | null;
+    };
+    user: {
+      user_name: string | null;
+      email?: string | null;
+    };
+  };
+}
+
+
+
+export interface VerifyBankTransferPaymentAccountPayload {
+  account_number: string | null;
+  payment_amount: string | null;
+}
+
+export interface Depositor {
+  name: string | null;
+  phone: string | null;
+  email?: string | null;
+}
+
