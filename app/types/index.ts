@@ -4,13 +4,15 @@ export interface ResourceFetchResponse<T> {
   message: string,
   error?: any,
   data: T,
+  image_url?: string,
+  timestamp?: string
 }
 
 export interface ResourceListResponse<T> {
   status?: boolean | number,
   message: string,
   error?: any,
-  data:   [T],
+  data: [T],
   meta?: ResourceListResponsePagination,
 }
 
@@ -95,18 +97,18 @@ export interface FormField {
   field_type: FieldType
   field_data_type: FieldDataType
   list_of_options: any[]
-  is_required: boolean | number 
+  is_required: boolean | number
   rank: string
   default_value: string
   list_of_values: any
-  is_thirdparty: boolean | number 
+  is_thirdparty: boolean | number
   thirdparty_endpoint: string
   is_visible: boolean | number
-  is_amount: boolean | number 
+  is_amount: boolean | number
   require_verification: boolean | number
-  is_readonly: boolean | number 
-  show_on_receipt: boolean | number 
-  in_remark: boolean | number 
+  is_readonly: boolean | number
+  show_on_receipt: boolean | number
+  in_remark: boolean | number
 }
 
 export interface FieldType {
@@ -131,26 +133,33 @@ export interface FileObject {
 }
 
 export interface User {
-  id: string;
-  id_number: string;
-  first_name: string;
-  last_name: string;
-  full_name: string;
-  email: string | null;
-  phone: string | null;
-  username: string | null;
-  created_at: Date | null;
-  updated_at: Date | null;
+  user_id: any
+  first_name: string
+  middle_name: any
+  last_name: string
+  username: string
+  full_name: string
+  user_role: any
+  teller_account_number: string
+  branch_code: any
+  department: any
+  mobile: string
+  email: string
+  account_status: string,
+  token: string | null
 }
 
-export interface VerifyFieldsPayload  {
+
+
+
+export interface VerifyFieldsPayload {
   service_id: string | undefined
   form_data: Record<string, any>
   channel_reference: string | null
   branch_user: BranchUser
 }
 
-export interface SubmitFieldsPayload_old  {
+export interface SubmitFieldsPayload_old {
   service_id: string
   form_data: Record<string, any>
   channel_reference: string | null
@@ -182,12 +191,12 @@ export interface PreviewDataItem {
 
 
 export interface DenominationData {
-    is_note: boolean | number
-    currency: string
-    code: number
-    denomination: number
-    quantity: number
-    amount: number
+  is_note: boolean | number
+  currency: string
+  code: number
+  denomination: number
+  quantity: number
+  amount: number
 }
 
 

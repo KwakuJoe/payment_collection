@@ -27,7 +27,7 @@
 
 
           <!-- refresh button -->
-          <Button :loading="true" @click="refreshInstitutions()">
+          <Button  @click="refreshInstitutions()">
             <div class="flex items-center gap-x-2">
               <Icon name="material-symbols:refresh" />
               <p>Refresh</p>

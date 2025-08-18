@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     public: {
       apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3000/api/v2",
       institutionsResource: process.env.INSTITUTIONS_RESOURCE ,
+      imageUrl: process.env.API_IMAGE_URL ,
       institutionServicesResource: process.env.INSTITUTION_SERVICE_RESOURCE ,
       categoriesResource: process.env.CATEGORY_RESOURCE ,
       servicesResource: process.env.SERVICE_RESOURCE ,

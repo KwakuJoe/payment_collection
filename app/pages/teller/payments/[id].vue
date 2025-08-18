@@ -231,9 +231,7 @@ await  getServiceById();
 
 });
 
-definePageMeta({
-  layout: "admin",
-});
+
 
 function getObjectsRequiredForVerification(
   data: FormField[],
@@ -267,5 +265,10 @@ function getFieldIsAmount(
 }
 
 
+definePageMeta({
+    layout: 'admin',
+      middleware: 'auth'
+
+})
 
 </script>

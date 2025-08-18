@@ -10,7 +10,9 @@
 import Toast from 'primevue/toast';
 
 definePageMeta({
-    layout: 'admin'
+    layout: 'admin',
+      middleware: 'auth'
+
 })
 
 </script>

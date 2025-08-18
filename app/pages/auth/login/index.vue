@@ -72,7 +72,7 @@
                             </div>
 
 
-                            <Button :loading="true" class="h-12" size="lg" @click="onSubmit()">Login</Button>
+                            <Button :loading="isLoggingIn" class="h-12" size="lg" @click="onSubmit()">Login</Button>
                         </form>
                     </div>
                 </div>
@@ -91,13 +91,14 @@ import { useForm } from "vee-validate";
 import { authModule } from "~/repository/modules/auth_module";
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
-
+import { useAuthStore } from "~/store/auth";
 // data
 const formErrors = ref<Record<string, string[]> | null>(null);
 const toast = useToast();
 const isLoggingIn = ref(false)
 const config = useRuntimeConfig();
-
+const authStore = useAuthStore()
+const router = useRouter();
 const { errors, handleSubmit, defineField } = useForm({
     validationSchema: yup.object({
         username: yup.string().required('User names is required to login'),
@@ -131,7 +132,15 @@ async function login() {
         console.log('login data:', res);
 
         if (res?.status === true) {
+
+            // set token & user
+            authStore.setAuthItems(
+                res?.data.token ?? '',
+                res?.data ?? null
+            )
             toast.add({ severity: 'success', summary: res.message, detail: 'You have successfully login in your account', life: 3000 });
+
+            routeToHome()
         } else {
             toast.add({ severity: 'error', summary: res?.message, detail: 'Failed to login', life: 3000 });
 
@@ -149,6 +158,12 @@ async function login() {
     } finally {
         isLoggingIn.value = false;
     }
+}
+
+
+function routeToHome() {
+    router.push('/')
+    // store the selected service in the session storage
 }
 
 

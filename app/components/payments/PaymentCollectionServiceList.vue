@@ -152,7 +152,6 @@ watch([search, selectedCategory], () => {
 function routeToPayment(service: Service) {
     router.push(`/teller/payments/${service.id}`)
     // store the selected service in the session storage
-
 }
 
 
