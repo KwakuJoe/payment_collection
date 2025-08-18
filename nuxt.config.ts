@@ -5,19 +5,19 @@ import Aura from "@primeuix/themes/aura";
 
 const MyPreset = definePreset(Aura, {
   semantic: {
-    primary: {
-      50: "#fef7ed",
-      100: "#fdedd3",
-      200: "#fad7a5",
-      300: "#f6bc6d",
-      400: "#f19833",
-      500: "#D8711E", // Your main color
-      600: "#c85914",
-      700: "#a64613",
-      800: "#883817",
-      900: "#6f2f16",
-      950: "#3c1508",
-    },
+primary: {
+  50: '#f0f9f9',
+  100: '#dbf0f0',
+  200: '#bae1e2',
+  300: '#8cccce',
+  400: '#57aeb2',
+  500: '#04383F',  // Your main color
+  600: '#036169',
+  700: '#045055',
+  800: '#064247',
+  900: '#08373c',
+  950: '#021d20'
+}
   },
 });
 
@@ -34,7 +34,10 @@ export default defineNuxtConfig({
       servicesResource: process.env.SERVICE_RESOURCE ,
       verifyFormFieldsResource:  process.env.VERIFY_FORM_FIELDS_RESOURCE ,
       submitFormFieldsResource: process.env.SUBMIT_FORM_FIELDS_RESOURCE ,
-      verifyPaymentAccountNumberResource: process.env.VERIFY_PAYMENT_ACCOUNT_NUMBER ,
+      verifyPaymentAccountNumberResource: process.env.VERIFY_PAYMENT_ACCOUNT_NUMBER , 
+      loginResource: process.env.LOGIN_RESOURCE,
+      loginWithTokenResource: process.env.LOGIN_WITH_TOKEN_RESOURCE,
+      appTitle: process.env.APP_TITLE
     },
   },
   modules: [

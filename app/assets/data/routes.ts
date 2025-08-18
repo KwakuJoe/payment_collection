@@ -19,6 +19,9 @@ export function setRouteNames(routeName: string): string {
     case 'teller-payments-id': // This is how Nuxt names dynamic routes
       pageTitle = 'Make payments';
       break;
+    case 'dashboard': // This is how Nuxt names dynamic routes
+      pageTitle = 'Dashboard';
+      break;
     default:
       pageTitle = '';
   }

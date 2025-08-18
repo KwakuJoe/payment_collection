@@ -7,7 +7,7 @@
         <div class="flex items-center justify-between w-full">
             <!-- system logo -->
             <div class="flex p-2 rounded-lg ">
-                <NuxtImg src="/assets/logo/fidelity_logo.png" class="w-[120px]" />
+                <NuxtImg src="/assets/logo/logo.svg" class="w-[120px]" />
             </div>
             <!-- payment title -->
             <div class="flex flex-col items-center">

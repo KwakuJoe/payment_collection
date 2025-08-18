@@ -2,10 +2,9 @@
     <aside class="w-full h-screen lg:border-r border-gray-100 dark:border-zinc-800 border-solid  dark:bg-[#18181B]">
         <div class="flex flex-col bg-white dark:bg-black/20 h-full">
             <!-- Logo and Title -->
-            <div
-                class="hidden lg:flex items-center h-16 border-b border-gray-100 border-solid dark:border-zinc-800">
+            <div class="hidden lg:flex items-center h-16 border-b border-gray-100 border-solid dark:border-zinc-800">
                 <!-- <NuxtImg src="/assets/logo/logo.svg" width="34" alt=""/> -->
-                <NuxtImg src="/assets/logo/fidelity_logo.png" class="w-[120px]" />
+                <NuxtImg src="/assets/logo/logo.svg" class="w-[120px]" />
                 <div class="flex flex-col items-start gap-x-2">
                     <p class="text-sm font-normal ">CENTRAL</p>
                     <p class="text-sm font-bold ">COMMAND </p>
@@ -70,22 +69,34 @@ import { NuxtImg } from '#components';
 const route = useRoute();
 
 // Menu Data
-const menuItems = ref([
-    // {
-    //     title: 'Dashboard',
-    //     icon: 'hugeicons:dashboard-square-01',
-    //     path: '/', // Single item
-    // },
-    {
-        title: 'Teller',
-        icon: 'solar:user-hands-broken',
-        path: '', // Single item
-        children: [
-            { name: 'Payments', icon: 'hugeicons:payment-01', path: '/' },
-            { name: 'Report', icon: 'carbon:report', path: '/teller/report' },
-        ],
-    },
+// Define the menu item type
+type MenuItem = {
+    title: string;
+    icon: string;
+    path: string;
+    children?: Array<{
+        name: string;
+        icon: string;
+        path: string;
+    }>;
+};
 
+const menuItems = ref<MenuItem[]>([
+    {
+        title: 'Dashboard',
+        icon: 'hugeicons:dashboard-square-01',
+        path: '/dashboard', // Single item
+    },
+    {
+        title: 'Payments',
+        icon: 'hugeicons:payment-01',
+        path: '/', // Single item
+    },
+    {
+        title: 'Report',
+        icon: 'carbon:report1',
+        path: '/teller/report', // Single item
+    }
 ]);
 
 // Open index state

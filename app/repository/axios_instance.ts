@@ -21,7 +21,9 @@ axiosInstance.interceptors.request.use(
     }
 
     // config.headers['X-Requested-With'] = 'XMLHttpRequest';
-
+    config.headers['Accept'] = 'application/json';
+    config.headers['Content-Type'] = 'application/json';
+    config.headers['ngrok-skip-browser-warning'] = 'true';
     return config;
   },
   (error) => {
