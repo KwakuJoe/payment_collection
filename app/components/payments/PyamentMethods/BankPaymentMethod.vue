@@ -86,11 +86,14 @@ import { usePaymentStepsStore } from '~/store/payment'
 import type { FormFieldForPosting, SubmitFieldsPayload, VerifyBankTransferPaymentAccountPayload } from '~/types'
 import { useToast } from "primevue/usetoast";
 import { institutionModule } from "~/repository/modules/institution_module";
+import { useAuthStore } from "~/store/auth";
 
 const props = defineProps<{
     prepareFormFields: FormFieldForPosting;
 }>();
 
+
+const authStore = useAuthStore()
 const bank_account_number  = ref('');
 
 onMounted( async () => {
@@ -149,29 +152,29 @@ const verifyBankTransferPaymentAccountPayload = ref<VerifyBankTransferPaymentAcc
 })
 
 const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
-    service_id: paymentStore.selectedPaymentService!.id.toString(),
+        service_id: paymentStore.selectedPaymentService!.id.toString(),
     form_data: props.prepareFormFields,
-    payment_type: 'BANK_TRANSFER',
-    source_account: null,
-    destination_account: bank_account_number.value,
-    depositor_name: paymentStore.depositor!.name,
-    depositor_phone: paymentStore.depositor!.phone,
-    depositor_email: paymentStore.depositor!.email!,
+        payment_method: 'BANK_TRANSFER',
+    source_account: verifyBankTransferPaymentAccountPayload.value.account_number,
+    destination_account: paymentStore.selectedPaymentService!.account_number,
+    depositor_name: paymentStore.depositor.name,
+    depositor_phone: paymentStore.depositor.phone,
+    depositor_email: paymentStore.depositor?.email!,
     total_amount: parseFloat(props.prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]),
     currency: paymentStore.selectedPaymentService!.currency,
     currency_denomination: paymentStore.selectedCurrencyDenomination!,
+    channel: 'BRANCH_PAYMENT_PORTAL',
     channel_reference: null,
+    app_reference: null,
     branch: {
-        name: null,
-        code: null,
+        name: authStore.user!.branch_name,
+        code: authStore.user!.branch_code,
         email: null
     },
     user: {
-        username: null,
-        phone: null,
-        email: null,
+        username: authStore.user!?.username,
+        email: authStore.user!?.email,
     }
-   
 
 })
 
