@@ -36,7 +36,7 @@
             </div>
         <div class="flex items-center justify-between py-3 border-gray-100 border-y dark:border-zinc-800">
             <h2 class="text-lg font-bold">Cash Counter</h2>
-            <Button variant="outline" size="small">
+            <Button variant="outline" size="small" @click="resetCashDenom()">
                 Clear All
             </Button>
         </div>
@@ -60,6 +60,8 @@
                             <div class="p-3 text-sm font-semibold border-l border-gray-100 dark:border-zinc-800">Amount
                             </div>
                         </div>
+
+                      
 
                         <!-- Notes Rows -->
                         <div v-for="(note, index) in notesData" :key="note.code"
@@ -166,6 +168,8 @@ import { usePaymentStepsStore } from '~/store/payment'
 import type { FormFieldForPosting, SubmitFieldsPayload } from '~/types'
 import { useToast } from "primevue/usetoast";
 import { institutionModule } from "~/repository/modules/institution_module";
+import { useAuthStore } from "~/store/auth";
+
 
 
 const props = defineProps<{
@@ -182,6 +186,7 @@ interface DenominationData {
     amount: number
 }
 
+const authStore = useAuthStore()
 
 
 // Debug flag (set to false in production)
@@ -194,9 +199,7 @@ const coinsData = ref(reactive<DenominationData[]>([]));
  const toast = useToast();
 
 onMounted( async () => {
-    let denomination = await splitNotesAndCoins(paymentStore.selectedPaymentService?.currency_denomination);
-    notesData.value = denomination.notes;
-    coinsData.value = denomination.coins;
+    await resetCashDenom();
 });
 
 
@@ -275,9 +278,19 @@ const grandTotal = computed(() => {
     return  totalNotes.value + totalCoins.value
 })
 
-const submitCashPayment = (async () => {
+const resetCashDenom = (async () => {
+
+    let denomination = await splitNotesAndCoins(paymentStore.selectedPaymentService?.currency_denomination);
+    notesData.value = denomination.notes;
+    coinsData.value = denomination.coins;
     
-    if(!SubmitFieldsPayload.value.depositor_name || !SubmitFieldsPayload.value.depositor_phone ){
+})
+
+const submitCashPayment = (async () => {
+
+    // parseFloat(props.prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`])
+    
+        if(!paymentStore.depositor.name || !paymentStore.depositor.phone ){
             toast.add({
                 severity: "error",
                 life: 10000,
@@ -287,6 +300,21 @@ const submitCashPayment = (async () => {
 
             return false;
     }
+
+       if (
+            parseFloat(props.prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]) !=
+            parseFloat(grandTotal.value.toFixed(2))
+        )
+        {
+                        toast.add({
+                    severity: "error",
+                    life: 10000,
+                    detail: '',
+                    summary: "CASH does not match amount to pay",
+                });
+
+                return false;
+        }
 
     // Verification API response is success
     await postFieldForSubmission();
@@ -298,32 +326,39 @@ const isVerificationLoading = ref(false);
 const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
     service_id: paymentStore.selectedPaymentService!.id.toString(),
     form_data: props.prepareFormFields,
-        payment_type: 'CASH',
-    teller_account_number: null,
-    customer_account_number: null,
+        payment_method: 'CASH',
+    source_account: authStore.user!?.source_account,
+    destination_account: paymentStore.selectedPaymentService!.account_number,
     depositor_name: paymentStore.depositor.name,
     depositor_phone: paymentStore.depositor.phone,
-    depositor_email: paymentStore.depositor.email!,
+    depositor_email: paymentStore.depositor?.email!,
     total_amount: parseFloat(props.prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]),
     currency: paymentStore.selectedPaymentService!.currency,
     currency_denomination: paymentStore.selectedCurrencyDenomination!,
+    channel: 'BRANCH_PAYMENT_PORTAL',
     channel_reference: null,
-    branch_user: {
-        branch: {
-            branch_name: null,
-            branch_code: null,
-            branch_email: null
-        },
-        user: {
-            user_name: null,
-            email: null
-        }
+    app_reference: null,
+    branch: {
+        name: authStore.user!.branch_name,
+        code: authStore.user!.branch_code,
+        email: null
+    },
+    user: {
+        username: authStore.user!?.username,
+        email: authStore.user!?.email,
     }
+
 
 })
 // get services from the institution
 async function postFieldForSubmission() {
     isVerificationLoading.value = true;
+
+    
+        SubmitFieldsPayload.value.depositor_name = paymentStore.depositor.name;
+    SubmitFieldsPayload.value.depositor_phone = paymentStore.depositor.phone;
+    SubmitFieldsPayload.value.depositor_email = paymentStore.depositor?.email!;
+    SubmitFieldsPayload.value.currency_denomination = paymentStore.selectedCurrencyDenomination!;
 
     try {
         const res = await institutionModule.postFieldForSubmission(SubmitFieldsPayload.value);

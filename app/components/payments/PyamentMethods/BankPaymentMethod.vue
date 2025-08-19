@@ -119,7 +119,7 @@ const submitBankTransferPayment = (async () => {
             return false;
     }
     
-    if(!SubmitFieldsPayload.value.customer_account_number){
+    if(!SubmitFieldsPayload.value.destination_account){
             toast.add({
                 severity: "error",
                 life: 10000,
@@ -151,9 +151,9 @@ const verifyBankTransferPaymentAccountPayload = ref<VerifyBankTransferPaymentAcc
 const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
     service_id: paymentStore.selectedPaymentService!.id.toString(),
     form_data: props.prepareFormFields,
-        payment_type: 'BANK_TRANSFER',
-    teller_account_number: null,
-    customer_account_number: bank_account_number.value,
+    payment_type: 'BANK_TRANSFER',
+    source_account: null,
+    destination_account: bank_account_number.value,
     depositor_name: paymentStore.depositor!.name,
     depositor_phone: paymentStore.depositor!.phone,
     depositor_email: paymentStore.depositor!.email!,
@@ -161,17 +161,17 @@ const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
     currency: paymentStore.selectedPaymentService!.currency,
     currency_denomination: paymentStore.selectedCurrencyDenomination!,
     channel_reference: null,
-    branch_user: {
-        branch: {
-            branch_name: null,
-            branch_code: null,
-            branch_email: null
-        },
-        user: {
-            user_name: null,
-            email: null
-        }
+    branch: {
+        name: null,
+        code: null,
+        email: null
+    },
+    user: {
+        username: null,
+        phone: null,
+        email: null,
     }
+   
 
 })
 
@@ -205,7 +205,7 @@ async function verifyBankTransferPaymentAccount() {
             account_name.value = res.data!.account_name
             message_from_verified_account_number.value = res?.message
 
-            SubmitFieldsPayload.value.customer_account_number =  res.data!.account_number
+            SubmitFieldsPayload.value.destination_account =  res.data!.account_number
 
             toast.add({
                           life: 5000,

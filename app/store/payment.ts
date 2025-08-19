@@ -16,11 +16,7 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
 
   const selectedPaymentServiceCompletedFieldValues = ref({} as any);
 
-  const depositor = ref<Depositor>({
-    name: null,
-    phone: null,
-    email: null
-  });
+  const depositor = ref({} as Depositor);
 
   // const selectedPaymentService = ref({} as any);
 

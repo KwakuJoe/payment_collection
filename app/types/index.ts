@@ -135,13 +135,14 @@ export interface FileObject {
 export interface User {
   user_id: any
   first_name: string
-  middle_name: any
+  middle_name: string | null
   last_name: string
   username: string
   full_name: string
   user_role: any
-  teller_account_number: string
-  branch_code: any
+  source_account: string
+  branch_name: string | null
+  branch_code: string | null
   department: any
   mobile: string
   email: string
@@ -203,27 +204,29 @@ export interface DenominationData {
 export interface SubmitFieldsPayload {
   service_id: string | null;
   form_data: Record<string, any>;
-  payment_type: string;
-  teller_account_number: string | null;
-  customer_account_number: string | null;
+  payment_method: string;
+  source_account: string | null;
+  destination_account: string | null;
   depositor_name: string | null;
   depositor_phone: string | null;
-  depositor_email: string | null;
+  depositor_email?: string | null;
   total_amount: number;
   currency: string | null;
   currency_denomination?: DenominationData[];
+  channel: string | null;
   channel_reference: string | null;
-  branch_user: {
+  app_reference: string | null;
     branch: {
-      branch_name?: string | null;
-      branch_code?: string | null;
-      branch_email?: string | null;
-    };
-    user: {
-      user_name: string | null;
+      name?: string | null;
+      code?: string | null;
       email?: string | null;
     };
-  };
+    user: {
+      username: string | null;
+      phone?: string | null;
+      email?: string | null;
+    };
+
 }
 
 
