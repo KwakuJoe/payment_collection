@@ -7,7 +7,7 @@ import { ref, computed } from 'vue';
 export const useAuthStore = defineStore('auth', () => {
   // State
   const token = ref<string | null>(localStorage.getItem('token') || null);
-  const user = ref<User | null>(null);
+  const user = ref<any | null>(localStorage.getItem('user') || null);
 
   // Getters
   const isAuthenticated = computed(() => !!token.value);

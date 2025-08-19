@@ -1,8 +1,6 @@
 <template>
     <div class=" flex h-screen w-full justify-center bg-primary-500/20 dark:bg-[#18181B]">
 
-
-
         <div class="flex justify-center items-center w-full max-w-[500px]">
 
             <div class="flex flex-col w-full bg-white dark:bg-[#1A1A1E]">
