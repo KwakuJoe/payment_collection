@@ -2,10 +2,10 @@
     <aside class="w-full h-screen lg:border-r border-gray-100 dark:border-zinc-800 border-solid  dark:bg-[#18181B]">
         <div class="flex flex-col bg-white dark:bg-black/20 h-full">
             <!-- Logo and Title -->
-            <div class="hidden lg:flex items-center h-16 border-b border-gray-100 border-solid dark:border-zinc-800">
+            <div class="hidden lg:flex items-center justify-between h-16 border-b border-gray-100 border-solid dark:border-zinc-800 px-5">
                 <!-- <NuxtImg src="/assets/logo/logo.svg" width="34" alt=""/> -->
                 <NuxtImg src="/assets/logo/logo.svg" class="w-[120px]" />
-                <div class="flex flex-col items-start gap-x-2">
+                <div class="flex items-start gap-x-2">
                     <p class="text-sm font-normal ">CENTRAL</p>
                     <p class="text-sm font-bold ">COMMAND </p>
                 </div>
