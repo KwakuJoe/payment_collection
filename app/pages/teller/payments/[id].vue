@@ -7,49 +7,38 @@
 
   <!-- component -->
 
-  <div
-    v-else
-    class="flex flex-col items-center w-full min-h-screen p-5 bg-gray-50 dark:bg-transparent"
-  >
+  <div v-else class="flex flex-col items-center w-full min-h-screen p-5 bg-gray-50 dark:bg-transparent">
     <div class="flex flex-col items-start w-full gap-x-2 gap-y-2 max-w-7xl">
       <!-- second section -->
       <div
-        class="flex flex-col w-full p-5 bg-white border border-gray-100 rounded-md lg:flex-row gap-x-3 gap-y-2 dark:border-zinc-800 dark:bg-black/20"
-      >
+        class="flex flex-col w-full p-5 bg-white border border-gray-100 rounded-md lg:flex-row gap-x-3 gap-y-2 dark:border-zinc-800 dark:bg-black/20">
 
-              <div class="flex flex-col lg:w-[60%] w-ful">
-   
+        <div class="flex flex-col lg:w-[60%] w-ful">
+
 
           <div
-            class="flex flex-wrap items-center w-full p-3 px-5 mt-2 border border-gray-100 rounded-md gap-y-2 gap-x-3 dark:border-zinc-800"
-          >
-            <div
-              class="flex items-center justify-center w-16 h-16 rounded-full bg-primary-500/10"
-            >
-              <Icon
-                class="text-3xl text-primary-500"
-                name="material-symbols-light:package-2-outline"
-              />
+            class="flex flex-wrap items-center w-full p-3 px-5 mt-2 border border-gray-100 rounded-md gap-y-2 gap-x-3 dark:border-zinc-800">
+            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-primary-500/10">
+              <Icon class="text-3xl text-primary-500" name="material-symbols-light:package-2-outline" />
             </div>
 
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500">service</p>
-              <p class="text-lg font-bold ">{{paymentStore.selectedPaymentService!.name}}</p>
+              <p class="text-lg font-bold ">{{ paymentStore.selectedPaymentService!.name }}</p>
             </div>
           </div>
         </div>
 
-        
+
         <div class="flex flex-col lg:w-[50%] w-full">
-        
+
           <!-- Institution -->
           <div
-            class="flex flex-wrap items-center w-full p-3 px-5 mt-2 border border-gray-100 rounded-md gap-y-2 gap-x-3 dark:border-zinc-800"
-          >
+            class="flex flex-wrap items-center w-full p-3 px-5 mt-2 border border-gray-100 rounded-md gap-y-2 gap-x-3 dark:border-zinc-800">
             <Avatar label="E" size="xlarge" shape="circle" />
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500 ">Institution</p>
-              <p class="font-bold font-lg ">{{paymentStore.selectedPaymentService?.institution?.name}}</p>
+              <p class="font-bold font-lg ">{{ paymentStore.selectedPaymentService?.institution?.name }}</p>
             </div>
           </div>
         </div>
@@ -57,10 +46,9 @@
 
       </div>
 
- <!-- {{ prepareFormFields }} -->
+      <!-- {{ prepareFormFields }} -->
       <div
-        class="flex flex-col w-full p-5 bg-white border border-gray-100 rounded-md dark:border-zinc-800 dark:bg-black/20"
-      >
+        class="flex flex-col w-full p-5 bg-white border border-gray-100 rounded-md dark:border-zinc-800 dark:bg-black/20">
 
         <Stepper linear class="w-full" :value="currentStep.toString()">
           <StepList>
@@ -72,37 +60,27 @@
           <StepPanels>
             <StepPanel class="" v-slot="{ activateCallback }" value="1">
               <!-- payment detail section -->
-               <PaymentDetailSection
-                :prepareFormFields="prepareFormFields"
-                :form_fields="formfields!"
-                :submission_form_fields="submission_form_fields"
-                :verification_form_fields="verification_form_fields"
-                  :service="paymentStore.selectedPaymentService"
-                  v-if="currentStep === 1"
-                />
+              <PaymentDetailSection :prepareFormFields="prepareFormFields" :form_fields="formfields!"
+                :submission_form_fields="submission_form_fields" :verification_form_fields="verification_form_fields"
+                :service="paymentStore.selectedPaymentService" v-if="currentStep === 1" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="2">
               <!-- Verify payment -->
-              <VerifyPaymentDetail   
-                              :prepareFormFields="prepareFormFields"
-              :form_fields="paymentStore.selectedPaymentServiceFormField!"
-              :submission_form_fields="submission_form_fields"
-                :verification_form_fields="verification_form_fields"
-                  :service="paymentStore.selectedPaymentService" v-if="currentStep === 2" />
+              <VerifyPaymentDetail :prepareFormFields="prepareFormFields"
+                :form_fields="paymentStore.selectedPaymentServiceFormField!"
+                :submission_form_fields="submission_form_fields" :verification_form_fields="verification_form_fields"
+                :service="paymentStore.selectedPaymentService" v-if="currentStep === 2" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="3">
               <!-- make payment -->
-              <PaymentMethod
-                :prepareFormFields="prepareFormFields"
-              :form_fields="paymentStore.selectedPaymentServiceFormField!"
-              :submission_form_fields="submission_form_fields"
-                :verification_form_fields="verification_form_fields"
-                  :service="paymentStore.selectedPaymentService"
-              v-if="currentStep === 3" />
+              <PaymentMethod :prepareFormFields="prepareFormFields"
+                :form_fields="paymentStore.selectedPaymentServiceFormField!"
+                :submission_form_fields="submission_form_fields" :verification_form_fields="verification_form_fields"
+                :service="paymentStore.selectedPaymentService" v-if="currentStep === 3" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="4">
               <!-- payment receipt -->
-              <PaymentReceipt v-if="currentStep === 4" :service="paymentStore.selectedPaymentService"  />
+              <PaymentReceipt v-if="currentStep === 4" :service="paymentStore.selectedPaymentService" />
             </StepPanel>
           </StepPanels>
         </Stepper>
@@ -110,7 +88,7 @@
     </div>
   </div>
 
-<Toast />
+  <Toast />
 </template>
 
 <script setup lang="ts">
@@ -183,7 +161,7 @@ async function getServiceById() {
     formfields.value = res?.data[0].form_field as FormField[];
 
     paymentStore.selectedPaymentServiceFormFieldRefreshed = res?.data[0].form_field;
-     
+
     paymentStore.selectedPaymentService = res?.data[0];
 
     paymentStore.selectedPaymentServiceFormField = res?.data[0].form_field as FormField[];
@@ -205,29 +183,29 @@ async function getServiceById() {
       0
     );
 
-    currentStep.value = (verification_form_fields.value.length > 0 ) ? 1 : 2;
+    currentStep.value = (verification_form_fields.value.length > 0) ? 1 : 2;
 
-    
+
   } catch (error: any) {
     isFetchServicesError.value = true;
     console.error("Failed to fetch services:", error);
 
-        toast.add({
-          life: 5000,
-            severity: "error",
-            detail: error.response?.data?.message ?? error.message,
-            summary:
-                error.response?.status == 401 ? "Unauthenticated" : "Server error",
-        });
+    toast.add({
+      life: 5000,
+      severity: "error",
+      detail: error.response?.data?.message ?? error.message,
+      summary:
+        error.response?.status == 401 ? "Unauthenticated" : "Server error",
+    });
   } finally {
     isServicesLoading.value = false;
   }
 }
 
-onMounted( async () => {
-    // paymentStore.selectedPaymentService = ref({} as Service);
+onMounted(async () => {
+  // paymentStore.selectedPaymentService = ref({} as Service);
   // paymentStore.selectedPaymentServiceFormField = ref([] as FormField[]);
-await  getServiceById();
+  await getServiceById();
 
 });
 
@@ -245,19 +223,18 @@ function getObjectsRequiredForVerification(
 function getFieldIsAmount(
   data: FormField[]
 ) {
-  let isAmountField:FormField[];
+  let isAmountField: FormField[];
 
-  data.forEach((item)=>{
-      
+  data.forEach((item) => {
+
   })
-  
-   isAmountField = data.filter(
-    (item) => 
-    { 
-      if(item && item.is_amount === 1){
-      return  item 
+
+  isAmountField = data.filter(
+    (item) => {
+      if (item && item.is_amount === 1) {
+        return item
       }
-      
+
     }
   );
 
@@ -266,8 +243,8 @@ function getFieldIsAmount(
 
 
 definePageMeta({
-    layout: 'admin',
-      middleware: 'auth'
+  layout: 'admin',
+  middleware: 'auth'
 
 })
 

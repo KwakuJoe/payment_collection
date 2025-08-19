@@ -94,7 +94,7 @@ const menuItems = ref<MenuItem[]>([
     },
     {
         title: 'Report',
-        icon: 'carbon:report1',
+        icon: 'majesticons:file-report-line',
         path: '/teller/report', // Single item
     }
 ]);
