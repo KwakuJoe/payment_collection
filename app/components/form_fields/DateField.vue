@@ -3,7 +3,7 @@
     <div class="flex flex-col w-full">
         <div class="flex flex-col items-start w-full gap-y-2">
             <p class="text-sm font-semibold">{{ field.field_label }}</p>
-            <DatePicker dateFormat="dd/mm/yy" class="w-full " v-model="prepareFormFields[`${field.field_name}`]" />
+            <DatePicker  size="small" dateFormat="dd/mm/yy" class="w-full " v-model="prepareFormFields[`${field.field_name}`]" />
         </div>
 
     </div>

@@ -1,3 +1,5 @@
+import type { DataTableFilterMeta, DataTableFilterMetaData } from 'primevue/datatable'
+
 
 export interface ResourceFetchResponse<T> {
   status?: boolean | number,
@@ -242,3 +244,48 @@ export interface Depositor {
   email?: string | null;
 }
 
+
+
+// report types
+
+// Define interfaces for our data structures
+export interface TableColumn {
+  field: string
+  header: string
+  sortable: boolean
+  exportable: boolean
+}
+
+export interface ServiceFilterOption {
+  label: string
+  value: string
+}
+
+export interface BackendFilters {
+  dateRange: [Date | null, Date | null] | null
+  service: string | null
+}
+
+// export interface TransactionRecord {
+//   id: string
+//   bankReference: string
+//   amountPaid: string
+//   channelRef: string
+//   branch: string
+//   branchUserName: string
+//   narration: string
+//   sourceAccount: string
+//   service: string
+//   transactionDate: string
+// }
+
+
+export interface BackendFilters {
+    dateRange: [Date | null, Date | null] | null;
+    service: string | null;
+}
+
+// Update the filters type definition
+export interface TableFilters {
+    [key: string]: DataTableFilterMetaData;
+}

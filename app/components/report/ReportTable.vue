@@ -1,35 +1,35 @@
 <template>
-    <div class=" min-h-screen w-full">
+    <div class="  w-full">
         <div class=" mx-auto">
 
             <!-- Backend Filters -->
-            <div class=" rounded-lg mb-6  border border-gray-100 dark:border-zinc-800 bg-white dark:bg-black/20 p-3 ">
+            <div class=" rounded-lg mb-6  border border-gray-100 dark:border-zinc-800  p-3 ">
                 <div class="flex lg:flex-row flex-col items-center gap-x-10 gap-y-2">
 
                     <div class="flex items-center  lg:w-fit w-full">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white ">Filters</h3>
+                        <h3 class="text-base font-semibold text-gray-900 dark:text-white ">Filters</h3>
                     </div>
 
                     <div class="flex lg:flex-row flex-col lg:flex-1 w-full items-center  justify-end gap-x-5 gap-y-2">
                         <!-- Date Range Filter -->
                         <div class="lg:flex-1 w-full">
 
-                            <Calendar fluid v-model="backendFilters.dateRange" selection-mode="range"
+                            <Calendar size="small" fluid v-model="backendFilters.dateRange" selection-mode="range"
                                 :manual-input="false" date-format="dd/mm/yy" placeholder="Select date range"
                                 class="w-full" />
                         </div>
 
                         <!-- Service Filter -->
                         <div class="lg:flex-1 w-full">
-                            <Select fluid v-model="backendFilters.service" :options="serviceOptions"
+                            <Select size="small" fluid v-model="backendFilters.service" :options="serviceOptions"
                                 option-label="label" option-value="value" placeholder="Select service" class="w-full" />
                         </div>
 
                         <!-- Filter Actions -->
                         <div class="flex lg:flex-1 w-full gap-x-2">
-                            <Button fluid @click="applyFilters" :loading="loading" icon="pi pi-search"
+                            <Button size="small" fluid @click="applyFilters" :loading="loading" icon="pi pi-search"
                                 label="Apply Filters" class="" />
-                            <Button fluid @click="resetFilters" :disabled="loading" icon="pi pi-refresh" label="Reset"
+                            <Button size="small" fluid @click="resetFilters" :disabled="loading" icon="pi pi-refresh" label="Reset"
                                 severity="secondary" outlined />
                         </div>
                     </div>
@@ -42,15 +42,15 @@
                 <DataTable ref="dt" :value="tableData" :loading="loading" paginator :rows="10"
                     :rows-per-page-options="[5, 10, 20, 50]" v-model:filters="filters" filter-display="menu"
                     :global-filter-fields="['id', 'service', 'bankReference', 'channelRef', 'branch', 'branchUserName']"
-                    sortable resizable-columns column-resize-mode="fit" size="large"  striped-rows
-                    class="p-datable-sm">
+                    sortable resizable-columns column-resize-mode="fit" size="large" striped-rows class="p-datable-sm">
                     <!-- Header with search and export -->
                     <template #header>
-                        <div class="flex justify-between items-center gap-x-10">
+                        <div class="flex justify-between items-center gap-x-10 ">
                             <div>
-                                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Transaction Reports</h2>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ tableData.length }} records found
-                                </p>
+                                <h2 class="text-base font-semibold text-gray-900 dark:text-white">Transaction Reports
+                                </h2>
+                                <!-- <p class="text-sm text-gray-500 dark:text-gray-400">{{ tableData.length }} records found
+                                </p> -->
                             </div>
                             <div class="flex">
 
@@ -58,13 +58,13 @@
                             <div class="flex flex-1 gap-2 justify-end">
                                 <!-- Frontend Search -->
                                 <div class="flex  w-[300px]">
-                                    <InputText fluid v-model="filters['global'].value"
+                                    <InputText size="small" fluid v-model="globalFilterValue"
                                         placeholder="Search by ID, Service, Reference..." class="w-full" />
                                 </div>
 
 
                                 <!-- Export Button -->
-                                <Button icon="pi pi-external-link" label="Export CSV" @click="exportCSV"
+                                <Button size="small" icon="pi pi-external-link" label="Export CSV" @click="exportCSV"
                                     severity="secondary" outlined />
                             </div>
                         </div>
@@ -72,13 +72,12 @@
 
                     <Column header="Actions" :exportable="false" style="min-width:100px">
                         <template #body="slotProps">
-                        <p>Action</p>
-                            <!-- <Menu ref="menu" :model="getMenuItems(slotProps.data)" :popup="true">
-                                <template #trigger="{ toggle, id }">
-                                    <Button icon="pi pi-ellipsis-v" severity="secondary" text rounded
-                                        @click="toggle($event)" :aria-controls="id" aria-haspopup="true" />
-                                </template>
-                            </Menu> -->
+                            <!-- Action Button -->
+                            <button
+                                class="flex justify-center items-center h-10 w-10 p-3 rounded-lg border border-gray-200 border-solid dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
+                                @click="onOpenLabDetails(slotProps.data)">
+                                <Icon name="material-symbols:more-horiz" />
+                            </button>
                         </template>
                     </Column>
 
@@ -130,29 +129,74 @@
             </div> -->
         </div>
     </div>
+
+
+    <!-- report detail dialog -->
+        <Dialog v-model:visible="isReportDetailDialogOpen" block-scroll maximizable modal header="Report details" position="center"
+        :style="{ width: '80rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+        <ReportDetail v-if="selectedRecord" :record="selectedRecord" @on-close="isReportDetailDialogOpen = false"
+            @on-success="handleSuccess" />
+    </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { FilterMatchMode } from '@primevue/core/api';
-// Reactive data
-const loading = ref(false)
-const tableData = ref([])
-const columns = ref([])
-const dt = ref()
+import { FilterMatchMode } from '@primevue/core/api'
+import { computed } from 'vue'
+import moment from 'moment';
+import type { TableColumn, TableFilters, BackendFilters, ServiceFilterOption } from "~/types";
+import { removeEmptyPropertiesDeep } from '~/utils'
+// Reactive data with type annotations
+const loading = ref<boolean>(false)
+const tableData = ref<Record<string, any>[]>([])
+const columns = ref<TableColumn[]>([])
+const isReportDetailDialogOpen = ref(false)
+const selectedRecord = ref<Record<string, any> | null>(null)
+const dt = ref<any>() // Type 'any' for PrimeVue DataTable ref
 
-const filters = ref({
+const filters = ref<TableFilters>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 })
 
-// Backend filters
-const backendFilters = ref({
-    dateRange: null,
-    service: null
+// Computed property for InputText v-model binding
+const globalFilterValue = computed({
+    get: () => (filters.value.global?.value as string) ?? '',
+    set: (val: string) => {
+        if (filters.value.global) {
+            filters.value.global.value = val
+        }
+    }
 })
 
-// Service options (this would come from backend)
-const serviceOptions = ref([
+// Helper functions for date handling
+const getInitialDateRange = (): [Date, Date] => {
+    const endDate = moment().endOf('day').toDate();
+    const startDate = moment().subtract(30, 'days').startOf('day').toDate();
+    return [startDate, endDate];
+};
+
+// Backend filters
+const backendFilters = ref<BackendFilters>({
+    dateRange: getInitialDateRange(),
+    service: null
+});
+
+
+// backend filter payload
+
+const backedFilterPayload = computed(() => {
+
+    const cleanedPayload = removeEmptyPropertiesDeep(backendFilters.value)
+    return {
+        start_date: cleanedPayload.dateRange?.[0] ?? null,
+        end_date: cleanedPayload.dateRange?.[1] ?? null,
+        service: cleanedPayload.service
+    }
+})
+
+
+// Service options
+const serviceOptions = ref<ServiceFilterOption[]>([
     { label: 'Mobile Banking', value: 'mobile_banking' },
     { label: 'Internet Banking', value: 'internet_banking' },
     { label: 'USSD Banking', value: 'ussd_banking' },
@@ -160,8 +204,8 @@ const serviceOptions = ref([
 ])
 
 // Sample data initialization
-const initializeTable = () => {
-    // Dynamic columns - these would come from backend response
+const initializeTable = (): void => {
+    // Dynamic columns
     columns.value = [
         { field: 'id', header: 'ID', sortable: true, exportable: true },
         { field: 'bankReference', header: 'Bank Reference', sortable: true, exportable: true },
@@ -172,12 +216,7 @@ const initializeTable = () => {
         { field: 'narration', header: 'Narration', sortable: true, exportable: true },
         { field: 'sourceAccount', header: 'Source Account', sortable: true, exportable: true },
         { field: 'service', header: 'Service', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true },
+        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true }
     ]
 
     // Sample table data
@@ -194,83 +233,66 @@ const initializeTable = () => {
             service: 'Mobile Banking',
             transactionDate: '2024-01-15'
         },
-        {
-            id: 'TXN002',
-            bankReference: 'BNK2024001235',
-            amountPaid: '₦150,500.00',
-            channelRef: 'CH2024002',
-            branch: 'Ikeja',
-            branchUserName: 'Sarah Okafor',
-            narration: 'Bill payment - PHCN',
-            sourceAccount: '0987654321',
-            service: 'Internet Banking',
-            transactionDate: '2024-01-16'
-        },
-        {
-            id: 'TXN003',
-            bankReference: 'BNK2024001236',
-            amountPaid: '₦5,000.00',
-            channelRef: 'CH2024003',
-            branch: 'Surulere',
-            branchUserName: 'Michael Chukwu',
-            narration: 'Airtime purchase',
-            sourceAccount: '1122334455',
-            service: 'USSD Banking',
-            transactionDate: '2024-01-17'
-        }
+        // ... other sample data
     ]
 }
 
 // Fetch data from backend
-const fetchReportData = async () => {
+const fetchReportData = async (): Promise<void> => {
     loading.value = true
 
     try {
-        // Simulate API call with backend filters
         await new Promise(resolve => setTimeout(resolve, 1500))
-
-        // In real implementation, replace with your API call:
-        // const { data } = await $fetch('/api/reports', {
-        //   method: 'POST',
-        //   body: {
-        //     dateRange: backendFilters.value.dateRange,
-        //     service: backendFilters.value.service
-        //   },
-        //   headers: {
-        //     'ngrok-skip-browser-warning': 'true'
-        //   }
-        // })
-        // columns.value = data.columns
-        // tableData.value = data.records
-
-        // For demo, just reinitialize with sample data
         initializeTable()
-
     } catch (error) {
         console.error('Error fetching report data:', error)
-        // Handle error - maybe show toast notification
     } finally {
         loading.value = false
     }
 }
 
+// date range validation
+const isValidDateRange = (dateRange: [Date | null, Date | null] | null): boolean => {
+    if (!dateRange || !dateRange[0] || !dateRange[1]) return false;
+    return moment(dateRange[1]).isSameOrAfter(dateRange[0]);
+};
+
 // Apply backend filters
-const applyFilters = () => {
-    fetchReportData()
-}
+const applyFilters = (): void => {
+    if (!isValidDateRange(backendFilters.value.dateRange)) {
+        // Show error message or handle invalid date range
+        return;
+    }
+    fetchReportData();
+};
 
 // Reset backend filters
-const resetFilters = () => {
+const resetFilters = (): void => {
     backendFilters.value = {
-        dateRange: null,
+        dateRange: getInitialDateRange(),
         service: null
-    }
+    };
+    fetchReportData();
+};
+
+
+// handle success
+function handleSuccess(){
+    isReportDetailDialogOpen.value = false,
     fetchReportData()
 }
 
 // Export CSV
-const exportCSV = () => {
-    dt.value.exportCSV()
+const exportCSV = (): void => {
+    dt.value?.exportCSV()
+}
+
+// Handle row details
+const onOpenLabDetails = (data: Record<string, any>): void => {
+    console.log('Opening details for:', data)
+    isReportDetailDialogOpen.value = true;
+    selectedRecord.value = data;
+    // Implement your row details logic here
 }
 
 // Initialize on mount

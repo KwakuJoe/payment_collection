@@ -14,7 +14,7 @@
           <div class="flex flex-col">
             <div class="relative items-center w-full max-w-sm">
               <!-- <Input v-model="search" placeholder="Search institution ..." class="pl-10 w-[370px]" /> -->
-              <InputText v-model="search" class="pl-10 w-[370px] text-sm" placeholder="Search" />
+              <InputText size="small" v-model="search" class="pl-10 w-[370px] text-sm" placeholder="Search" />
 
               <span class="absolute inset-y-0 flex items-center justify-center px-3 end-0">
                 <Icon class="text-lg " name="iconamoon:search-light" />
@@ -22,12 +22,12 @@
             </div>
           </div>
 
-          <Select filter v-model="selectedCategory" :options="uniqueCategories" option-label="name" option-value="value" placeholder="Select a Category"
+          <Select  size="small" filter v-model="selectedCategory" :options="uniqueCategories" option-label="name" option-value="value" placeholder="Select a Category"
             class="w-full md:w-56" />
 
 
           <!-- refresh button -->
-          <Button  @click="refreshInstitutions()">
+          <Button  size="small"  @click="refreshInstitutions()">
             <div class="flex items-center gap-x-2">
               <Icon name="material-symbols:refresh" />
               <p>Refresh</p>

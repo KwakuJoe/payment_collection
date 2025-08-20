@@ -12,7 +12,7 @@
                         class="flex items-center gap-2">
 
                         
-                        <RadioButton v-model="prepareFormFields[`${field.field_name}`]" :inputId="option.lov_value"
+                        <RadioButton  size="small" v-model="prepareFormFields[`${field.field_name}`]" :inputId="option.lov_value"
                             :name="prepareFormFields[`${field.field_name}`]" :value="option.lov_value" />
                         <label :for="option.lov_value">{{ option.lov_title }}</label>
                     </div>

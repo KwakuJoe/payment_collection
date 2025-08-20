@@ -6,6 +6,7 @@
         <span v-html="showAsteric"></span>
       </p>
       <InputText
+       size="small"
         :readonly="readonly"
         class="bg-yellow-500 border border-amber-600"
         fluid

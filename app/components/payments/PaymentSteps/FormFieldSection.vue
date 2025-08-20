@@ -25,7 +25,7 @@
                     :field="field" />
 
                 <!-- Checkbox -->
-                <MultiSelectField :prepare-form-fields="prepareFormFields" :field="field"
+                <MultiSelectField  :prepare-form-fields="prepareFormFields" :field="field"
                     v-else-if="field.field_type.code === 6" />
 
                 <!-- file -->

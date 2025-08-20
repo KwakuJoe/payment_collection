@@ -5,7 +5,7 @@
 
             <!-- cards -->
 
-            <div class="flex w-full gap-x-5">
+            <div class="flex w-full gap-x-2">
                 <!-- currency -->
                 <div
                     class="flex items-start lg:w-[25%] p-5 bg-white border border-gray-100 dark:border-zinc-800 rounded-tr-md rounded-tl-md dark:bg-black/20 gap-x-5">
@@ -54,8 +54,8 @@
 
                     </div>
                     <div class="flex flex-col flex-1 ">
-                        <p class="text-primary text-sm">Total</p>
-                        <p class="font-bold text-base">GHS 14,22333233.32</p>
+                        <p class="text-primary text-sm">Record</p>
+                        <p class="font-bold text-base">224</p>
                     </div>
                 </div>
 

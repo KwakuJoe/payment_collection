@@ -5,7 +5,7 @@
                                   
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <!-- <p class="text-sm font-semibold">Phone number</p> -->
-                            <InputText fluid v-model="verifyBankTransferPaymentAccountPayload.account_number" placeholder="Account Number" 
+                            <InputText  size="small" fluid v-model="verifyBankTransferPaymentAccountPayload.account_number" placeholder="Account Number" 
                                  autocomplete="off" v-bind:oninput="make_input_number"/>
                         </div>
 
@@ -17,7 +17,7 @@
                                   
                         <div class="flex flex-col items-start w-full gap-y-2">
                             <!-- <p class="text-sm font-semibold">Phone number</p> -->
-                            <InputText fluid v-model="prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]" 
+                            <InputText  size="small" fluid v-model="prepareFormFields[`${paymentStore.selectedPaymentServiceFormFieldIsAmount![0]?.field_name}`]" 
                              variant="filled"   class="bg-gray-500 border-2" 
                             :readonly="true" autocomplete="off" v-bind:oninput="make_input_number" disabled/>
                         </div>
@@ -25,7 +25,7 @@
             </div>
             <!-- verify button -->
             <div class="flex items-center w-full lg:w-1/4">
-                <Button  @click="verifyBankTransferPaymentAccount()" variant="outline_primary" class="w-full ">Verify </Button>
+                <Button   size="small" @click="verifyBankTransferPaymentAccount()" variant="outline_primary" class="w-full ">Verify </Button>
             </div>
         </div>
 
@@ -68,10 +68,10 @@
         <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
         <!-- amount -->
         <div class="flex flex-col justify-end max-w-full gap-x-5 gap-y-2 lg:flex-row">
-            <Button severity="secondary" class="w-full lg:w-1/2" size="lg" @click="paymentStore.previousStep()">
+            <Button  severity="secondary" class="w-full lg:w-1/2" size="small" @click="paymentStore.previousStep()">
                 GO BACK
             </Button>
-            <Button size="lg" class="w-full lg:w-1/2"  @click="submitBankTransferPayment()">
+            <Button size="small" class="w-full lg:w-1/2"  @click="submitBankTransferPayment()">
                 COMPLETE PAYMENT
             </Button>
         </div>

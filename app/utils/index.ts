@@ -39,3 +39,36 @@ const router = useRouter()
 
   router.push('/')
 }
+
+export function removeEmptyPropertiesDeep<T extends Record<string, any>>(obj: T): Partial<T> {
+  const cleaned: Partial<T> = {};
+  
+  for (const [key, value] of Object.entries(obj)) {
+    // Skip null, undefined, empty strings
+    if (value === null || value === undefined || value === '') {
+      continue;
+    }
+    
+    // Handle arrays
+    if (Array.isArray(value)) {
+      // Keep non-empty arrays
+      if (value.length > 0) {
+        (cleaned as any)[key] = value;
+      }
+    }
+    // Handle nested objects
+    else if (typeof value === 'object' && value !== null && !(value instanceof Blob)) {
+      const nestedCleaned = removeEmptyPropertiesDeep(value);
+      // Only add if the nested object has properties
+      if (Object.keys(nestedCleaned).length > 0) {
+        (cleaned as any)[key] = nestedCleaned;
+      }
+    }
+    // Handle primitive values
+    else {
+      (cleaned as any)[key] = value;
+    }
+  }
+  
+  return cleaned;
+}
