@@ -7,16 +7,17 @@ import axios, { AxiosError } from "axios";
 
 class InstitutionModule {
 
-  private config = useRuntimeConfig();
+    private config = useRuntimeConfig();
 
-  private INSTITUTIONS_RESOURCE = this.config.public.institutionsResource;
-  private INSTITUTION_SERVICE_RESOURCE = this.config.public.institutionServicesResource;
-  private CATEGORY_RESOURCE = this.config.public.categoriesResource;
-  private SERVICE_RESOURCE = this.config.public.servicesResource;
-  private VERIFY_FORM_FIELDS_RESOURCE = this.config.public.verifyFormFieldsResource;
-  private SUBMIT_FORM_FIELDS_RESOURCE = this.config.public.submitFormFieldsResource;
-  private VERIFY_PAYMENT_ACCOUNT_NUMBER = this.config.public.verifyPaymentAccountNumberResource;
-  
+    private INSTITUTIONS_RESOURCE = this.config.public.institutionsResource;
+    private INSTITUTION_SERVICE_RESOURCE = this.config.public.institutionServicesResource;
+    private CATEGORY_RESOURCE = this.config.public.categoriesResource;
+    private SERVICE_RESOURCE = this.config.public.servicesResource;
+    private VERIFY_FORM_FIELDS_RESOURCE = this.config.public.verifyFormFieldsResource;
+    private SUBMIT_FORM_FIELDS_RESOURCE = this.config.public.submitFormFieldsResource;
+    private VERIFY_PAYMENT_ACCOUNT_NUMBER = this.config.public.verifyPaymentAccountNumberResource;
+    private REPORT_RESOURCE = this.config.public.reportResource;
+
     private abortManager = abortControllerManager;
 
     async getInstitutions(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Institution> | undefined> {
@@ -101,7 +102,7 @@ class InstitutionModule {
         }
     }
 
-    async getServices(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> > {
+    async getServices(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> | undefined> {
         // Convert params object to query string
         const url = `${this.SERVICE_RESOURCE}`;
         const { abortKey = 'getServices', enableAbort = true } = options;
@@ -142,7 +143,7 @@ class InstitutionModule {
         }
     }
 
-    async getServiceById(service_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> > {
+    async getServiceById(service_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service>> {
         // Convert params object to query string
         const url = `${this.SERVICE_RESOURCE}/${service_id}`;
         const { abortKey = 'getServiceById', enableAbort = true } = options;
@@ -162,7 +163,7 @@ class InstitutionModule {
                 {
                     signal: controller?.signal,
                 });
-                console.log('Kwabena', res.data)
+            console.log('Kwabena', res.data)
             return res.data;
         } catch (error: unknown) {
             console.log(error);
@@ -183,7 +184,7 @@ class InstitutionModule {
         }
     }
 
-    async getServicesByInstitution(institutions_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service> > {
+    async getServicesByInstitution(institutions_id: string, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Service>> {
         // Convert params object to query string
         const url = `${this.INSTITUTION_SERVICE_RESOURCE}/${institutions_id}`;
         const { abortKey = 'getServices', enableAbort = true } = options;
@@ -244,7 +245,7 @@ class InstitutionModule {
             }
 
             throw error; // Re-throw the error for further handling
-        } 
+        }
     }
 
     async postFieldForSubmission(payload: SubmitFieldsPayload): Promise<ResourceFetchResponse<any> | undefined> {
@@ -268,10 +269,10 @@ class InstitutionModule {
             }
 
             throw error; // Re-throw the error for further handling
-        } 
+        }
     }
 
-        async VerifyBankTransferPaymentAccount(payload: VerifyBankTransferPaymentAccountPayload): Promise<ResourceFetchResponse<any> | undefined> {
+    async VerifyBankTransferPaymentAccount(payload: VerifyBankTransferPaymentAccountPayload): Promise<ResourceFetchResponse<any> | undefined> {
         // Convert params object to query string
         const url = `${this.VERIFY_PAYMENT_ACCOUNT_NUMBER}`;
 
@@ -292,7 +293,31 @@ class InstitutionModule {
             }
 
             throw error; // Re-throw the error for further handling
-        } 
+        }
+    }
+
+    async getReports(payload: Record<string, any>): Promise<ResourceFetchResponse<Record<string, any>> | undefined> {
+        // Convert params object to query string
+        const url = `${this.REPORT_RESOURCE}`;
+
+
+        try {
+            const res = await axiosInstance.post<ResourceFetchResponse<Record<string, any>> | undefined>(
+                url, payload);
+            return res.data;
+        } catch (error: unknown) {
+            console.log(error);
+            if (axios.isCancel(error)) {
+                console.log('Request cancelled:', url);
+                return;
+            } else if (error instanceof AxiosError) {
+                console.error('Error fetching transaction overview:', error.response?.data || error.message);
+            } else {
+                console.error('Unexpected error:', error);
+            }
+
+            throw error; // Re-throw the error for further handling
+        }
     }
 
 

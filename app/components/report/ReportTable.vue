@@ -1,16 +1,29 @@
 <template>
     <div class="  w-full">
+
+
+
         <div class=" mx-auto">
 
             <!-- Backend Filters -->
             <div class=" rounded-lg mb-6  border border-gray-100 dark:border-zinc-800  p-3 ">
                 <div class="flex lg:flex-row flex-col items-center gap-x-10 gap-y-2">
 
-                    <div class="flex items-center  lg:w-fit w-full">
+                    <!-- <div class="flex items-center  lg:w-fit w-full">
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white ">Filters</h3>
-                    </div>
+                    </div> -->
 
                     <div class="flex lg:flex-row flex-col lg:flex-1 w-full items-center  justify-end gap-x-5 gap-y-2">
+
+
+                        <!-- Service Filter -->
+                        <div class="lg:flex-1 w-full">
+                            <Select filter size="small" :disabled="isServicesLoading" fluid
+                                v-model="backendFilters.service" :options="serviceOptions" option-label="label"
+                                option-value="value"
+                                :placeholder="isServicesLoading ? 'Fetching service ...' : 'Select service'"
+                                class="w-full" />
+                        </div>
                         <!-- Date Range Filter -->
                         <div class="lg:flex-1 w-full">
 
@@ -19,30 +32,58 @@
                                 class="w-full" />
                         </div>
 
-                        <!-- Service Filter -->
-                        <div class="lg:flex-1 w-full">
-                            <Select size="small" fluid v-model="backendFilters.service" :options="serviceOptions"
-                                option-label="label" option-value="value" placeholder="Select service" class="w-full" />
+                        <!-- branch -->
+                        <!-- <div class="lg:flex-1 w-full">
+                            <Select filter size="small" fluid v-model="backendFilters.branch" :options="branchOptions"
+                                option-label="label" option-value="value" placeholder="Select branch" class="w-full" />
                         </div>
+
+                        <div class="lg:flex-1 w-full">
+                            <Select filter size="small" fluid v-model="backendFilters.teller" :options="tellerOptions"
+                                option-label="label" option-value="value" placeholder="Select teller" class="w-full" />
+                        </div> -->
+
 
                         <!-- Filter Actions -->
                         <div class="flex lg:flex-1 w-full gap-x-2">
                             <Button size="small" fluid @click="applyFilters" :loading="loading" icon="pi pi-search"
-                                label="Apply Filters" class="" />
-                            <Button size="small" fluid @click="resetFilters" :disabled="loading" icon="pi pi-refresh" label="Reset"
-                                severity="secondary" outlined />
+                                label="Apply " class="" />
+                            <Button size="small" fluid @click="resetFilters" :disabled="loading" icon="pi pi-refresh"
+                                label="Reset" severity="secondary" outlined />
                         </div>
                     </div>
 
                 </div>
             </div>
 
+            <!-- error view -->
+            <div v-if="isGetReportError" class="flex flex-col w-full">
+                <ErrorView title="Error fetching report" message="There was an error fetching report, please try again"
+                    @retry="getReports()" />
+            </div>
+
+
+
+            <!-- Empty state -->
+            <div v-else-if="reportResource?.data.transactions.length < 1" class="flex flex-col w-full">
+                <EmptyState title="No Reports found"
+                    message="There was an error fetching report, Try adjusting filter (Eg. date ranger, service ..)"
+                    @retry="getReports()" />
+            </div>
+
+            <!-- loading -->
+
+            <div v-else-if="loading" class="flex flex-col w-full">
+                <Loading message="Fetching reports" @retry="getReports()" />
+            </div>
+
+
             <!-- DataTable -->
-            <div class=" w-full overflow-x-auto ">
-                <DataTable ref="dt" :value="tableData" :loading="loading" paginator :rows="10"
-                    :rows-per-page-options="[5, 10, 20, 50]" v-model:filters="filters" filter-display="menu"
+            <div v-else class=" w-full overflow-x-auto ">
+                <DataTable ref="dt" :value="tableData" paginator :rows="10" :rows-per-page-options="[5, 10, 20, 50]"
+                    v-model:filters="filters" filter-display="menu"
                     :global-filter-fields="['id', 'service', 'bankReference', 'channelRef', 'branch', 'branchUserName']"
-                    sortable resizable-columns column-resize-mode="fit" size="large" striped-rows class="p-datable-sm">
+                    sortable resizable-columns column-resize-mode="fit" size="small" striped-rows class="p-datable-sm">
                     <!-- Header with search and export -->
                     <template #header>
                         <div class="flex justify-between items-center gap-x-10 ">
@@ -74,7 +115,7 @@
                         <template #body="slotProps">
                             <!-- Action Button -->
                             <button
-                                class="flex justify-center items-center h-10 w-10 p-3 rounded-lg border border-gray-200 border-solid dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
+                                class="flex justify-center items-center h-8 w-8 p-2 rounded-lg border border-gray-200 border-solid dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
                                 @click="onOpenLabDetails(slotProps.data)">
                                 <Icon name="material-symbols:more-horiz" />
                             </button>
@@ -132,8 +173,8 @@
 
 
     <!-- report detail dialog -->
-        <Dialog v-model:visible="isReportDetailDialogOpen" block-scroll maximizable modal header="Report details" position="center"
-        :style="{ width: '80rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <Dialog v-model:visible="isReportDetailDialogOpen" block-scroll maximizable modal header="Report details"
+        position="center" :style="{ width: '80rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <ReportDetail v-if="selectedRecord" :record="selectedRecord" @on-close="isReportDetailDialogOpen = false"
             @on-success="handleSuccess" />
     </Dialog>
@@ -144,8 +185,12 @@ import { ref, onMounted } from 'vue'
 import { FilterMatchMode } from '@primevue/core/api'
 import { computed } from 'vue'
 import moment from 'moment';
-import type { TableColumn, TableFilters, BackendFilters, ServiceFilterOption } from "~/types";
+import type { TableColumn, TableFilters, BackendFilters, ServiceFilterOption, ResourceListResponse, Service, ResourceFetchResponse } from "~/types";
 import { removeEmptyPropertiesDeep } from '~/utils'
+import { toast } from 'vue-sonner'
+import { institutionModule } from '~/repository/modules/institution_module';
+import { useReportStore } from '~/store/report';
+
 // Reactive data with type annotations
 const loading = ref<boolean>(false)
 const tableData = ref<Record<string, any>[]>([])
@@ -153,7 +198,13 @@ const columns = ref<TableColumn[]>([])
 const isReportDetailDialogOpen = ref(false)
 const selectedRecord = ref<Record<string, any> | null>(null)
 const dt = ref<any>() // Type 'any' for PrimeVue DataTable ref
+const isServicesLoading = ref(false)
+const servicesResource = ref<ResourceListResponse<Service> | undefined>()
+const reportResource = ref<ResourceFetchResponse<Record<string, any>> | undefined>()
+const isGetReportError = ref(false)
+const reportStore = useReportStore()
 
+// const columnHeader = ref<>([])
 const filters = ref<TableFilters>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 })
@@ -171,70 +222,62 @@ const globalFilterValue = computed({
 // Helper functions for date handling
 const getInitialDateRange = (): [Date, Date] => {
     const endDate = moment().endOf('day').toDate();
-    const startDate = moment().subtract(30, 'days').startOf('day').toDate();
+    const startDate = moment().startOf('day').toDate();
     return [startDate, endDate];
 };
 
 // Backend filters
 const backendFilters = ref<BackendFilters>({
     dateRange: getInitialDateRange(),
-    service: null
+    service: null,
+    branch: null,
+    teller: null,
 });
 
 
 // backend filter payload
 
 const backedFilterPayload = computed(() => {
-
     const cleanedPayload = removeEmptyPropertiesDeep(backendFilters.value)
     return {
         start_date: cleanedPayload.dateRange?.[0] ?? null,
         end_date: cleanedPayload.dateRange?.[1] ?? null,
-        service: cleanedPayload.service
+        service: cleanedPayload.service,
+        teller: cleanedPayload.teller,
+        branch: cleanedPayload.branch,
     }
 })
 
 
 // Service options
-const serviceOptions = ref<ServiceFilterOption[]>([
-    { label: 'Mobile Banking', value: 'mobile_banking' },
-    { label: 'Internet Banking', value: 'internet_banking' },
-    { label: 'USSD Banking', value: 'ussd_banking' },
-    { label: 'POS Transaction', value: 'pos_transaction' }
+const serviceOptions = computed(() => {
+    return servicesResource.value?.data.map((service: Service) => ({
+        label: service.name,
+        value: service.id
+    }))
+})
+
+const branchOptions = ref<ServiceFilterOption[]>([
+    { label: 'Dansoman', value: 'dansoman' },
+    { label: 'Ridge', value: 'ridge' },
+    { label: 'Kumasi', value: 'kumasi' },
+    { label: 'Cape coast', value: 'cape_coast' }
+])
+
+const tellerOptions = ref<ServiceFilterOption[]>([
+    { label: 'Ann Marie', value: 'dansoman' },
+    { label: 'Kwame Bolt', value: 'ridge' },
+    { label: 'James Asar', value: 'kumasi' },
+    { label: 'Levi North', value: 'cape_coast' }
 ])
 
 // Sample data initialization
 const initializeTable = (): void => {
     // Dynamic columns
-    columns.value = [
-        { field: 'id', header: 'ID', sortable: true, exportable: true },
-        { field: 'bankReference', header: 'Bank Reference', sortable: true, exportable: true },
-        { field: 'amountPaid', header: 'Amount Paid', sortable: true, exportable: true },
-        { field: 'channelRef', header: 'Channel Ref', sortable: true, exportable: true },
-        { field: 'branch', header: 'Branch', sortable: true, exportable: true },
-        { field: 'branchUserName', header: 'Branch User Name', sortable: true, exportable: true },
-        { field: 'narration', header: 'Narration', sortable: true, exportable: true },
-        { field: 'sourceAccount', header: 'Source Account', sortable: true, exportable: true },
-        { field: 'service', header: 'Service', sortable: true, exportable: true },
-        { field: 'transactionDate', header: 'Transaction Date', sortable: true, exportable: true }
-    ]
+    columns.value = []
 
     // Sample table data
-    tableData.value = [
-        {
-            id: 'TXN001',
-            bankReference: 'BNK2024001234',
-            amountPaid: '₦25,000.00',
-            channelRef: 'CH2024001',
-            branch: 'Victoria Island',
-            branchUserName: 'John Adebayo',
-            narration: 'Transfer to savings account',
-            sourceAccount: '0123456789',
-            service: 'Mobile Banking',
-            transactionDate: '2024-01-15'
-        },
-        // ... other sample data
-    ]
+    tableData.value = []
 }
 
 // Fetch data from backend
@@ -251,6 +294,116 @@ const fetchReportData = async (): Promise<void> => {
     }
 }
 
+async function getReports() {
+    loading.value = true;
+    reportStore.loading = true;
+    isGetReportError.value = false;
+
+    try {
+        const res = await institutionModule.getReports(
+            backedFilterPayload.value,
+        );
+
+        if (res?.status === true) {
+
+            if (res?.data.transactions.length > 0) {
+                console.log(res?.data.transactions[0])
+                columns.value = generateColumns(res?.data.transactions)
+                tableData.value = res?.data.transactions;
+
+                // assign overview data
+                reportStore.tableOverviewData.service_name = res?.data.service_name
+                reportStore.tableOverviewData.service_account = res?.data.service_account
+                reportStore.tableOverviewData.service_total_amount = res?.data.service_total_amount
+                reportStore.tableOverviewData.service_count = res?.data.service_count
+            } else {
+                console.log('Transaction is empty')
+            }
+
+            reportResource.value = res;
+            // const firstArray = res?.data['transactions'][0];
+            loading.value = false;
+            reportStore.loading = false;
+
+            isGetReportError.value = false;
+        } else {
+            loading.value = false;
+            reportStore.loading = false;
+
+            toast('Server Error', {
+                description: 'Failed to fetch report data',
+                class: 'bg-red-500 text-white',
+                action: {
+                    label: 'Retry',
+                    onClick: () => getReports(),
+                },
+            })
+        }
+
+
+
+    } catch (error: any) {
+        isGetReportError.value = true;
+        console.error('Failed to fetch services:', error);
+
+        toast('Server Error', {
+            description: error.response?.data?.message ?? error.message,
+            class: 'bg-red-500 text-white',
+            action: {
+                label: 'Retry',
+                onClick: () => getReports(),
+            },
+        })
+    } finally {
+        loading.value = false;
+    }
+}
+
+
+async function getServices(requestSource?: string) {
+    isServicesLoading.value = true;
+
+    try {
+        const res = await institutionModule.getServices(
+            { abortKey: 'get-all-services', enableAbort: false },
+        );
+
+        if (res?.status === true) {
+            servicesResource.value = res;
+
+            // generateColumn
+
+
+        } else {
+
+            toast('Server Error', {
+                description: 'Failed to fetch services',
+                class: 'bg-red-500 text-white',
+                action: {
+                    label: 'Retry',
+                    onClick: () => getServices(requestSource),
+                },
+            })
+        }
+
+        isServicesLoading.value = false;
+
+    } catch (error: any) {
+        console.error('Failed to fetch services:', error);
+
+        toast('Server Error', {
+            description: error.response?.data?.message ?? error.message,
+            class: 'bg-red-500 text-white',
+            action: {
+                label: 'Retry',
+                onClick: () => getServices(requestSource),
+            },
+        })
+    } finally {
+        isServicesLoading.value = false;
+    }
+}
+
 // date range validation
 const isValidDateRange = (dateRange: [Date | null, Date | null] | null): boolean => {
     if (!dateRange || !dateRange[0] || !dateRange[1]) return false;
@@ -263,23 +416,53 @@ const applyFilters = (): void => {
         // Show error message or handle invalid date range
         return;
     }
-    fetchReportData();
+    getReports();
 };
 
 // Reset backend filters
 const resetFilters = (): void => {
     backendFilters.value = {
         dateRange: getInitialDateRange(),
-        service: null
+        service: null,
+        branch: null,
+        teller: null
     };
     fetchReportData();
 };
 
+// generate columns
+function generateColumns(transactions: any[]) {
+    if (!transactions || transactions.length === 0) {
+        return [];
+    }
+
+    const firstTransaction = transactions[0];
+
+    return Object.keys(firstTransaction).map((key) => {
+        // Convert key into readable header
+        let header = key
+            .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
+            .replace(/_/g, " ")                  // underscores to spaces
+            .replace(/\s+/g, " ")                // normalize spaces
+            .trim();
+
+        header = header.charAt(0).toUpperCase() + header.slice(1);
+
+        return {
+            field: key,
+            header: header,
+            sortable: true,
+            exportable: true,
+        };
+
+    });
+}
+
 
 // handle success
-function handleSuccess(){
+function handleSuccess() {
     isReportDetailDialogOpen.value = false,
-    fetchReportData()
+        fetchReportData()
 }
 
 // Export CSV
@@ -298,5 +481,7 @@ const onOpenLabDetails = (data: Record<string, any>): void => {
 // Initialize on mount
 onMounted(() => {
     initializeTable()
+    getServices()
+    getReports()
 })
 </script>

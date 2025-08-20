@@ -263,7 +263,9 @@ export interface ServiceFilterOption {
 
 export interface BackendFilters {
   dateRange: [Date | null, Date | null] | null
-  service: string | null
+  service: string | null,
+  branch: string | null,
+  teller: string | null
 }
 
 // export interface TransactionRecord {

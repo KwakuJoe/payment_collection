@@ -24,7 +24,7 @@ primary: {
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  ssr: false,
+  ssr: false, 
   runtimeConfig: {
     public: {
       apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3000/api/v2",
@@ -33,6 +33,7 @@ export default defineNuxtConfig({
       institutionServicesResource: process.env.INSTITUTION_SERVICE_RESOURCE ,
       categoriesResource: process.env.CATEGORY_RESOURCE ,
       servicesResource: process.env.SERVICE_RESOURCE ,
+      reportResource: process.env.REPORT_RESOURCE,
       verifyFormFieldsResource:  process.env.VERIFY_FORM_FIELDS_RESOURCE ,
       submitFormFieldsResource: process.env.SUBMIT_FORM_FIELDS_RESOURCE ,
       verifyPaymentAccountNumberResource: process.env.VERIFY_PAYMENT_ACCOUNT_NUMBER , 

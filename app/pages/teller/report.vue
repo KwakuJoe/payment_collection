@@ -15,7 +15,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Service</p>
-                        <p class="font-bold text-base">Ghana Gov/ECG</p>
+                        <p class="font-bold text-base"> {{ loading ? 'Loading ...' : tableOverviewData.service_name }}</p>
                     </div>
                 </div>
 
@@ -29,7 +29,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Account Number</p>
-                        <p class="font-bold text-base">11229233329332322</p>
+                        <p class="font-bold text-base">{{ loading ? 'Loading ...' : tableOverviewData.service_account }}</p>
                     </div>
                 </div>
 
@@ -42,7 +42,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Total</p>
-                        <p class="font-bold text-base">GHS 14,22333233.32</p>
+                        <p class="font-bold text-base">{{ loading ? 'Loading ...' : formatCurrency(tableOverviewData.service_total_amount) }}</p>
                     </div>
                 </div>
 
@@ -55,7 +55,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Record</p>
-                        <p class="font-bold text-base">224</p>
+                        <p class="font-bold text-base">{{ loading ? 'Loading ...' : tableOverviewData.service_count }}</p>
                     </div>
                 </div>
 
@@ -72,8 +72,20 @@
         </div>
 
     </div>
+    
+
+      <!-- toast initialization -->
+  <Toast />
 </template>
 <script setup lang="ts">
+import Toast from 'primevue/toast';
+import { useReportStore } from '~/store/report';
+
+
+//data
+const reportStore = useReportStore()
+const {loading, tableOverviewData} = storeToRefs(reportStore)
+
 definePageMeta({
     layout: 'admin',
     middleware: 'auth'
