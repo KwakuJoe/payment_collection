@@ -377,6 +377,7 @@ async function postFieldForSubmission() {
                 detail: "Fields verified successfully",
                 summary: res?.message
             });
+            paymentStore.currentStep++;
         } else {
 
             if (res?.error) {

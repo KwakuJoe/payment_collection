@@ -208,7 +208,7 @@ async function verifyBankTransferPaymentAccount() {
             account_name.value = res.data!.account_name
             message_from_verified_account_number.value = res?.message
 
-            SubmitFieldsPayload.value.destination_account =  res.data!.account_number
+            SubmitFieldsPayload.value.source_account =  res.data!.account_number
 
             toast.add({
                           life: 5000,
@@ -217,6 +217,7 @@ async function verifyBankTransferPaymentAccount() {
                 summary: res?.message
             });
 
+                
 
         } else {
             
@@ -249,6 +250,13 @@ async function verifyBankTransferPaymentAccount() {
 async function postFieldForSubmission() {
     isVerificationLoading.value = true;
 
+            SubmitFieldsPayload.value.depositor_name = paymentStore.depositor.name;
+    SubmitFieldsPayload.value.depositor_phone = paymentStore.depositor.phone;
+    SubmitFieldsPayload.value.depositor_email = paymentStore.depositor?.email!;
+
+    SubmitFieldsPayload.value.source_account = verifyBankTransferPaymentAccountPayload.value.account_number;
+    SubmitFieldsPayload.value.destination_account = verifyBankTransferPaymentAccountPayload.value.account_number;
+
     try {
         const res = await institutionModule.postFieldForSubmission(SubmitFieldsPayload.value);
 
@@ -266,6 +274,7 @@ async function postFieldForSubmission() {
                 detail: "Fields verified successfully",
                 summary: res?.message
             });
+            paymentStore.currentStep++;
         } else {
 
             if (res?.error) {
