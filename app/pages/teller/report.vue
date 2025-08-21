@@ -8,30 +8,18 @@
             <div class="flex w-full gap-x-2">
                 <!-- currency -->
                 <div
-                    class="flex items-start lg:w-[25%] p-5 bg-white border border-gray-100 dark:border-zinc-800 rounded-tr-md rounded-tl-md dark:bg-black/20 gap-x-5">
+                    class="flex items-start lg:flex-1 p-5 bg-white border border-gray-100 dark:border-zinc-800 rounded-tr-md rounded-tl-md dark:bg-black/20 gap-x-5">
                     <div class="flex justify-center items-center w-12 h-12 bg-primary-500/10 rounded-sm">
                         <Icon class="w-12 h-12 text-xl  text-primary-500" name="f7:cube-box" />
 
                     </div>
                     <div class="flex flex-col flex-1 ">
-                        <p class="text-primary text-sm">Service</p>
-                        <p class="font-bold text-base"> {{ loading ? 'Loading ...' : tableOverviewData.service_name }}</p>
+                        <p class="font-bold text-base"> {{ loading ? '-' : tableOverviewData.service_name }}</p>
+                        <p class="text-primary text-sm">{{ loading ? '-' : tableOverviewData.service_account  }}</p>
+
                     </div>
                 </div>
 
-                <!-- account number -->
-                <div
-                    class="flex items-start lg:w-[25%] p-5 bg-white border border-gray-100 dark:border-zinc-800 rounded-tr-md rounded-tl-md dark:bg-black/20 gap-x-5">
-                    <div class="flex justify-center items-center w-12 h-12 bg-primary-500/10 rounded-sm">
-                        <Icon class="w-12 h-12 text-xl  text-primary-500"
-                            name="material-symbols-light:account-balance-outline-rounded" />
-
-                    </div>
-                    <div class="flex flex-col flex-1 ">
-                        <p class="text-primary text-sm">Account Number</p>
-                        <p class="font-bold text-base">{{ loading ? 'Loading ...' : tableOverviewData.service_account }}</p>
-                    </div>
-                </div>
 
                 <!-- total amount -->
                 <div
@@ -42,7 +30,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Total</p>
-                        <p class="font-bold text-base">{{ loading ? 'Loading ...' : formatCurrency(tableOverviewData.service_total_amount) }}</p>
+                        <p class="font-bold text-base">{{ loading ? '-' : formatCurrency(tableOverviewData.service_total_amount) }}</p>
                     </div>
                 </div>
 
@@ -55,7 +43,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Record</p>
-                        <p class="font-bold text-base">{{ loading ? 'Loading ...' : tableOverviewData.service_count }}</p>
+                        <p class="font-bold text-base">{{ loading ? '-' : tableOverviewData.service_count }}</p>
                     </div>
                 </div>
 
