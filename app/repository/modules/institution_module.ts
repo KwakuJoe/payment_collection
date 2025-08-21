@@ -320,6 +320,30 @@ class InstitutionModule {
         }
     }
 
+    async getReportDetail(payload: Record<string, any>): Promise<ResourceFetchResponse<Record<string, any>> | undefined> {
+        // Convert params object to query string
+        const url = `${this.REPORT_RESOURCE}-detail`;
+
+
+        try {
+            const res = await axiosInstance.post<ResourceFetchResponse<Record<string, any>> | undefined>(
+                url, payload);
+            return res.data;
+        } catch (error: unknown) {
+            console.log(error);
+            if (axios.isCancel(error)) {
+                console.log('Request cancelled:', url);
+                return;
+            } else if (error instanceof AxiosError) {
+                console.error('Error fetching transaction overview:', error.response?.data || error.message);
+            } else {
+                console.error('Unexpected error:', error);
+            }
+
+            throw error; // Re-throw the error for further handling
+        }
+    }
+
 
 
     // Public methods for request management

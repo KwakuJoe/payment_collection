@@ -28,6 +28,8 @@ export const formatCurrency = (amount: number, currency:string = 'GHS'): string 
     }).format(amount)
 }
 
+
+
 // image for client side
 export function imageUrl(url: string): string {
     const config = useRuntimeConfig();

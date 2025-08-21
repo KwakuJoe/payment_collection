@@ -30,7 +30,7 @@
                     </div>
                     <div class="flex flex-col flex-1 ">
                         <p class="text-primary text-sm">Total</p>
-                        <p class="font-bold text-base">{{ loading ? '-' : formatCurrency(tableOverviewData.service_total_amount) }}</p>
+                        <p class="font-bold text-base">{{ loading ? '-' : tableOverviewData.service_total_amount}}</p>
                     </div>
                 </div>
 
@@ -78,6 +78,7 @@ definePageMeta({
     layout: 'admin',
     middleware: 'auth'
 })
+
 
 
 

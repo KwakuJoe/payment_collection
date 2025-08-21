@@ -4,7 +4,7 @@
         <Icon name="material-symbols:hourglass-disabled-rounded" class="text-5xl text-gray-500" />
         <p class="text-xl font-semibold">{{ title ?? 'No data found' }} </p>
         <p class="text-center text-gray-500">{{ message ?? 'There is No data found' }}</p>
-        <Button  size="small" label="Refresh"  @click="emit('retry')" class="mt-3" >{{ btnMessage ?? 'Retry' }}</Button>
+        <Button v-if="showBtn"  size="small" label="Refresh"  @click="emit('retry')" class="mt-3" >{{ btnMessage ?? 'Retry' }}</Button>
     </div>
 </template>
 <script setup lang="ts">
@@ -14,6 +14,7 @@ const props = defineProps<{
     title?: string,
     message?: string,
     btnMessage?: string
+    showBtn?: boolean
 }>()
 </script>
 <style></style>

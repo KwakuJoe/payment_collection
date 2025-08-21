@@ -14,7 +14,7 @@ export function setRouteNames(routeName: string): string {
       pageTitle = 'Payments Collections';
       break;
     case 'teller-report':
-      pageTitle = 'Teller Report';
+      pageTitle = 'Report';
       break;
     case 'teller-payments-id': // This is how Nuxt names dynamic routes
       pageTitle = 'Make payments';

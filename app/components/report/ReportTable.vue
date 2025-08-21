@@ -299,6 +299,13 @@ async function getReports() {
     reportStore.loading = true;
     isGetReportError.value = false;
 
+
+    reportStore.tableOverviewData.service_name = ' - ';
+    reportStore.tableOverviewData.service_account = '-';
+    reportStore.tableOverviewData.service_total_amount =   0
+    reportStore.tableOverviewData.service_count = 0
+
+
     try {
         const res = await institutionModule.getReports(
             backedFilterPayload.value,

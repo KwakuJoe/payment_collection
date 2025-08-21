@@ -1,5 +1,13 @@
 <template>
-    <div class="w-full">
+
+    <!-- error -->
+    <ErrorView v-if="isGetReportError" message="There was error trying to fetch report detail"
+        @retry="getReportDetail()" />
+
+    <!-- loader -->
+    <Loading v-else-if="loading" message="Fetch report detail data ..." />
+
+    <div v-else class="w-full">
         <Tabs value="0" scrollable>
             <TabList>
                 <Tab value="0">RECEIPT</Tab>
@@ -10,44 +18,16 @@
             </TabList>
             <TabPanels>
                 <TabPanel value="0">
-                    <p class="m-0">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                        deserunt mollit anim id est laborum.
-                    </p>
+                    <ReportReceipt  :record="reportDetailResource?.data ?? null" @on-close="emits('on-close')" />
                 </TabPanel>
                 <TabPanel value="1">
-                    <p class="m-0">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-                        laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
-                        beatae vitae dicta sunt explicabo. Nemo enim
-                        ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
-                        dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non
-                        numquam eius modi.
-                    </p>
+                    <ViewReportDetail :record="reportDetailResource?.data ?? null" @on-close="emits('on-close')" />
                 </TabPanel>
                 <TabPanel value="2">
-                    <p class="m-0">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
-                        provident, similique sunt in culpa
-                        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-                        facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-                        cumque nihil impedit quo minus.
-                    </p>
+                    <ReportFormData :record="reportDetailResource?.data ?? null" @on-close="emits('on-close')"/>
                 </TabPanel>
                 <TabPanel value="3">
-                    <p class="m-0">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
-                        provident, similique sunt in culpa
-                        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-                        facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-                        cumque nihil impedit quo minus.
-                    </p>
+                <ReportCoreBankingData :record="reportDetailResource?.data ?? null" @on-close="emits('on-close')"/> 
                 </TabPanel>
                 <TabPanel value="4">
                     <p class="m-0">
@@ -64,11 +44,79 @@
     </div>
 </template>
 <script setup lang="ts">
+import { institutionModule } from '~/repository/modules/institution_module';
+import type { ResourceFetchResponse } from '~/types';
+import { useToast } from "primevue/usetoast";
+
+
 
 const props = defineProps<{
     record: Record<string, any> | null,
 }>()
 
 const emits = defineEmits(['on-success', 'on-close'])
+
+const toast = useToast()
+const reportDetailResource = ref<ResourceFetchResponse<Record<string, any>>>()
+
+const payload = computed(() => {
+    return {
+        transaction_id: props.record?.id
+    }
+})
+
+// data
+const loading = ref(false)
+const isGetReportError = ref(false)
+
+
+
+async function getReportDetail() {
+    loading.value = true;
+    isGetReportError.value = false;
+
+
+
+    try {
+        const res = await institutionModule.getReportDetail(
+            payload.value,
+        );
+
+        if (res?.status === true) {
+            loading.value = false;
+            isGetReportError.value = false;
+            reportDetailResource.value = res;
+        } else {
+            loading.value = false;
+        toast.add({
+            severity: "error",
+            detail: 'Failed to fetch resources..',
+            summary: "Sever error",
+        });
+        }
+
+
+
+    } catch (error: any) {
+        isGetReportError.value = true;
+        console.error('Failed to fetch services:', error);
+
+
+        toast.add({
+            severity: "error",
+            detail: error.response?.data?.message ?? error.message,
+            summary:
+                error.response?.status == 401 ? "Unauthenticated" : "Sever error",
+        });
+    } finally {
+        loading.value = false;
+    }
+}
+
+
+onMounted(() => {
+    getReportDetail()
+})
+
 </script>
 <style></style>
