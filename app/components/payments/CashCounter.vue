@@ -219,7 +219,7 @@ function splitNotesAndCoins(data:any) {
             
         };
 
-        if (denomination > 1) {
+        if (denomination >= 1) {
             notes.push(formattedItem);
         } else {
             coins.push(formattedItem);

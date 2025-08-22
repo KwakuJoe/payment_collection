@@ -7,7 +7,11 @@
     <!-- loader -->
     <Loading v-else-if="loading" message="Fetch report detail data ..." />
 
+ 
+
     <div v-else class="w-full">
+
+           
         <Tabs value="0" scrollable>
             <TabList>
                 <Tab value="0">RECEIPT</Tab>
@@ -30,14 +34,10 @@
                 <ReportCoreBankingData :record="reportDetailResource?.data ?? null" @on-close="emits('on-close')"/> 
                 </TabPanel>
                 <TabPanel value="4">
-                    <p class="m-0">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
-                        provident, similique sunt in culpa
-                        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-                        facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-                        cumque nihil impedit quo minus.
-                    </p>
+                <ReportCashDenominationData   :record="currency_denomination" @on-close="emits('on-close')"/> 
+
+                   
+                    
                 </TabPanel>
             </TabPanels>
         </Tabs>
@@ -45,7 +45,7 @@
 </template>
 <script setup lang="ts">
 import { institutionModule } from '~/repository/modules/institution_module';
-import type { ResourceFetchResponse } from '~/types';
+import type { DenominationData, ResourceFetchResponse } from '~/types';
 import { useToast } from "primevue/usetoast";
 
 
@@ -68,6 +68,28 @@ const payload = computed(() => {
 // data
 const loading = ref(false)
 const isGetReportError = ref(false)
+const receipt = ref({})
+const form_data = ref({})
+const transaction = ref({})
+const currency_denomination = ref([])
+
+const core_banking = ref({
+    status: false,
+    message: '',
+    reference: '',
+    request: null,
+    response: null,
+
+})
+
+const transmission = ref({
+    status: false,
+    message: '',
+    reference: '',
+    request: null,
+    response: null
+
+})
 
 
 
@@ -86,6 +108,25 @@ async function getReportDetail() {
             loading.value = false;
             isGetReportError.value = false;
             reportDetailResource.value = res;
+
+            // transaction.value = res.data
+            // form_data.value = res.data.form_data
+            // receipt.value = res.data.form_data
+            currency_denomination.value =JSON.parse(  res?.data.currency_denomination)
+            
+            // core_banking.value.status = res.data.core_banking_status
+            // core_banking.value.message = res.data.core_banking_message
+            // core_banking.value.reference = res.data.core_banking_reference
+            // core_banking.value.request = res.data.core_banking_request
+            // core_banking.value.response = res.data.core_banking_response
+           
+            // transmission.value.status = res.data.transmission_status
+            // transmission.value.message = res.data.transmission_message
+            // transmission.value.reference = res.data.transmission_reference
+            // transmission.value.request = res.data.transmission_request
+            // transmission.value.response = res.data.transmission_response
+
+            
         } else {
             loading.value = false;
         toast.add({

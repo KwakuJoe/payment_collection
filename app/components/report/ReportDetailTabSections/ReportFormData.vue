@@ -1,12 +1,13 @@
 <template>
-    <div class="flex flex-col gap-y-2 border border-gray-100 border-dashed dark:border-zinc-800 p-5">
+    <div class="flex flex-col p-5 border border-gray-100 border-dashed gap-y-2 dark:border-zinc-800">
 
-        <div v-if="parseMetadata(record?.form_data)" v-for="(value, key) in parseMetadata(record?.form_data)" :key="key" class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
+        <!-- {{ record?.form_data }} -->
+        <div v-if="record?.form_data" v-for="(value, key) in parseMetadata(record?.form_data)" :key="key" class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
             <p>{{key.toUpperCase()}}</p>
             <p class="font-medium ">{{ value ?? '-' }}</p>
         </div>
 
-        <!-- empty -->
+       
         <EmptyState v-else message="Form data is not found on this transaction report" title="No form data fond" />
 
     </div>
