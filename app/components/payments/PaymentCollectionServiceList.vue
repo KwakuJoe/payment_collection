@@ -8,7 +8,9 @@
                     class="flex flex-wrap items-center w-full p-3 px-5 border border-gray-100 rounded-md gap-y-2 gap-x-3 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800">
 
 
-                    <Avatar :label="institution?.name[0]" size="xlarge" shape="circle" />
+                  
+
+                    <img :src="`${config.public.imageUrl}/${institution?.image}`" :alt="institution?.name" class="shadow-lg" width="64" />
 
 
                     <div class="flex flex-col flex-1">
@@ -94,10 +96,12 @@ import type { Institution, ResourceListResponse, Service, } from '~/types'
 import { toast } from 'vue-sonner'
 import { usePaymentStepsStore } from '~/store/payment';
 const paymentStore = usePaymentStepsStore();
+
 const props = defineProps<{
     institution: Institution | null
 }>()
 
+const config = useRuntimeConfig();
 // Mock data
 
 // Reactive state - using your variable names
