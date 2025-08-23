@@ -8,28 +8,31 @@
             <!-- system logo -->
             <div class="flex p-2 rounded-lg ">
                 <NuxtImg src="/assets/logo/logo.svg" class="w-[120px]" />
+                
             </div>
             <!-- payment title -->
             <div class="flex flex-col items-center">
-                <p class="font-bold font-lg">{{record?.service?.name}}</p>
+                <p class="font-bold font-lg">{{record?.service?.name}} </p>
                 <p class="font-semibold text-gray-500">{{record?.institution?.name ?? ''}}</p>
             </div>
             <!-- utility company logo -->
             <div class="flex p-2 rounded-lg bg-primary/0">
-                <NuxtImg src="/assets/logo/ecg.png" class="w-[120px]" />
+               <img :src="`${config.public.imageUrl}/${record?.institution?.image}`" :alt="record?.institution?.name" class="shadow-lg" width="64" />
             </div>
         </div>
 
         <div class="flex items-center justify-between w-full">
             <div class="flex flex-col">
-                <p class="font-medium text-gray-500">BRANCH: <span class="font-light">RIDGE TOWER</span></p>
-                <p class="font-medium text-gray-500">TELLER: <span class="font-light">Pskwashie</span></p>
+                <p class="font-medium text-gray-500">BRANCH: <span class="font-light">{{record?.branch_name}}</span></p>
+                <p class="font-medium text-gray-500">TELLER: <span class="font-light">{{record?.teller_name}}</span></p>
             </div>
             <div class="flex flex-col">
                 <p class="font-medium text-gray-500">REFERENCE: <span class="font-light">FBL2321</span></p>
-                <p class="font-medium text-gray-500">DATE: <span class="font-light">-12-NOV-202 12:30 PM</span></p>
+                <p class="font-medium text-gray-500">DATE: <span class="font-light">{{record?.created_at}}</span></p>
             </div>
         </div>
+        <br>
+        
 
         <div class="flex flex-col p-5 border border-gray-100 rounded-md gap-y-2 dark:border-zinc-900">
             <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
@@ -87,6 +90,7 @@
 import { usePaymentStepsStore } from '~/store/payment';
 import type { Service } from '~/types';
 const paymentStore = usePaymentStepsStore();
+const config = useRuntimeConfig();
 
 const props = defineProps<{
     record: Record<string, any> | null;

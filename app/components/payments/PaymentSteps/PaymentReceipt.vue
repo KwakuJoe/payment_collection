@@ -16,18 +16,20 @@
             </div>
             <!-- utility company logo -->
             <div class="flex p-2 rounded-lg bg-primary/0">
-                <NuxtImg src="/assets/logo/ecg.png" class="w-[120px]" />
+                <!-- <NuxtImg src="/assets/logo/ecg.png" class="w-[120px]" /> -->
+               <img :src="`${config.public.imageUrl}/${service?.institution?.image}`" :alt="service?.institution?.name" class="shadow-lg" width="64" />
+
             </div>
         </div>
 
         <div class="flex items-center justify-between w-full">
             <div class="flex flex-col">
-                <p class="font-medium text-gray-500">BRANCH: <span class="font-light">RIDGE TOWER</span></p>
-                <p class="font-medium text-gray-500">TELLER: <span class="font-light">Pskwashie</span></p>
+                <p class="font-medium text-gray-500">BRANCH: <span class="font-light">{{ user.branch_name }}</span></p>
+                <p class="font-medium text-gray-500">TELLER: <span class="font-light">{{ user.username }}</span></p>
             </div>
             <div class="flex flex-col">
                 <p class="font-medium text-gray-500">REFERENCE: <span class="font-light">FBL2321</span></p>
-                <p class="font-medium text-gray-500">DATE: <span class="font-light">-12-NOV-202 12:30 PM</span></p>
+                <p class="font-medium text-gray-500">DATE: <span class="font-light"> 12-NOV-202 12:30 PM</span></p>
             </div>
         </div>
 
@@ -86,7 +88,13 @@
 <script setup lang="ts">
 import { usePaymentStepsStore } from '~/store/payment';
 import type { Service } from '~/types';
+import { useAuthStore } from "~/store/auth";
+
+const authStore = useAuthStore()
+const { token, user } = storeToRefs(authStore);
+
 const paymentStore = usePaymentStepsStore();
+const config = useRuntimeConfig();
 
 const props = defineProps<{
     service: Service;
