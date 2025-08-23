@@ -13,7 +13,7 @@
         </div>
 
         <div class="flex">
-          <p class="text-sm text-gray-500"> >> </p>
+          <p class="text-sm text-gray-500"> </p>
         </div>
       </div>
 </template>
