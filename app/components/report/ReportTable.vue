@@ -2,7 +2,7 @@
     <div class="  w-full">
 
 
-
+        <pre>{{ authStore.user }}</pre>
         <div class=" mx-auto">
 
             <!-- Backend Filters -->
@@ -208,6 +208,8 @@ import { removeEmptyPropertiesDeep } from '~/utils'
 import { useToast } from "primevue/usetoast";
 import { institutionModule } from '~/repository/modules/institution_module';
 import { useReportStore } from '~/store/report';
+import { useAuthStore } from '~/store/auth';
+
 
 // Reactive data with type annotations
 const loading = ref<boolean>(false)
@@ -222,6 +224,7 @@ const reportResource = ref<ResourceFetchResponse<Record<string, any>> | undefine
 const isGetReportError = ref(false)
 const reportStore = useReportStore()
 const toast = useToast();
+const authStore = useAuthStore()
 
 // const columnHeader = ref<>([])
 const filters = ref<TableFilters>({
@@ -249,8 +252,8 @@ const getInitialDateRange = (): [Date, Date] => {
 const backendFilters = ref<BackendFilters>({
     dateRange: getInitialDateRange(),
     service: null,
-    branch: null,
-    teller: null,
+    branch: `${authStore.user.branch_name}`,
+    teller: `${authStore.user.username}`,
 });
 
 
@@ -326,6 +329,8 @@ async function getReports() {
 
 
     try {
+        backedFilterPayload.value.branch = authStore.user.branch_name
+        backedFilterPayload.value.teller = authStore.user.username
         const res = await institutionModule.getReports(
             backedFilterPayload.value,
         );

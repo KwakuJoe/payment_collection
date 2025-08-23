@@ -84,7 +84,7 @@
                         <!-- Coins Total -->
                         <div
                             class="grid grid-cols-3 border-t border-gray-100 bg-gray-50 dark:bg-zinc-900 dark:border-zinc-800">
-                            <div class="p-3 font-bold">Total Notes</div>
+                            <div class="p-3 font-bold">Total Coins</div>
                             <div class="p-3 font-bold"></div>
                             <div class="p-3 font-bold border-l border-gray-100 dark:border-zinc-800">{{ totalCoins }}</div>
 
