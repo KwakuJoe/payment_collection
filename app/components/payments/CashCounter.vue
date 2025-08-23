@@ -36,9 +36,8 @@
             </div>
         <div class="flex items-center justify-between py-3 border-gray-100 border-y dark:border-zinc-800">
             <h2 class="text-lg font-bold">Cash Counter</h2>
-            <Button variant="outline" size="small" @click="resetCashDenom()">
-                Clear All
-            </Button>
+            <Button variant="outline" label="Clear All" size="small" @click="resetCashDenom()"/>
+
         </div>
 
        <!-- {{ SubmitFieldsPayload }} -->
@@ -143,12 +142,10 @@
 
 
                     <div class="flex w-full gap-x-5">
-                <Button size="lg" severity="secondary" class="w-full lg:w-1/2" @click="paymentStore.previousStep()">
-                    BACK
-                </Button>
-                <Button size="lg" class="w-full lg:w-1/2" :loading="isVerificationLoading" @click="submitCashPayment()">
-                     COMPLETE PAYMENT
-                </Button> 
+                <Button size="lg" severity="secondary" label="BACK" class="w-full lg:w-1/2" @click="paymentStore.previousStep()"/>
+
+                <Button size="lg" class="w-full lg:w-1/2" label="COMPLETE PAYMENT" :loading="isVerificationLoading" @click="submitCashPayment()"/>
+
 
             </div>
 

@@ -34,9 +34,7 @@
             </div>
         <div class="flex items-center justify-between py-3 border-gray-100 border-y dark:border-zinc-800">
             <h2 class="text-lg font-bold">Cash Counter</h2>
-            <Button @click="clearAll" variant="outline" size="small">
-                Clear All
-            </Button>
+            <Button @click="clearAll" label="Clear All" variant="outline" size="small"/>
         </div>
 
         <form @submit.prevent="onSubmit">
@@ -148,31 +146,15 @@
         <!-- amount -->
         <div class="flex flex-col justify-end max-w-full mt-6 gap-x-5 lg:flex-row">
         <div class="flex flex-col justify-end max-w-full gap-x-5 gap-y-2 lg:flex-row">
-            <Button severity="secondary" class="w-full lg:w-1/2" size="lg" @click="paymentStore.previousStep()">
-                GO BACK
-            </Button>
-            <Button size="lg" class="w-full lg:w-1/2"  @click="onSubmit()">
-                COMPLETE PAYMENT
-            </Button>
+            <Button severity="secondary" label=" GO BACK" class="w-full lg:w-1/2" size="lg" @click="paymentStore.previousStep()"/>
+
+            <Button size="lg" label="COMPLETE PAYMENT" class="w-full lg:w-1/2"  @click="onSubmit()"/>
         </div>
         </div>
 
-            <!-- Action Buttons -->
-            <!-- <div class="flex gap-4 mt-6">
-                <Button @click="getCountData" variant="outline" type="button">
-                    Get Count Data
-                </Button>
-                <Button type="submit">
-                    Submit Count
-                </Button>
-            </div> -->
+
         </form>
 
-        <!-- Debug Output (remove in production) -->
-        <!-- <div v-if="showDebug" class="p-4 mt-6 bg-gray-100 rounded-lg dark:bg-zinc-900">
-            <h4 class="mb-2 font-bold">Debug Output:</h4>
-            <pre class="overflow-auto text-xs">{{ JSON.stringify(countData, null, 2) }}</pre>
-        </div> -->
     </div>
 </template>
 

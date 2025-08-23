@@ -70,7 +70,7 @@
                             </div>
 
 
-                            <Button :loading="isLoggingIn" class="h-12" size="lg" @click="onSubmit()">Login</Button>
+                            <Button :loading="isLoggingIn" label="Login" class="h-12" size="lg" @click="onSubmit()"/>
                         </form>
                     </div>
                 </div>

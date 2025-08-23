@@ -39,10 +39,9 @@
 
             <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
             <div class="flex w-full gap-x-5">
-                <Button size="lg" severity="secondary" class="w-full lg:w-1/2" @click="backStepper()">
-                    {{ props.verification_form_fields.length > 0 ? 'BACK' : 'CANCEL' }}
-                </Button>
-                <Button size="lg" class="w-full lg:w-1/2" @click="nextStepper()">CONTINUE</Button>
+                <Button size="lg" severity="secondary" :label="props.verification_form_fields.length > 0 ? 'BACK' : 'CANCEL'" class="w-full lg:w-1/2" @click="backStepper()" />
+
+                <Button size="lg" label="CONTINUE" class="w-full lg:w-1/2" @click="nextStepper()"/>
 
             </div>
         </div>

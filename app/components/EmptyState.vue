@@ -4,8 +4,9 @@
         <Icon name="material-symbols:hourglass-disabled-rounded" class="text-5xl text-gray-500" />
         <p class="text-xl font-semibold">{{ title ?? 'No data found' }} </p>
         <p class="text-center text-gray-500">{{ message ?? 'There is No data found' }}</p>
-        <Button v-if="showBtn"  size="small" label="Refresh"  @click="emit('retry')" class="mt-3" >{{ btnMessage ?? 'Retry' }}</Button>
-    </div>
+        <Button v-if="showBtn"  size="small" :label=" btnMessage ?? 'Retry' "  @click="emit('retry')" class="mt-3" />
+
+        </div>
 </template>
 <script setup lang="ts">
 const emit = defineEmits(['retry'])

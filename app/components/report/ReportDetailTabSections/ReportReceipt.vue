@@ -72,12 +72,10 @@
 
     <div> 
         <div class="flex flex-col max-w-full mt-6 gap-x-5 gap-y-2 lg:flex-row ">
-            <Button severity="secondary" size="lg" class="w-full lg:w-1/2" @click="emits('on-close')">
-               CLOSE
-            </Button>
-            <Button size="lg"  class="w-full lg:w-1/2" @click="print('printArea')" >
-                PRINT
-            </Button>
+            <Button severity="secondary" size="lg" label="CLOSE" class="w-full lg:w-1/2" @click="emits('on-close')"/>
+
+            <Button size="lg" label="PRINT"  class="w-full lg:w-1/2" @click="print('printArea')" />
+
         </div>
         </div>
 

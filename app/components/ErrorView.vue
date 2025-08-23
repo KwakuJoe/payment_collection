@@ -4,7 +4,7 @@
         <Icon name="uil:server-network" class="text-5xl text-red-500" />
         <p class="text-xl font-semibold">{{ title ?? 'Server Error' }} </p>
         <p class="text-center text-gray-500">{{ message ?? ' An error occurred try to perform this operation' }}</p>
-        <Button  size="small" label="Retry" severity="danger" @click="emit('retry')" class="mt-3" >{{ btnMessage ?? 'Retry' }}</Button>
+        <Button size="small" :label="btnMessage ?? 'Retry'" severity="danger" @click="emit('retry')" class="mt-3" />
     </div>
 </template>
 <script setup lang="ts">

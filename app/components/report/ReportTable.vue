@@ -47,7 +47,7 @@
                         <!-- Filter Actions -->
                         <div class="flex lg:flex-1 w-full gap-x-2">
                             <Button size="small" fluid @click="applyFilters" :loading="loading" icon="pi pi-search"
-                                label="Apply " class="" />
+                                label="Apply" class="" />
                             <Button size="small" fluid @click="resetFilters" :disabled="loading" icon="pi pi-refresh"
                                 label="Reset" severity="secondary" outlined />
                         </div>

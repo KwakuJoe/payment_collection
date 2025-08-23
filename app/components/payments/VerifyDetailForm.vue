@@ -92,8 +92,7 @@
 
             <div class="border-t border-dashed border-gray-300 dark:border-zinc-700 my-4"></div>
         <div class="flex w-full gap-x-5">
-            <!-- <Button size="lg" variant="secondary" class="lg:w-1/2 w-full" @click="paymentStore.previousStep()">BACK</Button>
-            <Button size="lg" class="lg:w-1/2 w-full" @click="onSubmit()">PROCEED</Button> -->
+
             
         </div>
     </form>

@@ -24,6 +24,7 @@
     "nuxt": "^4.0.1",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.4.1",
+    "primeicons": "^7.0.0",
     "primevue": "^4.3.7",
     "reka-ui": "^2.4.1",
     "remove": "^0.1.5",

@@ -5,7 +5,7 @@
         {{ field.field_label }} 
         <span v-html="showAsteric"></span>
       </p>
-            <Select  size="small" filter fluid  :options="field.list_of_options" option-value="lov_value"
+            <Select checkmark  size="small" filter fluid  :options="field.list_of_options" option-value="lov_value"
                 option-label="lov_title"  class="w-full md:w-56" 
                 v-model="prepareFormFields[`${field.field_name}`]"
                 />

@@ -22,17 +22,12 @@
             </div>
           </div>
 
-          <Select  size="small" filter v-model="selectedCategory" :options="uniqueCategories" option-label="name" option-value="value" placeholder="Select a Category"
+          <Select checkmark  size="small" filter v-model="selectedCategory" :options="uniqueCategories" option-label="name" option-value="value" placeholder="Select a Category"
             class="w-full md:w-56" />
 
 
           <!-- refresh button -->
-          <Button  size="small"  @click="refreshInstitutions()">
-            <div class="flex items-center gap-x-2">
-              <Icon name="material-symbols:refresh" />
-              <p>Refresh</p>
-            </div>
-          </Button>
+          <Button  size="small" :loading="isInstitutionsLoading" label="Refresh" icon="pi pi-refresh"  @click="refreshInstitutions()"/>
         </div>
       </div>
     </div>
