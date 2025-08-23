@@ -39,7 +39,8 @@ export default defineNuxtConfig({
       verifyPaymentAccountNumberResource: process.env.VERIFY_PAYMENT_ACCOUNT_NUMBER , 
       loginResource: process.env.LOGIN_RESOURCE,
       loginWithTokenResource: process.env.LOGIN_WITH_TOKEN_RESOURCE,
-      appTitle: process.env.APP_TITLE
+      appTitle: process.env.APP_TITLE,
+      fieldGetExternalData: process.env.FIELD_GET_EXTERNAL_DATA_RESOURCE
     },
   },
   modules: [

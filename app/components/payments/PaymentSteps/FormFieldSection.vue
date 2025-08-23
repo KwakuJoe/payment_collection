@@ -9,7 +9,7 @@
                 <TextBox :field="field" v-if="field.field_type.code === 1 && field.is_visible === 1" :prepare-form-fields="prepareFormFields" />
 
                 <!-- select -->
-                <ListOfValues :prepare-form-fields="prepareFormFields" v-else-if="field.field_type.code === 2"
+                <ListOfValues :prepare-form-fields="prepareFormFields" v-else-if="field.field_type.code === 2 && field.is_visible === 1"
                     :field="field" />
 
                 <!-- date -->
@@ -18,7 +18,7 @@
 
                 <!-- radio button -->
                 <RadioButtonField :prepare-form-fields="prepareFormFields" :field="field"
-                    v-else-if="field.field_type.code === 4" />
+                    v-else-if="field.field_type.code === 4 && field.is_visible === 1" />
 
                 <!-- multi select -->
                 <MultiSelectField :prepare-form-fields="prepareFormFields" v-else-if="field.field_type.code === 5"

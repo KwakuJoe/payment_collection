@@ -159,29 +159,27 @@ export interface VerifyFieldsPayload {
   service_id: string | undefined
   form_data: Record<string, any>
   channel_reference: string | null
-  branch_user: BranchUser
+  branch: Branch
+  user: ApplicationUser
 }
 
 export interface SubmitFieldsPayload_old {
   service_id: string
   form_data: Record<string, any>
   channel_reference: string | null
-  branch_user: BranchUser
-}
-
-export interface BranchUser {
   branch: Branch
   user: ApplicationUser
 }
 
+
 export interface Branch {
-  branch_name: string | null
-  branch_code: string | null
-  branch_email: string | null
+  name: string | null
+  code: string | null
+  email?: string | null
 }
 
 export interface ApplicationUser {
-  user_name: string | null
+  username: string | null
   email: string | null
 }
 

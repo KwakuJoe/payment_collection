@@ -39,9 +39,10 @@
 
             <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
             <div class="flex w-full gap-x-5">
-                <Button size="lg" severity="secondary" :label="props.verification_form_fields.length > 0 ? 'BACK' : 'CANCEL'" class="w-full lg:w-1/2" @click="backStepper()" />
-
-                <Button size="lg" label="CONTINUE" class="w-full lg:w-1/2" @click="nextStepper()"/>
+                <Button size="lg" severity="secondary" class="w-full lg:w-1/2" @click="backStepper()">
+                    {{ props.verification_form_fields.length > 0 ? 'BACK' : 'CANCEL' }}
+                </Button>
+                <Button size="lg" class="w-full lg:w-1/2" @click="nextStepper()">CONTINUE</Button>
 
             </div>
         </div>
@@ -59,8 +60,11 @@ import { routerKey } from 'vue-router';
 
 const paymentStore = usePaymentStepsStore();
 const toast = useToast();
+const router = useRouter()
+const params = reactive({})
 
 const props = defineProps<{
+    getServiceById: () => void;
     prepareFormFields: FormFieldForPosting;
     service: Service ;
     verification_form_fields: FormField[];
@@ -68,6 +72,9 @@ const props = defineProps<{
     form_fields: FormField[];
 }>();
 
+onMounted( async () => {
+  paymentStore.selectedPaymentServiceFormField! = props.form_fields;
+});
 const validationErrors = ref<any[]>([]);
 
 
@@ -76,8 +83,11 @@ const backStepper = (async () => {
 
     if (paymentStore.currentStep > 1 && (props.verification_form_fields.length > 0)) {
         paymentStore.selectedPaymentServiceFormField = paymentStore.selectedPaymentServiceFormFieldRefreshed!
-        paymentStore.currentStep--;
-        // window.location.reload();
+       // paymentStore.currentStep--;
+
+         paymentStore.previousStep()
+                props.getServiceById();
+        
     } else {
         goHome();
     }

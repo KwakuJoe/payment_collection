@@ -61,16 +61,18 @@
           <StepPanels>
             <StepPanel class="" v-slot="{ activateCallback }" value="1">
               <!-- payment detail section -->
-              <PaymentDetailSection :prepareFormFields="prepareFormFields" :form_fields="formfields!"
+              <PaymentDetailSection :prepareFormFields="prepareFormFields" :form_fields="paymentStore.selectedPaymentServiceFormField"
                 :submission_form_fields="submission_form_fields" :verification_form_fields="verification_form_fields"
                 :service="paymentStore.selectedPaymentService" v-if="currentStep === 1" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="2">
               <!-- Verify payment -->
               <VerifyPaymentDetail :prepareFormFields="prepareFormFields"
-                :form_fields="paymentStore.selectedPaymentServiceFormField!"
+                :form_fields="paymentStore.selectedPaymentServiceFormField"
                 :submission_form_fields="submission_form_fields" :verification_form_fields="verification_form_fields"
-                :service="paymentStore.selectedPaymentService" v-if="currentStep === 2" />
+                :service="paymentStore.selectedPaymentService" 
+                :getServiceById="getServiceById"
+                v-if="currentStep === 2" />
             </StepPanel>
             <StepPanel v-slot="{ activateCallback }" value="3">
               <!-- make payment -->
@@ -206,8 +208,10 @@ async function getServiceById() {
 onMounted(async () => {
   // paymentStore.selectedPaymentService = ref({} as Service);
   // paymentStore.selectedPaymentServiceFormField = ref([] as FormField[]);
-  prepareFormFields.value = {} as FormFieldForPosting;
+
+  paymentStore.previewDataItem = [];
   await getServiceById();
+
 
 });
 

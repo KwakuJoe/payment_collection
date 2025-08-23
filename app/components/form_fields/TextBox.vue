@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full">
-    <div class="flex flex-col items-start w-full gap-y-2">
+  <div class="flex flex-col lg:w-[100%] gap-5 ">
+    <div class="flex flex-col items-start gap-y-2">
       <p class="text-sm font-semibold">
         {{ field.field_label }} 
         <span v-html="showAsteric"></span>
@@ -9,6 +9,7 @@
        size="small"
         :readonly="readonly"
         class="bg-yellow-500 border border-amber-600"
+
         fluid
         type="text"
         v-model="prepareFormFields[`${field.field_name}`]"
@@ -42,7 +43,7 @@ const showAsteric = ref("");
 const applyFieldValidation = (field: FormField) => {
   props.prepareFormFields[field.field_name] = defaultValue.value;
 
-  if (props.field.is_amount) {
+  if (props.field.is_amount || (props.field.field_data_type.code == 2)) {
     make_input_number.value = "this.value = this.value.replace(/[^0-9.]/g, '')";
   }
 

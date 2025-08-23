@@ -34,9 +34,37 @@ const fileAcceptedExtensions = ref(`
 
 
 // handle file upload
-const onFileSelect = (file: FileUploadSelectEvent) => {
+const onFileSelectt = (file: FileUploadSelectEvent) => {
     console.log('File selected:', file.files[0]);
     props.prepareFormFields[props.field.field_name] = file.files[0];
+};
+
+const base64Image = ref('');
+const SelectedBase64Image = ref('');
+
+const onFileSelect = async (file: FileUploadSelectEvent) => {
+  const selectedImage = file.files[0];
+  let base64Image_ = await createBase64Image(selectedImage);
+  SelectedBase64Image.value = base64Image_;
+  base64Image.value = base64Image_.split(',')[1];
+
+  props.prepareFormFields[props.field.field_name] = base64Image.value;
+
+  if (base64Image_ != '' && base64Image_ != undefined) {
+    // showSelectIconImage();
+  }
+  console.log(base64Image.value);
+};
+
+const createBase64Image = (file: any): Promise<string> => {
+  return new Promise((resolve, abort) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = (error) => abort(error);
+  });
 };
 
 

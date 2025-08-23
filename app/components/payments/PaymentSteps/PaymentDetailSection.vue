@@ -5,7 +5,7 @@
         <div class="flex flex-col w-full gap-y-5">
             <p class="text-xl font-bold">Payment Details</p>
 
-           
+           <!-- {{ prepareFormFields }} -->
 
             <Message v-if="validationErrors.length" severity="error">
                 <ul>
@@ -39,6 +39,7 @@ import { goHome } from '~/utils/index'
 import FormFieldSection from "./FormFieldSection.vue";
 import { useToast } from "primevue/usetoast";
 import { institutionModule } from "~/repository/modules/institution_module";
+import { useAuthStore } from "~/store/auth";
 // props
 const props = defineProps<{
     prepareFormFields: FormFieldForPosting;
@@ -54,6 +55,9 @@ onMounted( async () => {
 
 // data
 
+const authStore = useAuthStore()
+const { token, user } = storeToRefs(authStore);
+
 const paymentStore = usePaymentStepsStore();
 const toast = useToast();
 const isVerificationLoading = ref(false)
@@ -63,16 +67,14 @@ const verifyFieldsPayload = ref<VerifyFieldsPayload>({
     service_id: paymentStore.selectedPaymentService?.id,
     channel_reference: null,
     form_data: props.prepareFormFields,
-    branch_user: {
-        branch: {
-            branch_name: null,
-            branch_code: null,
-            branch_email: null
-        },
-        user: {
-            user_name: null,
-            email: null
-        }
+    branch: {
+        name: user.value.branch_name,
+        code: user.value.branch_code,
+        email: null
+    },
+    user: {
+        username: user.value.username,
+        email: user.value.email,
     }
 
 })
