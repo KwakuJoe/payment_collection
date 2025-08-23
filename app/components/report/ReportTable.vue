@@ -111,7 +111,7 @@
                         </div>
                     </template>
 
-                    <Column header="Actions" :exportable="false" style="min-width:100px">
+                    <Column header="-" :exportable="false" style="min-width:100px">
                         <template #body="slotProps">
                             <!-- Action Button -->
                             <button
@@ -130,9 +130,27 @@
                                 class="font-semibold text-green-600 dark:text-green-400">
                                 {{ slotProps.data[col.field] }}
                             </span>
-                            <span v-else-if="col.field === 'id'"
+                            <!-- <span v-else-if="col.field === 'id'"
                                 class="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                                {{ slotProps.data[col.field] }}
+                                {{ slotProps.data[col.field] }} 
+                            </span> -->
+
+                            <span v-else-if="col.field === 'status'" class="">
+                                <Tag style="height: 20px; font-size: 12px;" :severity="slotProps.data[col.field] === true ?
+                                    'success' : 'danger'" value="Success">{{ slotProps.data[col.field] === true ?
+                                        'success' : 'Failed' }}</Tag>
+                            </span>
+
+                            <span v-else-if="col.field === 'is_core_banking'" class="">
+                                <Tag style="height: 20px; font-size: 12px;" :severity="slotProps.data[col.field] === true ?
+                                    'success' : 'danger'" value="Success">{{ slotProps.data[col.field] === true ?
+                                        'Yes' : 'No' }}</Tag>
+                            </span>
+
+                            <span v-else-if="col.field === 'core_banking_status'" class="">
+                                <Tag style="height: 20px; font-size: 12px;" :severity="slotProps.data[col.field] == 'SUCCESS' ?
+                                    'success' : 'danger'" value="Success">{{ slotProps.data[col.field] == 'SUCCESS' ?
+                                        'success' : 'Failed' }}</Tag>
                             </span>
                             <span v-else>
                                 {{ slotProps.data[col.field] }}
@@ -429,31 +447,59 @@ const resetFilters = (): void => {
 };
 
 // generate columns
+// function generateColumns(transactions: any[]) {
+//     if (!transactions || transactions.length === 0) {
+//         return [];
+//     }
+
+//     const firstTransaction = transactions[0];
+
+//     return Object.keys(firstTransaction).map((key) => {
+//         // Convert key into readable header
+//         let header = key
+//             .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
+//             .replace(/_/g, " ")                  // underscores to spaces
+//             .replace(/\s+/g, " ")                // normalize spaces
+//             .trim();
+
+//         header = header.charAt(0).toUpperCase() + header.slice(1);
+
+//         return {
+//             field: key,
+//             header: header,
+//             sortable: true,
+//             exportable: true,
+//         };
+
+//     });
+// }
+
 function generateColumns(transactions: any[]) {
     if (!transactions || transactions.length === 0) {
         return [];
     }
 
     const firstTransaction = transactions[0];
+    const excludeColumns = ['id']; // Add any other columns you want to hide
 
-    return Object.keys(firstTransaction).map((key) => {
-        // Convert key into readable header
-        let header = key
-            .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
-            .replace(/_/g, " ")                  // underscores to spaces
-            .replace(/\s+/g, " ")                // normalize spaces
-            .trim();
+    return Object.keys(firstTransaction)
+        .filter(key => !excludeColumns.includes(key)) // Filter out excluded columns
+        .map((key) => {
+            let header = key
+                .replace(/([a-z])([A-Z])/g, "$1 $2")
+                .replace(/_/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
 
-        header = header.charAt(0).toUpperCase() + header.slice(1);
+            header = header.charAt(0).toUpperCase() + header.slice(1);
 
-        return {
-            field: key,
-            header: header,
-            sortable: true,
-            exportable: true,
-        };
-
-    });
+            return {
+                field: key,
+                header: header,
+                sortable: true,
+                exportable: true,
+            };
+        });
 }
 
 

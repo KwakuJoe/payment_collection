@@ -211,7 +211,7 @@ function splitNotesAndCoins(data:any) {
                 denomination: parseFloat(item.denomination),
                 currency: item.currency,
                 code: item.code,
-                quantity: parseFloat(item.quantity),
+                quantity: parseFloat(item.quantity ?? 0),
                 amount: parseFloat(item.amount)
             
         };
