@@ -20,7 +20,7 @@
 
             <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
             <div class="flex w-full gap-x-5">
-                <Button severity="secondary" size="lg" label="GO BACK" class="w-full lg:w-1/2" :loading="isVerificationLoading"
+                <Button severity="secondary" size="lg" label="GO BACK" class="w-full lg:w-1/2" 
                     @click="goHome()"/>
                 <Button type="button" size="lg" class="w-full lg:w-1/2" label="VERIFY" icon="pi pi-search"
                     :loading="isVerificationLoading" @click="nextStepper()" />

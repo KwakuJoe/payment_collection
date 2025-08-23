@@ -23,6 +23,7 @@
                 </div>
             </div>
 
+
             <div class="flex items-center justify-between w-full">
                 <div class="flex flex-col">
                     <p class="font-medium text-gray-500">BRANCH: <span class="font-light">{{ user.branch_name }}</span>
