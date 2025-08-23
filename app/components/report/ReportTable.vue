@@ -187,7 +187,7 @@ import { computed } from 'vue'
 import moment from 'moment';
 import type { TableColumn, TableFilters, BackendFilters, ServiceFilterOption, ResourceListResponse, Service, ResourceFetchResponse } from "~/types";
 import { removeEmptyPropertiesDeep } from '~/utils'
-import { toast } from 'vue-sonner'
+import { useToast } from "primevue/usetoast";
 import { institutionModule } from '~/repository/modules/institution_module';
 import { useReportStore } from '~/store/report';
 
@@ -203,6 +203,7 @@ const servicesResource = ref<ResourceListResponse<Service> | undefined>()
 const reportResource = ref<ResourceFetchResponse<Record<string, any>> | undefined>()
 const isGetReportError = ref(false)
 const reportStore = useReportStore()
+const toast = useToast();
 
 // const columnHeader = ref<>([])
 const filters = ref<TableFilters>({
@@ -302,7 +303,7 @@ async function getReports() {
 
     reportStore.tableOverviewData.service_name = ' - ';
     reportStore.tableOverviewData.service_account = '-';
-    reportStore.tableOverviewData.service_total_amount =   0
+    reportStore.tableOverviewData.service_total_amount = 0
     reportStore.tableOverviewData.service_count = 0
 
 
@@ -337,14 +338,11 @@ async function getReports() {
             loading.value = false;
             reportStore.loading = false;
 
-            toast('Server Error', {
-                description: 'Failed to fetch report data',
-                class: 'bg-red-500 text-white',
-                action: {
-                    label: 'Retry',
-                    onClick: () => getReports(),
-                },
-            })
+            toast.add({
+                severity: "error",
+                detail: 'Failed to fetch report data',
+                summary: "Sever error",
+            });
         }
 
 
@@ -353,14 +351,12 @@ async function getReports() {
         isGetReportError.value = true;
         console.error('Failed to fetch services:', error);
 
-        toast('Server Error', {
-            description: error.response?.data?.message ?? error.message,
-            class: 'bg-red-500 text-white',
-            action: {
-                label: 'Retry',
-                onClick: () => getReports(),
-            },
-        })
+        toast.add({
+            severity: "error",
+            detail: error.response?.data?.message ?? error.message,
+            summary:
+                error.response?.status == 401 ? "Unauthenticated" : "Sever error",
+        });
     } finally {
         loading.value = false;
     }
@@ -383,14 +379,11 @@ async function getServices(requestSource?: string) {
 
         } else {
 
-            toast('Server Error', {
-                description: 'Failed to fetch services',
-                class: 'bg-red-500 text-white',
-                action: {
-                    label: 'Retry',
-                    onClick: () => getServices(requestSource),
-                },
-            })
+            toast.add({
+                severity: "error",
+                detail: 'Failed to fetch services',
+                summary: "Sever error",
+            });
         }
 
         isServicesLoading.value = false;
@@ -398,14 +391,12 @@ async function getServices(requestSource?: string) {
     } catch (error: any) {
         console.error('Failed to fetch services:', error);
 
-        toast('Server Error', {
-            description: error.response?.data?.message ?? error.message,
-            class: 'bg-red-500 text-white',
-            action: {
-                label: 'Retry',
-                onClick: () => getServices(requestSource),
-            },
-        })
+        toast.add({
+            severity: "error",
+            detail: error.response?.data?.message ?? error.message,
+            summary:
+                error.response?.status == 401 ? "Unauthenticated" : "Sever error",
+        });
     } finally {
         isServicesLoading.value = false;
     }

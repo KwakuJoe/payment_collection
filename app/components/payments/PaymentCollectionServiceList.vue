@@ -93,7 +93,7 @@
 import { ref, computed, watch } from 'vue'
 import { institutionModule } from '~/repository/modules/institution_module';
 import type { Institution, ResourceListResponse, Service, } from '~/types'
-import { toast } from 'vue-sonner'
+import { useToast } from "primevue/usetoast";
 import { usePaymentStepsStore } from '~/store/payment';
 const paymentStore = usePaymentStepsStore();
 
@@ -114,15 +114,17 @@ const isServicesLoading = ref(false)
 const isFetchServicesError = ref(false)
 const router = useRouter()
 const params = reactive({})
+const toast = useToast();
 
 
-const filteredServices = computed(() => {
-    let filtered = serviceResource?.value?.data || []
+
+const filteredServices = computed<Service[]>(() => {
+    let filtered: Service[] = serviceResource?.value?.data || []
 
     // Filter by search query
     if (search.value.trim()) {
         const query = search.value.toLowerCase().trim()
-        filtered = filtered?.filter(service =>
+        filtered = filtered.filter(service =>
             service.name.toLowerCase().includes(query)
         )
     }
@@ -185,14 +187,13 @@ async function getServices(requestSource: string) {
         isFetchServicesError.value = true;
         console.error('Failed to fetch services:', error);
 
-        toast('Server Error', {
-            description: error.response?.data?.message ?? error.message,
-            class: 'bg-red-500 text-white',
-            action: {
-                label: 'Retry',
-                onClick: () => getServices(requestSource),
-            },
-        })
+
+    toast.add({
+      severity: "error",
+      detail: error.response?.data?.message ?? error.message,
+      summary:
+        error.response?.status == 401 ? "Unauthenticated" : "Sever error",
+    });
     } finally {
         isServicesLoading.value = false;
     }

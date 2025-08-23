@@ -135,7 +135,7 @@ const uniqueCategories = computed(() => {
 })
 
 const filteredInstitutions = computed(() => {
-  let filtered = institutionResource?.value?.data || []
+  let filtered:Institution[] = institutionResource?.value?.data || []
 
   // Filter by search query
   if (search.value.trim()) {
