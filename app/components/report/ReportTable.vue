@@ -2,7 +2,6 @@
     <div class="  w-full">
 
 
-        <pre>{{ authStore.user }}</pre>
         <div class=" mx-auto">
 
             <!-- Backend Filters -->
