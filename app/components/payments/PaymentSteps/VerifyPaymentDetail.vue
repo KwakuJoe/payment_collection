@@ -10,6 +10,8 @@
 
   <!-- {{ paymentStore.selectedPaymentServiceFormFieldIsAmount }} -->
 
+   <!-- {{ prepareFormFields}} -->
+
               <Message v-if="validationErrors.length" severity="error">
                   <ul>
                       <li v-for="(error, index) in validationErrors" :key="index">{{ index + 1 }}. {{ error }}</li>

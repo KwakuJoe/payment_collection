@@ -205,6 +205,7 @@ async function getServiceById() {
 onMounted(async () => {
   // paymentStore.selectedPaymentService = ref({} as Service);
   // paymentStore.selectedPaymentServiceFormField = ref([] as FormField[]);
+  prepareFormFields.value = {} as FormFieldForPosting;
   await getServiceById();
 
 });

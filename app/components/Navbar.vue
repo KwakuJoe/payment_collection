@@ -1,11 +1,11 @@
 <template>
     <div
         class="flex justify-center w-full border-b border-gray-100 dark:border-zinc-800 border-solid bg-white dark:bg-[#18181B]">
-        <div class="flex justify-center  w-full bg-white dark:bg-black/20">
-            <div class="flex items-center justify-between gap-x-3 px-4 h-16  w-full max-w-7xl">
-                <div class="flex gap-x-2 items-center">
+        <div class="flex justify-center w-full bg-white dark:bg-black/20">
+            <div class="flex items-center justify-between w-full h-16 px-4 gap-x-3 max-w-7xl">
+                <div class="flex items-center gap-x-2">
                     <button @click="drawerVisible = true"
-                        class="lg:hidden items-center gap-x-2 hover:bg-gray-100 dark:hover:bg-zinc-900 p-2 rounded-md">
+                        class="items-center p-2 rounded-md lg:hidden gap-x-2 hover:bg-gray-100 dark:hover:bg-zinc-900">
                         <Icon class="text-2xl" name="line-md:close-to-menu-transition" />
                     </button>
                     <p class="font-bold">{{ ucFirst(pageTitle) }}</p>
@@ -17,10 +17,10 @@
                          <!-- user drop down -->
                         <div class="flex">
                             <button @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"
-                                class="lg:flex hidden items-center gap-x-4 hover:bg-gray-100 dark:hover:bg-zinc-900 p-2 rounded-md ">
+                                class="items-center hidden p-2 rounded-md lg:flex gap-x-4 hover:bg-gray-100 dark:hover:bg-zinc-900 ">
                                 <Avatar :label="user_info?.full_name[0]" class="" shape="circle" />
-                                <div class="flex flex-col items-start">
-                                    <p class="font-semibold text-sm">{{ user_info?.username }}</p>
+                                <div class="flex flex-col items-start"> 
+                                    <p class="text-sm font-semibold">{{ user_info?.username }}</p>
                                     <p class="text-sm text-gray-400">{{ user_info?.full_name }}</p>
                                 </div>
                                 <Icon class="text-3xl" name="mdi:chevron-down" />
@@ -34,7 +34,7 @@
 
                     <!-- dark theme -->
                     <button
-                        class="flex justify-center items-center h-10 w-10 p-3 rounded-lg border border-gray-100 border-solid dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
+                        class="flex items-center justify-center w-10 h-10 p-3 border border-gray-100 border-solid rounded-lg dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
                         @click="toggleDarkMode()">
                         <Icon v-if="isDark" name="material-symbols:sunny-outline-rounded" @click="" />
                         <Icon v-else name="material-symbols:moon-stars-outline" @click="" />
@@ -49,26 +49,26 @@
     </div>
 
     <!-- side drawer on small screen only -->
-    <div class="card flex justify-center">
+    <div class="flex justify-center card">
         <Drawer v-model:visible="drawerVisible" class="!w-90 md:!w-90 lg:!w-[30rem]">
             <template #header>
                 <div
-                    class="flex items-center gap-x-3 px-4 h-16 border-b border-gray-200 border-solid dark:border-zinc-800">
+                    class="flex items-center h-16 px-4 border-b border-gray-200 border-solid gap-x-3 dark:border-zinc-800">
                     <img src="../assets/ucc-logo.png" width="24" alt="" />
                     <div class="flex flex-col">
-                        <p class="font-bold text-xs">UNIVERSITY OF CAPE COAST</p>
-                        <p class="text-gray-400 text-xs">HEALTH MANAGEMENT PORTAL</p>
+                        <p class="text-xs font-bold">UNIVERSITY OF CAPE COAST</p>
+                        <p class="text-xs text-gray-400">HEALTH MANAGEMENT PORTAL</p>
                     </div>
                 </div>
             </template>
 
-            <div class="flex flex-col h-full justify-between">
+            <div class="flex flex-col justify-between h-full">
                 <!-- menus -->
                 <SideMenu />
 
                 <!-- profile -->
                 <button @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"
-                    class="flex items-center gap-x-4 hover:bg-gray-100 dark:hover:bg-zinc-900 p-2 rounded-md">
+                    class="flex items-center p-2 rounded-md gap-x-4 hover:bg-gray-100 dark:hover:bg-zinc-900">
                     <Avatar :label="user_info?.full_name[0]" class="" shape="circle" />
                     <div class="flex flex-col items-start">
                         <p class="font-semibold">{{ user_info?.full_name }}</p>

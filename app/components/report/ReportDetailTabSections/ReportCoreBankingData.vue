@@ -3,7 +3,7 @@
 
         <!-- {{ record?.core_banking_request }} -->
 
-        <h3 class="font=bold">Core Banking Request</h3>
+
         <div v-if="record?.core_banking_request" v-for="(value, key) in parseMetadata(record?.core_banking_request)" :key="key" class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
             <p>{{key.toUpperCase()}}</p>
             <p class="font-medium ">{{ value ?? '-' }}</p>
@@ -18,7 +18,7 @@
         </div> 
 
 
-         <EmptyState v-else message="Core banking data is not found on this transaction report" title="No core banking data fond" />
+         <EmptyState v-else message="Core banking data is not found on this transaction report" title="No core banking data found" />
 
     </div>
 </template>

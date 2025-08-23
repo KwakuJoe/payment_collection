@@ -107,7 +107,7 @@
 
 
         <!-- empty -->
-        <EmptyState v-else message="Core banking data is not found on this transaction report" title="No core banking data fond" />
+         <EmptyState v-else message="Cash denominations is not found on this transaction report" title="No Cash" />
 
     </div>
 </template>

@@ -8,7 +8,7 @@
         </div>
 
        
-        <EmptyState v-else message="Form data is not found on this transaction report" title="No form data fond" />
+        <EmptyState v-else message="Form data is not found on this transaction report" title="No form data found" />
 
     </div>
 </template>

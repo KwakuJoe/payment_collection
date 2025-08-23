@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col w-full p-5 border border-gray-100 gap-y-5 dark:border-zinc-800">
+       
         <div class="flex flex-col items-end lg:flex-row gap-x-5 gap-y-2">
             <div class="flex flex-col w-full lg:w-2/4 ">
                                   
@@ -94,6 +95,7 @@ const props = defineProps<{
 
 
 const authStore = useAuthStore()
+const { token, user } = storeToRefs(authStore);
 const bank_account_number  = ref('');
 
 onMounted( async () => {
@@ -167,13 +169,13 @@ const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
     channel_reference: null,
     app_reference: null,
     branch: {
-        name: authStore.user!.branch_name,
-        code: authStore.user!.branch_code,
+        name: user.value.branch_name,
+        code: user.value.branch_code,
         email: null
     },
     user: {
-        username: authStore.user!?.username,
-        email: authStore.user!?.email,
+        username: user.value.username,
+        email: user.value.email,
     }
 
 })

@@ -112,7 +112,7 @@ async function getReportDetail() {
             // transaction.value = res.data
             // form_data.value = res.data.form_data
             // receipt.value = res.data.form_data
-            currency_denomination.value =JSON.parse(  res?.data.currency_denomination)
+            currency_denomination.value =JSON.parse(  res?.data.currency_denomination || "[]")
             
             // core_banking.value.status = res.data.core_banking_status
             // core_banking.value.message = res.data.core_banking_message
