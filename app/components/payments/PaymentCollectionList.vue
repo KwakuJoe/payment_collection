@@ -6,7 +6,7 @@
       <div class="flex justify-between w-full">
         <div class="flex flex-col">
           <p class="font-bold ">Institutions</p>
-          <p class="text-sm text-gray-500">Browse and search through our partner institutions</p>
+          <p class="text-sm text-gray-500">Browse through our partner institutions</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-x-3">
