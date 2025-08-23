@@ -35,7 +35,8 @@
           <!-- Institution -->
           <div
             class="flex flex-wrap items-center w-full p-3 px-5 mt-2 border border-gray-100 rounded-md gap-y-2 gap-x-3 dark:border-zinc-800">
-            <Avatar label="E" size="xlarge" shape="circle" />
+            <!-- <Avatar label="E" size="xlarge" shape="circle" /> -->
+            <img :src="`${config.public.imageUrl}/${paymentStore.selectedPaymentService?.institution?.image}`" :alt="paymentStore.selectedPaymentService?.institution?.name" class="shadow-lg" width="64" />
             <div class="flex flex-col flex-1">
               <p class="text-sm text-gray-500 ">Institution</p>
               <p class="font-bold font-lg ">{{ paymentStore.selectedPaymentService?.institution?.name }}</p>
@@ -106,7 +107,7 @@ const isFetchServicesError = ref(false);
 // const serviceResource = ref<ResourceListResponse<Service>();
 const prepareFormFields = ref({} as FormFieldForPosting);
 const toast = useToast();
-
+const config = useRuntimeConfig();
 
 
 const steps = [
