@@ -266,19 +266,6 @@ export interface BackendFilters {
   teller: string | null
 }
 
-// export interface TransactionRecord {
-//   id: string
-//   bankReference: string
-//   amountPaid: string
-//   channelRef: string
-//   branch: string
-//   branchUserName: string
-//   narration: string
-//   sourceAccount: string
-//   service: string
-//   transactionDate: string
-// }
-
 
 export interface BackendFilters {
     dateRange: [Date | null, Date | null] | null;
@@ -288,4 +275,111 @@ export interface BackendFilters {
 // Update the filters type definition
 export interface TableFilters {
     [key: string]: DataTableFilterMetaData;
+}
+
+
+
+export interface ReportInstitution {
+  id: string;
+  category_id: string | null;
+  name: string;
+  customer_number: string;
+  customer_name: string;
+  description: string;
+  tooltip: string;
+  rank: string;
+  product_code: string;
+  alias: string;
+  icon: string;
+  image: string;
+  status: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface ReportService {
+  id: string;
+  name: string;
+  description: string;
+  institution_id: string;
+  account_number: string;
+  currency: string;
+  tooltip: string;
+  rank: string;
+  verification_endpoint: string;
+  process_endpoint: string;
+  merchant_code: string | null;
+  biller_id: string | null;
+  biller_verification_endpoint: string | null;
+  biller_process_endpoint: string | null;
+  biller_reversal_endpoint: string | null;
+  is_reversible: number;
+  day_for_reversal: number;
+  has_external_reversible: number;
+  require_verification: number;
+  uses_core_banking: number;
+  app_id: string | null;
+  app: string | null;
+  status: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface CurrencyDenomination {
+  is_note: number;
+  denomination: number;
+  currency: string;
+  code: string;
+  quantity: number;
+  amount: number;
+}
+
+export interface RootTransaction {
+  id: string;
+  status: boolean;
+  category_id: string | null;
+  category: string | null;
+  institution_id: string;
+  institution: ReportInstitution;
+  service_id: string;
+  service: ReportService;
+  form_data: string; // you can JSON.parse this if you want an object
+  payment_method: string;
+  currency: string;
+  currency_denomination: string | CurrencyDenomination[];
+  total_amount: string;
+  source_account: string;
+  destination_account: string;
+  teller_name: string;
+  branch_code: string;
+  branch_name: string;
+  branch_email: string | null;
+  depositor_name: string;
+  depositor_phone: string;
+  depositor_email: string;
+  channel: string;
+  app_reference: string | null;
+  channel_reference: string | null;
+  comment: string | null;
+  receipt: string | null;
+  has_external_receipt: boolean;
+  receipt_url: string | null;
+  is_core_banking: boolean;
+  core_banking_reference: string | null;
+  core_banking_status: string;
+  core_banking_request: string;
+  core_banking_response: string;
+  core_banking_message: string;
+  core_banking_time: string;
+  transmission_status: string | null;
+  transmission_reference: string | null;
+  transmission_request: string | null;
+  transmission_response: string | null;
+  transmission_message: string | null;
+  transmission_time: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 }

@@ -380,6 +380,9 @@ async function postFieldForSubmission() {
                 detail: "Fields verified successfully",
                 summary: res?.message
             });
+            
+            paymentStore.selectedPaymentServiceReceipt = res.data.receipt ?? [];
+            paymentStore.selectedPaymentServiceReceiptUrl = res.data.receipt_url ?? '';
             paymentStore.currentStep++;
         } else {
 
@@ -398,7 +401,7 @@ async function postFieldForSubmission() {
                 severity: "error",
                 life: 5000,
                 detail: res?.message ?? "Failed to verify fields",
-                summary: "Verification Error",
+                summary: res?.message ?? "Verification Error",
             });
         }
 

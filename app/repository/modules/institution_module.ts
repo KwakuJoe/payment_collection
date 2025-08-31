@@ -9,6 +9,7 @@ class InstitutionModule {
 
     private config = useRuntimeConfig();
 
+    private BILLER_API_BASEURL = this.config.public.billerApiBaseUrl;
     private INSTITUTIONS_RESOURCE = this.config.public.institutionsResource;
     private INSTITUTION_SERVICE_RESOURCE = this.config.public.institutionServicesResource;
     private CATEGORY_RESOURCE = this.config.public.categoriesResource;
@@ -24,6 +25,7 @@ class InstitutionModule {
     async getInstitutions(params: Record<string, any>, options: { abortKey?: string; enableAbort?: boolean } = {}, requestSource?: string): Promise<ResourceListResponse<Institution> | undefined> {
         // Convert params object to query string
         const url = `${this.INSTITUTIONS_RESOURCE}`;
+        // const url = `${this.INSTITUTIONS_RESOURCE}`;
         const { abortKey = 'getInstitutions', enableAbort = true } = options;
 
         let controller: AbortController | undefined;

@@ -20,7 +20,7 @@
                     <div class="relative justify-start z-10 flex flex-col h-full text-white p-5">
 
                         <div class="flex items-center justify-between">
-                            <NuxtImg src="/assets/logo/logo.svg" class="w-[150px]" />
+                            <NuxtImg src="/assets/logo/logo.png" class="w-[150px]" />
                             <div class="mt-5">
                                 <p class="font-semibold text-2xl">{{ config.public.appTitle }}</p>
                             </div>

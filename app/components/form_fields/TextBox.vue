@@ -5,11 +5,12 @@
         {{ field.field_label }} 
         <span v-html="showAsteric"></span>
       </p>
+      
       <InputText
        size="small"
         :readonly="readonly"
         class="bg-yellow-500 border border-amber-600"
-
+data-p="disabled"
         fluid
         type="text"
         v-model="prepareFormFields[`${field.field_name}`]"
@@ -34,8 +35,8 @@ const props = defineProps<{
 const defaultValue = ref(props.field.default_value);
 const readonly = ref(props.field.is_readonly ? true : false );
 const maxlength = ref(props.field.field_length);
-const is_amount = ref(props.field.is_amount || false);
-const is_required = ref(props.field.is_required || false);
+const is_amount = ref(props.field.is_amount  ? true : false );
+const is_required = ref(props.field.is_required  ? true : false );
 
 const make_input_number = ref("");
 const showAsteric = ref("");

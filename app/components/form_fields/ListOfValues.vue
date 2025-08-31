@@ -12,6 +12,7 @@
                    <Select checkmark  size="small" filter fluid  :options="options" option-value="lov_value"
                 option-label="lov_title"  class="w-full md:w-56" 
                 v-model="prepareFormFields[`${field.field_name}`]"
+                :disabled="readonly"
                 />        
                
                   <Button v-if="options.length < 1" :loading="isExternaldataLoading" icon="pi pi-refresh" @click="getData()" >
@@ -36,10 +37,10 @@ const props = defineProps<{
 
 const paymentStore = usePaymentStepsStore();
 const defaultValue = ref(props.field.default_value || "");
-const readonly = ref(props.field.is_readonly || false);
+const readonly = ref(props.field.is_readonly ? true : false );
 const maxlength = ref(props.field.field_length);
-const is_amount = ref(props.field.is_amount || false);
-const is_required = ref(props.field.is_required || false);
+const is_amount = ref(props.field.is_amount  ? true : false );
+const is_required = ref(props.field.is_required  ? true : false );
 
 const make_input_number = ref("");
 const showAsteric = ref("");
@@ -68,7 +69,7 @@ onMounted(async () => {
     if(props.field.is_thirdparty == 1 && options.value.length < 1){
     setTimeout(() => {
        getData()
-    }, 5000);
+    }, 1000);
   }
   
 });
@@ -87,7 +88,8 @@ const isLoadingGetData = ref(false)
 const payload = computed(() => {
     return {
         field_id: props.field.id,
-        institution_id: paymentStore.selectedPaymentService!.institution.id
+         [props.field.field_name]: props.prepareFormFields[props.field.field_name],
+              service_id: paymentStore.selectedPaymentService!.id,
       }
 })
 

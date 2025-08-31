@@ -1,22 +1,22 @@
 <template>
     <aside class="w-full h-screen lg:border-r border-gray-100 dark:border-zinc-800 border-solid  dark:bg-[#18181B]">
-        <div class="flex flex-col bg-white dark:bg-black/20 h-full">
+        <div class="flex flex-col h-full bg-white dark:bg-black/20">
             <!-- Logo and Title -->
-            <div class="hidden lg:flex items-center justify-between h-16 border-b border-gray-100 border-solid dark:border-zinc-800 px-5">
-                <!-- <NuxtImg src="/assets/logo/logo.svg" width="34" alt=""/> -->
-                <NuxtImg src="/assets/logo/logo.svg" class="w-[120px]" />
-                <div class="flex items-start gap-x-2">
+            <div class="items-center hidden h-16 px-5 border-b border-gray-100 border-solid lg:flex dark:border-zinc-800">
+
+                <NuxtImg src="/assets/logo/logo.png" class="w-[120px]" />
+                <!-- <div class="flex items-start gap-x-2">
                     <p class="text-sm font-normal ">CENTRAL</p>
                     <p class="text-sm font-bold ">COMMAND </p>
-                </div>
+                </div> -->
             </div>
-
+ 
             <!-- Menu Items -->
             <ul class="px-4 py-6">
                 <li v-for="(item, index) in menuItems" :key="index">
                     <!-- Single Menu Item -->
                     <router-link v-if="!item.children" :to="item.path"
-                        class="flex items-center p-3 text-sm  rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-800/30 transition"
+                        class="flex items-center p-3 text-sm transition rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-800/30"
                         :class="{ 'bg-gray-50 dark:bg-zinc-800/20 text-primary font-bold border-l-2 border-primary': isActive(item.path), 'font-bold': isActive(item.path) }">
                         <span class="mr-2 text-lg">
                             <Icon :name="item.icon" />
@@ -27,7 +27,7 @@
                     <!-- Nested Menu Item -->
                     <div v-else>
                         <button
-                            class="flex items-center justify-between w-full p-3 rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-800/30 transition"
+                            class="flex items-center justify-between w-full p-3 transition rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-800/30"
                             @click="toggleDropdown(index)">
                             <div class="flex items-center">
                                 <span class="mr-2 text-lg">
@@ -44,7 +44,7 @@
                             <ul v-if="openIndex === index" class="pl-6">
                                 <li v-for="child in item.children" :key="child.path">
                                     <router-link :to="child.path"
-                                        class="flex items-center p-3 text-sm font-bold rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-800/30 transition"
+                                        class="flex items-center p-3 text-sm font-bold transition rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-800/30"
                                         :class="{ 'bg-gray-50 dark:bg-zinc-800/20 text-primary font-bold border-l-2 border-primary': isActive(child.path), 'font-bold': isActive(child.path) }">
                                         <span class="mr-2">
                                             <Icon :name="child.icon" />

@@ -8,6 +8,8 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
   const totalSteps = 4;
   const previewDataItem = ref<PreviewDataItem[]>([]);
   const selectedPaymentService = ref({} as Service);
+  const selectedPaymentServiceReceipt = ref([] as any[]);
+  const selectedPaymentServiceReceiptUrl = ref('');
   const selectedPaymentServiceFormField = ref([] as FormField[]);
   const selectedPaymentServiceFormFieldRefreshed = ref<FormField[]>();
   const selectedCurrencyDenomination = ref([] as DenominationData[]);
@@ -58,6 +60,9 @@ export const usePaymentStepsStore = defineStore('paymentSteps', () => {
     selectedPaymentServiceFormFieldIsAmount,
     selectedPaymentServiceCompletedFieldValues,
     prepareFormFields,
-    depositor
+    depositor,
+    selectedPaymentServiceReceipt,
+    selectedPaymentServiceReceiptUrl,
+
   }
 })

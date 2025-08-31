@@ -2,12 +2,14 @@
    
     <div  
         class="flex flex-col w-full p-10 bg-white border border-gray-100 gap-y-5 dark:bg-black/20 dark:border-zinc-800">
-        
+
+
+
          <div id="printArea">
         <div class="flex items-center justify-between w-full">
             <!-- system logo -->
             <div class="flex p-2 rounded-lg ">
-                <NuxtImg src="/assets/logo/logo.svg" class="w-[120px]" />
+                <NuxtImg src="/assets/logo/logo.png" class="w-[120px]" />
                 
             </div>
             <!-- payment title -->
@@ -21,7 +23,7 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-between w-full">
+        <div class="flex items-center justify-between w-full" v-if="record?.receipt">
             <div class="flex flex-col">
                 <p class="font-medium text-gray-500">BRANCH: <span class="font-light">{{record?.branch_name}}</span></p>
                 <p class="font-medium text-gray-500">TELLER: <span class="font-light">{{record?.teller_name}}</span></p>
@@ -35,34 +37,12 @@
         
 
         <div class="flex flex-col p-5 border border-gray-100 rounded-md gap-y-2 dark:border-zinc-900">
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p >Phone Number</p>
-                <p class="font-medium">0554538444</p>
-            </div>
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p>Meter Number</p>
-                <p class="font-medium">26646463</p>
-            </div>
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p >Customer Name</p>
-                <p class="font-medium">ROLAND MAY LUKE</p>
-            </div>
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p >Balance</p>
-                <p class="font-medium ">0.00</p>
-            </div>
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p>Amount</p>
-                <p class="font-medium">0.00</p>
-            </div>
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p>Payment Methods</p>
-                <p class="font-medium">CASH</p>
-            </div>
-            <div class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
-                <p >PAID BY</p>
-                <p class="font-medium">ROLAND BAKA FORSON (0554538444)</p>
-            </div>
+                <div v-for="receipt in receipt_record" :key="receipt.key"
+                    class="flex justify-between w-full py-2 border-b-2 border-gray-100 border-dashed dark:border-zinc-800">
+                    <p>{{ receipt.key }}</p>
+                    <p class="font-medium">{{ receipt.value }}</p>
+                </div>
+
 
         </div>
         
@@ -93,6 +73,12 @@ const config = useRuntimeConfig();
 const props = defineProps<{
     record: Record<string, any> | null;
 }>()
+
+const receipt_record = ref([] as any[]);
+onMounted(async () => {
+  receipt_record.value = props.record?.receipt ? JSON.parse(props.record?.receipt ?? '') : []; 
+
+});
 
 const emits = defineEmits(['on-success', 'on-close'])
 

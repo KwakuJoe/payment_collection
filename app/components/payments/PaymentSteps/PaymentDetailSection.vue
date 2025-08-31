@@ -192,9 +192,10 @@ function updateFormFieldsWithPreview(previewData:PreviewDataItem[], formFields:F
                 default_value: field.is_amount == true ? parseFloat(previewMap[field.field_name]) : previewMap[field.field_name]
             };
         }else{
+            field.default_value = props.prepareFormFields[`${field.field_name}`]
             if(field.require_verification){
                 // field.field_type.code = 1
-                field.is_visible = false
+                // field.is_visible = false
                 field.is_readonly = true
             }
         }

@@ -1,22 +1,22 @@
 <template>
-    <div class="  w-full">
+    <div class="w-full ">
 
 
-        <div class=" mx-auto">
+        <div class="mx-auto ">
 
             <!-- Backend Filters -->
-            <div class=" rounded-lg mb-6  border border-gray-100 dark:border-zinc-800  p-3 ">
-                <div class="flex lg:flex-row flex-col items-center gap-x-10 gap-y-2">
+            <div class="p-3 mb-6 border border-gray-100 rounded-lg dark:border-zinc-800">
+                <div class="flex flex-col items-center lg:flex-row gap-x-10 gap-y-2">
 
-                    <!-- <div class="flex items-center  lg:w-fit w-full">
+                    <!-- <div class="flex items-center w-full lg:w-fit">
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white ">Filters</h3>
                     </div> -->
 
-                    <div class="flex lg:flex-row flex-col lg:flex-1 w-full items-center  justify-end gap-x-5 gap-y-2">
+                    <div class="flex flex-col items-center justify-end w-full lg:flex-row lg:flex-1 gap-x-5 gap-y-2">
 
 
                         <!-- Service Filter -->
-                        <div class="lg:flex-1 w-full">
+                        <div class="w-full lg:flex-1">
                             <Select filter size="small" :disabled="isServicesLoading" fluid
                                 v-model="backendFilters.service" :options="serviceOptions" option-label="label"
                                 option-value="value"
@@ -24,7 +24,7 @@
                                 class="w-full" />
                         </div>
                         <!-- Date Range Filter -->
-                        <div class="lg:flex-1 w-full">
+                        <div class="w-full lg:flex-1">
 
                             <Calendar size="small" fluid v-model="backendFilters.dateRange" selection-mode="range"
                                 :manual-input="false" date-format="dd/mm/yy" placeholder="Select date range"
@@ -32,19 +32,19 @@
                         </div>
 
                         <!-- branch -->
-                        <!-- <div class="lg:flex-1 w-full">
+                        <!-- <div class="w-full lg:flex-1">
                             <Select filter size="small" fluid v-model="backendFilters.branch" :options="branchOptions"
                                 option-label="label" option-value="value" placeholder="Select branch" class="w-full" />
                         </div>
 
-                        <div class="lg:flex-1 w-full">
+                        <div class="w-full lg:flex-1">
                             <Select filter size="small" fluid v-model="backendFilters.teller" :options="tellerOptions"
                                 option-label="label" option-value="value" placeholder="Select teller" class="w-full" />
                         </div> -->
 
 
                         <!-- Filter Actions -->
-                        <div class="flex lg:flex-1 w-full gap-x-2">
+                        <div class="flex w-full lg:flex-1 gap-x-2">
                             <Button size="small" fluid @click="applyFilters" :loading="loading" icon="pi pi-search"
                                 label="Apply" class="" />
                             <Button size="small" fluid @click="resetFilters" :disabled="loading" icon="pi pi-refresh"
@@ -78,14 +78,14 @@
 
 
             <!-- DataTable -->
-            <div v-else class=" w-full overflow-x-auto ">
+            <div v-else class="w-full overflow-x-auto ">
                 <DataTable ref="dt" :value="tableData" paginator :rows="10" :rows-per-page-options="[5, 10, 20, 50]"
                     v-model:filters="filters" filter-display="menu"
                     :global-filter-fields="['id', 'service', 'bankReference', 'channelRef', 'branch', 'branchUserName']"
                     sortable resizable-columns column-resize-mode="fit" size="small" striped-rows class="p-datable-sm">
                     <!-- Header with search and export -->
                     <template #header>
-                        <div class="flex justify-between items-center gap-x-10 ">
+                        <div class="flex items-center justify-between gap-x-10 ">
                             <div>
                                 <h2 class="text-base font-semibold text-gray-900 dark:text-white">Transaction Reports
                                 </h2>
@@ -95,7 +95,7 @@
                             <div class="flex">
 
                             </div>
-                            <div class="flex flex-1 gap-2 justify-end">
+                            <div class="flex justify-end flex-1 gap-2">
                                 <!-- Frontend Search -->
                                 <div class="flex  w-[300px]">
                                     <InputText size="small" fluid v-model="globalFilterValue"
@@ -114,7 +114,7 @@
                         <template #body="slotProps">
                             <!-- Action Button -->
                             <button
-                                class="flex justify-center items-center h-8 w-8 p-2 rounded-lg border border-gray-200 border-solid dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
+                                class="flex items-center justify-center w-8 h-8 p-2 border border-gray-200 border-solid rounded-lg dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900"
                                 @click="onOpenLabDetails(slotProps.data)">
                                 <Icon name="material-symbols:more-horiz" />
                             </button>
@@ -130,7 +130,7 @@
                                 {{ slotProps.data[col.field] }}
                             </span>
                             <!-- <span v-else-if="col.field === 'id'"
-                                class="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                                class="px-2 py-1 font-mono text-sm bg-gray-100 rounded dark:bg-gray-700">
                                 {{ slotProps.data[col.field] }} 
                             </span> -->
 
@@ -161,8 +161,8 @@
 
                     <!-- Empty state -->
                     <template #empty>
-                        <div class="text-center py-8">
-                            <i class="pi pi-search text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+                        <div class="py-8 text-center">
+                            <i class="mb-4 text-4xl text-gray-400 pi pi-search dark:text-gray-600"></i>
                             <p class="text-gray-500 dark:text-gray-400">No records found</p>
                             <p class="text-sm text-gray-400 dark:text-gray-500">Try adjusting your filters or search
                                 terms</p>
@@ -242,7 +242,7 @@ const globalFilterValue = computed({
 
 // Helper functions for date handling
 const getInitialDateRange = (): [Date, Date] => {
-    const endDate = moment().endOf('day').toDate();
+    const endDate = moment().startOf('day').toDate();
     const startDate = moment().startOf('day').toDate();
     return [startDate, endDate];
 };
@@ -450,33 +450,7 @@ const resetFilters = (): void => {
     fetchReportData();
 };
 
-// generate columns
-// function generateColumns(transactions: any[]) {
-//     if (!transactions || transactions.length === 0) {
-//         return [];
-//     }
 
-//     const firstTransaction = transactions[0];
-
-//     return Object.keys(firstTransaction).map((key) => {
-//         // Convert key into readable header
-//         let header = key
-//             .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
-//             .replace(/_/g, " ")                  // underscores to spaces
-//             .replace(/\s+/g, " ")                // normalize spaces
-//             .trim();
-
-//         header = header.charAt(0).toUpperCase() + header.slice(1);
-
-//         return {
-//             field: key,
-//             header: header,
-//             sortable: true,
-//             exportable: true,
-//         };
-
-//     });
-// }
 
 function generateColumns(transactions: any[]) {
     if (!transactions || transactions.length === 0) {

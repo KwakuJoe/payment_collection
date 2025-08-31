@@ -32,10 +32,11 @@
        
                 </div>
             </div>
+
             
             <FormFieldSection :prepareFormFields="prepareFormFields" :service="service"
                 :verification_form_fields="verification_form_fields" :submission_form_fields="submission_form_fields"
-                :form_fields="paymentStore.selectedPaymentServiceFormField!" />
+                :form_fields="getObjectsRequiredForVerification(paymentStore.selectedPaymentServiceFormField!, 0)" />
 
             <div class="my-4 border-t border-gray-300 border-dashed dark:border-zinc-700"></div>
             <div class="flex w-full gap-x-5">
@@ -127,7 +128,7 @@ return ;
      toast.add({
           life: 10000,
             severity: "error",
-            summary: 'Field has not been configures',
+            summary: 'Amount field is required',
             detail: 'Contact Adminstrator'
                
         });
@@ -187,7 +188,14 @@ function validateRequiredFields(formObject:FormFieldForPosting, formFields:FormF
     return errors;
 }
 
-
+function getObjectsRequiredForVerification(
+  data: FormField[],
+  require_verification: number | boolean
+) {
+  return data.filter(
+    (item) => item && item.require_verification === require_verification && item.is_visible == true
+  );
+}
 
 
 

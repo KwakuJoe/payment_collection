@@ -17,8 +17,10 @@
                 <Tab value="0">RECEIPT</Tab>
                 <Tab value="1">TRANSACTION</Tab>
                 <Tab value="2">FORM DATA</Tab>
-                <Tab value="3">CORE BANKING DETAILS</Tab>
-                <Tab value="4">CASH DENOMINATION</Tab>
+                <Tab value="3" v-if="transaction.is_core_banking">CORE BANKING DETAILS</Tab>
+                <Tab value="4" v-if="transaction.currency_denomination">CASH DENOMINATION</Tab>
+                <Tab value="5" v-if="transaction.is_core_banking">TRANSMISSION</Tab>
+           
             </TabList>
             <TabPanels>
                 <TabPanel value="0">
@@ -35,9 +37,10 @@
                 </TabPanel>
                 <TabPanel value="4">
                 <ReportCashDenominationData   :record="currency_denomination" @on-close="emits('on-close')"/> 
+                </TabPanel>
 
-                   
-                    
+                <TabPanel value="5">
+                    <ReportTransmissionData :record="reportDetailResource?.data ?? null" @on-close="emits('on-close')"/> 
                 </TabPanel>
             </TabPanels>
         </Tabs>
@@ -45,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import { institutionModule } from '~/repository/modules/institution_module';
-import type { DenominationData, ResourceFetchResponse } from '~/types';
+import type { DenominationData, ResourceFetchResponse, RootTransaction } from '~/types';
 import { useToast } from "primevue/usetoast";
 
 
@@ -70,7 +73,7 @@ const loading = ref(false)
 const isGetReportError = ref(false)
 const receipt = ref({})
 const form_data = ref({})
-const transaction = ref({})
+const transaction = ref( {} as RootTransaction)
 const currency_denomination = ref([])
 
 const core_banking = ref({
@@ -108,6 +111,7 @@ async function getReportDetail() {
             loading.value = false;
             isGetReportError.value = false;
             reportDetailResource.value = res;
+            transaction.value = res.data as RootTransaction;
 
             // transaction.value = res.data
             // form_data.value = res.data.form_data
