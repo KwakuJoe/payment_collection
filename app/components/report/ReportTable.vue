@@ -26,7 +26,7 @@
                         <!-- Date Range Filter -->
                         <div class="w-full lg:flex-1">
 
-                            <Calendar size="small" fluid v-model="backendFilters.dateRange" selection-mode="range"
+                            <Calendar showIcon iconDisplay="input"  size="small" fluid v-model="backendFilters.dateRange" selection-mode="range"
                                 :manual-input="false" date-format="dd/mm/yy" placeholder="Select date range"
                                 class="w-full" />
                         </div>

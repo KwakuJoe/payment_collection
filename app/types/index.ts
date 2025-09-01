@@ -272,6 +272,11 @@ export interface BackendFilters {
     service: string | null;
 }
 
+export interface DashboardFilters {
+    dateRange: [Date | null, Date | null] | null;
+    branch: string | null;
+}
+
 // Update the filters type definition
 export interface TableFilters {
     [key: string]: DataTableFilterMetaData;
