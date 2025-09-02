@@ -19,6 +19,7 @@ class InstitutionModule {
     private VERIFY_PAYMENT_ACCOUNT_NUMBER = this.config.public.verifyPaymentAccountNumberResource;
     private REPORT_RESOURCE = this.config.public.reportResource;
     private FIELD_GET_EXTERNAL_DATA_RESOURCE = this.config.public.fieldGetExternalData;
+    private DASHBOARD_SERVICE_SUMMARY = this.config.public.dashboardServiceSummary;
 
     private abortManager = abortControllerManager;
 
@@ -166,7 +167,7 @@ class InstitutionModule {
                 {
                     signal: controller?.signal,
                 });
-            console.log('Kwabena', res.data)
+           
             return res.data;
         } catch (error: unknown) {
             console.log(error);
@@ -373,6 +374,32 @@ class InstitutionModule {
         }
     }
 
+
+        
+    async getServiceSummary(payload:any): Promise<ResourceFetchResponse<Record<string, any>> | undefined> {
+        // Convert params object to query string
+        const url = `${this.DASHBOARD_SERVICE_SUMMARY}`;
+
+        // alert(JSON.stringify(payload));
+
+        try {
+            const res = await axiosInstance.post<ResourceFetchResponse<Record<string, any>> | undefined>(
+                url, payload);
+            return res.data;
+        } catch (error: unknown) {
+            console.log(error);
+            if (axios.isCancel(error)) {
+                console.log('Request cancelled:', url);
+                return;
+            } else if (error instanceof AxiosError) {
+                console.error('Error fetching transaction overview:', error.response?.data || error.message);
+            } else {
+                console.error('Unexpected error:', error);
+            }
+
+            throw error; // Re-throw the error for further handling
+        }
+    }
 
 
     // Public methods for request management

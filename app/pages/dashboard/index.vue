@@ -5,9 +5,9 @@
 
         <!-- Header Filters -->
         <div
-            class="flex lg:flex-row flex-col flex-wrap lg:items-center w-full p-3 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 justify-between max-w-7xl mt-2 rounded-md">
+            class="flex flex-col flex-wrap justify-between w-full p-3 mt-2 bg-white border border-gray-100 rounded-md lg:flex-row lg:items-center dark:border-zinc-800 dark:bg-black/20 max-w-7xl">
             <p class="font-medium">Filters</p>
-            <div class="flex flex-wrap  gap-x-2 gap-y-1 flex-1 items-end justify-end ">
+            <div class="flex flex-wrap items-end justify-end flex-1 gap-x-2 gap-y-1 ">
                 <!-- Date Range Filter -->
                 <div class=" lg:w-[250px] w-full ">
 
@@ -23,16 +23,17 @@
                 </div>
 
                 <div class="lg:w-[100px] w-full">
-                    <Button size="small" fluid @click="resetFilters" icon="pi pi-refresh" label="Apply" severity="" />
+                    <Button size="small" fluid @click="getServiceSummary" icon="pi pi-refresh" label="Search" severity="" />
+                    <!-- <Button size="small" fluid @click="resetFilters" icon="pi pi-refresh" label="Reset" severity="" /> -->
                 </div>
             </div>
         </div>
 
 
-        <div class="flex flex-col w-full  max-w-7xl">
+        <div class="flex flex-col w-full max-w-7xl">
             <!-- Cards Error -->
             <div v-if="isFetchError1"
-                class="flex w-full border border-gray-100 dark:border-zinc-800  dark:bg-black/20 max-w-7xl rounded-md my-2">
+                class="flex w-full my-2 border border-gray-100 rounded-md dark:border-zinc-800 dark:bg-black/20 max-w-7xl">
                 <ErrorView message="Failed to retrieve data" @retry="refreshDashboardData()" />
             </div>
 
@@ -42,41 +43,41 @@
             </div>
 
             <!-- Header cards -->
-            <div v-else class="flex lg:flex-row flex-col w-full mt-2 gap-x-2">
+            <div v-else class="flex flex-col w-full mt-2 lg:flex-row gap-x-2">
                 <!-- total service -->
                 <div
-                    class="flex lg:items-center lg:w-1/3 w-full p-3 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3">
-                    <div class="flex justify-center items-center w-14 h-14 bg-primary-500/10 rounded-full">
-                        <Icon class="w-12 h-12 text-xl  text-primary-500" name="f7:cube-box" />
+                    class="flex w-full p-3 mt-1 bg-white border border-gray-100 rounded-md lg:items-center lg:w-1/3 dark:border-zinc-800 dark:bg-black/20 gap-x-3">
+                    <div class="flex items-center justify-center rounded-full w-14 h-14 bg-primary-500/10">
+                        <Icon class="w-12 h-12 text-xl text-primary-500" name="f7:cube-box" />
 
                     </div>
                     <div class="flex flex-col flex-1 ">
-                        <p class="text-primary text-sm">Total Services</p>
-                        <p class="font-bold text-2xl"> 20</p>
+                        <p class="text-sm text-primary">Total Services</p>
+                        <p class="text-2xl font-bold"> {{ reportStore.dasboardServiceSummary.service_count?.count }}</p>
                     </div>
                 </div>
                 <!-- total institutions -->
                 <div
-                    class="flex lg:items-center lg:w-1/3 w-full p-3 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3">
-                    <div class="flex justify-center items-center w-14 h-14 bg-primary-500/10 rounded-full">
-                        <Icon class="w-12 h-12 text-xl  text-primary-500" name="tdesign:institution" />
+                    class="flex w-full p-3 mt-1 bg-white border border-gray-100 rounded-md lg:items-center lg:w-1/3 dark:border-zinc-800 dark:bg-black/20 gap-x-3">
+                    <div class="flex items-center justify-center rounded-full w-14 h-14 bg-primary-500/10">
+                        <Icon class="w-12 h-12 text-xl text-primary-500" name="tdesign:institution" />
 
                     </div>
                     <div class="flex flex-col flex-1 ">
-                        <p class="text-primary text-sm">Total Institutions</p>
-                        <p class="font-bold text-2xl"> 20</p>
+                        <p class="text-sm text-primary">Total Institutions</p>
+                        <p class="text-2xl font-bold"> 20</p>
                     </div>
                 </div>
                 <!-- Total Amount -->
                 <div
-                    class="flex lg:items-center lg:w-1/3 w-full p-3 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3">
-                    <div class="flex justify-center items-center w-14 h-14 bg-primary-500/10 rounded-full">
-                        <Icon class="w-12 h-12 text-xl  text-primary-500" name="si:money-line" />
+                    class="flex w-full p-3 mt-1 bg-white border border-gray-100 rounded-md lg:items-center lg:w-1/3 dark:border-zinc-800 dark:bg-black/20 gap-x-3">
+                    <div class="flex items-center justify-center rounded-full w-14 h-14 bg-primary-500/10">
+                        <Icon class="w-12 h-12 text-xl text-primary-500" name="si:money-line" />
 
                     </div>
                     <div class="flex flex-col flex-1 ">
-                        <p class="text-primary text-sm">Total Amount</p>
-                        <p class="font-bold text-2xl"> 20,000.00</p>
+                        <p class="text-sm text-primary">Total Amount</p>
+                        <p class="text-2xl font-bold"> {{ reportStore.dasboardServiceSummary.service_count?.amount }} </p>
                     </div>
                 </div>
             </div>
@@ -84,12 +85,12 @@
 
 
         <!-- top services & bar chart -->
-        <div class="flex lg:flex-row flex-col w-full max-w-7xl mt-2 gap-x-2">
+        <div class="flex flex-col w-full mt-2 lg:flex-row max-w-7xl gap-x-2">
             <!-- top services -->
             <div
-                class="flex flex-col  lg:w-1/3 w-full p-4 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3 ">
+                class="flex flex-col w-full p-4 mt-1 bg-white border border-gray-100 rounded-md lg:w-1/2 dark:border-zinc-800 dark:bg-black/20 gap-x-3 ">
                 <div class="flex mb-2">
-                    <p>Top Services</p>
+                    <p>Top 10  Services</p>
                 </div>
 
                 <!-- error -->
@@ -103,7 +104,7 @@
 
             <!-- bar chart -->
             <div
-                class="flex flex-col  lg:flex-1 w-full p-4 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3 justify-end ">
+                class="flex flex-col justify-end w-full p-4 mt-1 bg-white border border-gray-100 rounded-md lg:flex-1/2 dark:border-zinc-800 dark:bg-black/20 gap-x-3 ">
                 <!-- error -->
                 <ErrorView v-if="isFetchError2" message="Failed to retrieve data" @retry="refreshDashboardData()" />
                 <!-- loader -->
@@ -114,10 +115,10 @@
         </div>
 
         <!-- line graphs & pie chart -->
-        <div class="flex lg:flex-row flex-col  w-full max-w-7xl mt-2 gap-x-2">
+        <div class="flex flex-col w-full mt-2 lg:flex-row max-w-7xl gap-x-2">
             <!-- Line chart -->
             <div
-                class="flex flex-col  lg:flex-1 w-full p-4 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3 ">
+                class="flex flex-col w-full p-4 mt-1 bg-white border border-gray-100 rounded-md lg:flex-1 dark:border-zinc-800 dark:bg-black/20 gap-x-3 ">
                 <!-- error -->
                 <ErrorView v-if="isFetchError1" message="Failed to retrieve data" @retry="refreshDashboardData()" />
                 <!-- loader -->
@@ -127,7 +128,7 @@
             </div>
             <!-- pie Chart -->
             <div
-                class="flex flex-col justify-center items-center  lg:w-1/3 w-full p-5 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20 mt-1 rounded-md gap-x-3 ">
+                class="flex flex-col items-center justify-center w-full p-5 mt-1 bg-white border border-gray-100 rounded-md lg:w-1/3 dark:border-zinc-800 dark:bg-black/20 gap-x-3 ">
                 <!-- error -->
                 <ErrorView v-if="isFetchError1" message="Failed to retrieve data" @retry="refreshDashboardData()" />
                 <!-- loader -->
@@ -140,7 +141,7 @@
 
         <!-- horizontal bar graph -->
         <div
-            class="flex flex-col w-full max-w-7xl mt-2 p-4 gap-x-2 bg-white border border-gray-100 dark:border-zinc-800  dark:bg-black/20  rounded-md">
+            class="flex flex-col w-full p-4 mt-2 bg-white border border-gray-100 rounded-md max-w-7xl gap-x-2 dark:border-zinc-800 dark:bg-black/20">
 
             <!-- error -->
             <ErrorView v-if="isFetchError1" message="Failed to retrieve data" @retry="refreshDashboardData()" />
@@ -151,15 +152,20 @@
         </div>
 
     </div>
+
+      <Toast />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import Chart from 'primevue/chart';
-import type { DashboardFilters, ServiceFilterOption } from "~/types";
+import type { DasboardServiceSummary, DashboardFilters, FormatLabelsAndData, ServiceFilterOption } from "~/types";
 import moment from "moment";
 import { useAuthStore } from '~/store/auth';
 import { institutionModule } from "~/repository/modules/institution_module";
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
+import { useReportStore } from '~/store/report';
 
 
 const authStore = useAuthStore()
@@ -167,6 +173,9 @@ const loading1 = ref(false)
 const loading2 = ref(false)
 const isFetchError1 = ref(false)
 const isFetchError2 = ref(false)
+const toast = useToast();
+const reportStore = useReportStore()
+
 // Helper functions for date handling
 const getInitialDateRange = (): [Date, Date] => {
     const endDate = moment().startOf('day').toDate();
@@ -185,6 +194,7 @@ const branchOptions = ref<ServiceFilterOption[]>([
     { label: 'Kumasi', value: 'kumasi' },
     { label: 'Cape coast', value: 'cape_coast' }
 ])
+
 
 
 // Reset backend filters
@@ -290,9 +300,9 @@ function refreshDashboardData() {
     getDashboardData2()
 }
 
-onMounted(() => {
-    getDashboardData1()
-    getDashboardData2()
+onMounted( async () => {
+    await getServiceSummary()
+    // getDashboardData2()
 })
 
 
@@ -300,6 +310,71 @@ definePageMeta({
     layout: 'admin',
     middleware: 'auth'
 })
+
+
+
+
+const dashboard_summary = ref<any>(null);
+
+
+// backend filter payload
+
+const backedFilterPayload = computed(() => {
+    const cleanedPayload = removeEmptyPropertiesDeep(dashboardFilters.value)
+    return {
+        start_date: cleanedPayload.dateRange?.[0] ?? null,
+        end_date: cleanedPayload.dateRange?.[1] ?? null,
+    }
+})
+
+
+
+// get services from the institution
+async function getServiceSummary() {
+
+  try {
+    const res = await institutionModule.getServiceSummary(
+      backedFilterPayload.value );
+       if (res?.status === true) {
+        reportStore.dasboardServiceSummary = res.data as DasboardServiceSummary;
+       }else{
+        reportStore.dasboardServiceSummary = {} as DasboardServiceSummary;
+       }
+
+           toast.add({
+      life: 5000,
+      severity: "success",
+      detail: res?.message ?? "Data loaded successfully",
+      summary: '' ,
+    });
+
+
+
+  } catch (error: any) {
+   
+    toast.add({
+      life: 5000,
+      severity: "error",
+      detail: error.response?.data?.message ?? error.message,
+      summary:
+        error.response?.status == 401 ? "Unauthenticated" : "Server error",
+    });
+  } finally {
+    // isServicesLoading.value = false;
+  }
+}
+
+
+function formatChartData(items = [], labelKey:string, valueKey:string) {
+   
+        // alert('has items')
+          return {
+    labels: items.map(item => item[labelKey]),
+    data: items.map(item => Number(item[valueKey]))
+  };
+  
+
+}
 
 </script>
 

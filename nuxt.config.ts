@@ -41,7 +41,8 @@ export default defineNuxtConfig({
       loginResource: process.env.LOGIN_RESOURCE,
       loginWithTokenResource: process.env.LOGIN_WITH_TOKEN_RESOURCE,
       appTitle: process.env.APP_TITLE,
-      fieldGetExternalData: process.env.FIELD_GET_EXTERNAL_DATA_RESOURCE
+      fieldGetExternalData: process.env.FIELD_GET_EXTERNAL_DATA_RESOURCE,
+      dashboardServiceSummary: process.env.DASHBOARD_SERVICE_SUMMARY,
     },
   },
   modules: [

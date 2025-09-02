@@ -388,3 +388,43 @@ export interface RootTransaction {
   updated_at: string;
   deleted_at: string | null;
 }
+
+
+
+
+export interface DasboardServiceSummary {
+  service_count: {
+    count: number;
+    amount: string | number;
+  };
+  is_success: {
+    count: number;
+    amount: string | number;
+  };
+  is_not_success: {
+    count: number;
+    amount: string | number;
+  };
+  top_10_services: {
+    institution: string;
+    service: string;
+    total: number;
+    total_amount: string | number;
+  }[];
+  payment_methods: {
+    payment_method: string;
+    total: number;
+    total_amount: string | number;
+  }[];
+  by_institution: {
+    institution: string;
+    total: number;
+    total_amount: string | number;
+  }[];
+}
+
+
+export interface  FormatLabelsAndData {
+    labels: string[];
+    data: number[];
+};

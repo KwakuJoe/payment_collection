@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import type { DasboardServiceSummary } from '~/types';
 
 export const useReportStore = defineStore('report', () => {
 
@@ -11,9 +12,11 @@ export const useReportStore = defineStore('report', () => {
         service_count: 0,
     })
 
+    const dasboardServiceSummary = ref({} as DasboardServiceSummary);
 
     return {
         loading,
-        tableOverviewData
+        tableOverviewData,
+        dasboardServiceSummary
     }
 })
