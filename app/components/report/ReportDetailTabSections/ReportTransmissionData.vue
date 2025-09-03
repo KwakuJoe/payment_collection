@@ -11,7 +11,7 @@
         </div>
 
 
-         <EmptyState v-else message="Core banking data is not found on this transaction report" title="No core banking data found" />
+         <EmptyState v-else message="Transmission data is not found on this transaction report" title="No transmission data found" />
 
     </div>
 </template>

@@ -193,6 +193,8 @@ interface DenominationData {
 
 const authStore = useAuthStore()
 
+const user = authStore.getUser();
+
 
 // Debug flag (set to false in production)
 const showDebug = ref(true)
@@ -342,13 +344,13 @@ const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
     channel_reference: null,
     app_reference: null,
     branch: {
-        name: authStore.user!.branch_name,
-        code: authStore.user!.branch_code,
+        name: user?.branch_name,
+        code: user?.branch_code,
         email: null
     },
     user: {
-        username: authStore.user!?.username,
-        email: authStore.user!?.email,
+        username: user!?.username,
+        email: user?.email,
     }
 
 

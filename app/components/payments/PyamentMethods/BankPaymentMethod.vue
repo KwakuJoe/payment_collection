@@ -100,8 +100,10 @@ const props = defineProps<{
 
 
 const authStore = useAuthStore()
-const { token, user } = storeToRefs(authStore);
+
 const bank_account_number = ref('');
+
+const user = authStore.getUser();
 
 onMounted(async () => {
 
@@ -175,13 +177,13 @@ const SubmitFieldsPayload = ref<SubmitFieldsPayload>({
     channel_reference: null,
     app_reference: null,
     branch: {
-        name: user.value.branch_name,
-        code: user.value.branch_code,
+        name: user?.branch_name,
+        code: user?.branch_code,
         email: null
     },
     user: {
-        username: user.value.username,
-        email: user.value.email,
+        username: user!?.username,
+        email: user?.email,
     }
 
 })
@@ -288,7 +290,11 @@ async function postFieldForSubmission() {
                 detail: "Fields verified successfully",
                 summary: res?.message
             });
+            
+            paymentStore.selectedPaymentServiceReceipt = res.data.receipt ?? [];
+            paymentStore.selectedPaymentServiceReceiptUrl = res.data.receipt_url ?? '';
             paymentStore.currentStep++;
+
         } else {
 
             if (res?.error) {
