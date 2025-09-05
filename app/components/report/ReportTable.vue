@@ -242,7 +242,7 @@ const globalFilterValue = computed({
 
 // Helper functions for date handling
 const getInitialDateRange = (): [Date, Date] => {
-    const endDate = moment().startOf('day').toDate();
+    const endDate = moment().endOf('day').toDate();
     const startDate = moment().startOf('day').toDate();
     return [startDate, endDate];
 };
