@@ -1,11 +1,13 @@
 
-<template>
+<template> 
     <div>
-        {{reportStore.dasboardServiceSummary.payment_methods}}
+        <!-- {{reportStore.dasboardServiceSummary.payment_methods}} -->
+
+        <!-- {{doughnut_data}} -->
 
      
   
-    <div div v-if="reportStore.dasboardServiceSummary.payment_methods?.length > 0" class="flex justify-center card">
+    <div  v-if="reportStore.dasboardServiceSummary.payment_methods?.length > 0" class="flex justify-center card">
         <Chart type="doughnut" :data="chartData" :options="chartOptions" class="w-fit" />
     </div>
 
@@ -13,25 +15,35 @@
           </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+
 import { ref, onMounted } from "vue";
 import { useReportStore } from '~/store/report';
+import type { FormatLabelsAndData } from "~/types";
 const reportStore = useReportStore();
+
+
+const props = defineProps<{
+    doughnut_data: FormatLabelsAndData
+}>();
 
 const payment_methods = ref(null);
 
+const labelss = ref(props.doughnut_data.labels as string[]);
+const datass = ref(props.doughnut_data.data as number[]);
+
 const chartData = ref();
-const chartOptions = ref(null);
+const chartOptions = ref();
 
 
-const setChartData = () => {
+const setChartData = (  ) => {
     const documentStyle = getComputedStyle(document.body);
 
     return {
-        labels:  ['CASH'],
+        labels:  labelss.value , 
         datasets: [
             {
-                data: [1],
+                data: datass.value ,
                 backgroundColor: [documentStyle.getPropertyValue('--p-green-500'), documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-amber-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--p-green-600'), documentStyle.getPropertyValue('--p-red-600'), documentStyle.getPropertyValue('--p-amber-600')]
             }
@@ -56,23 +68,29 @@ const setChartOptions = () => {
 };
 
 
+// 🔑 Watch for changes in the prop and update chart
+watch(
+  () => props.doughnut_data,
+  (newVal) => {
+    if (newVal) {
+      labelss.value = newVal.labels;
+      datass.value = newVal.data;
+      chartData.value = setChartData();
+    }
+  },
+  { immediate: true, deep: true } // run immediately on mount
+);
 
-const labelss = ref([]);
-const datass = ref([]);
 onMounted( async () => {
 
-
-
         chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
-
-
+        chartOptions.value = setChartOptions();
 
 });
 
 
 
-function formatChartData(items = [], labelKey, valueKey) {
+function formatChartData(items = [], labelKey:string, valueKey:string) {
 
         // alert('has items')
           return {

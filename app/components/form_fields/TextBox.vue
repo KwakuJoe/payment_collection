@@ -10,7 +10,6 @@
        size="small"
         :readonly="readonly"
         class="bg-yellow-500 border border-amber-600"
-data-p="disabled"
         fluid
         type="text"
         v-model="prepareFormFields[`${field.field_name}`]"

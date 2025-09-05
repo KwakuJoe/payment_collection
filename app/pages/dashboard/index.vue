@@ -2,7 +2,6 @@
 
 
     <div class="flex flex-col min-h-screen w-full items-center  bg-white  dark:bg-[#18181B] ">
-
         <!-- Header Filters -->
         <div
             class="flex flex-col flex-wrap justify-between w-full p-3 mt-2 bg-white border border-gray-100 rounded-md lg:flex-row lg:items-center dark:border-zinc-800 dark:bg-black/20 max-w-7xl">
@@ -134,7 +133,7 @@
                 <!-- loader -->
                 <PieChartLoader v-else-if="loading2" />
                 <!-- pie chart -->
-                <DoughnutChart v-else />
+                <DoughnutChart :doughnut_data="doughnut_data" v-else />
 
             </div>
         </div>
@@ -148,7 +147,7 @@
             <!-- loader -->
             <HorizontalBarChartLoader v-else-if="loading2" />
             <!-- Line chart -->
-            <HorizontalBarChart v-else/>
+            <HorizontalBarChart :bar_data="bar_data" v-else/>
         </div>
 
     </div>
@@ -187,7 +186,7 @@ const dashboardFilters = ref<DashboardFilters>({
     branch: `${authStore.user.branch_name}`,
 });
 
-
+ 
 const branchOptions = ref<ServiceFilterOption[]>([
     { label: 'Dansoman', value: 'dansoman' },
     { label: 'Ridge', value: 'ridge' },
@@ -196,6 +195,15 @@ const branchOptions = ref<ServiceFilterOption[]>([
 ])
 
 
+const doughnut_data = ref<FormatLabelsAndData>({
+    labels: [''],
+    data: [1]
+})
+
+const bar_data = ref<FormatLabelsAndData>({
+    labels: [''],
+    data: [1]
+})
 
 // Reset backend filters
 const resetFilters = (): void => {
@@ -337,6 +345,10 @@ async function getServiceSummary() {
       backedFilterPayload.value );
        if (res?.status === true) {
         reportStore.dasboardServiceSummary = res.data as DasboardServiceSummary;
+
+        doughnut_data.value = formatChartData(reportStore.dasboardServiceSummary.payment_methods as [], 'payment_method' , 'total');
+        bar_data.value = formatChartData(reportStore.dasboardServiceSummary.by_institution as [], 'institution' , 'total');
+        // console.table(formatChartData(reportStore.dasboardServiceSummary.payment_methods as [], 'payment_method' , 'total'));
        }else{
         reportStore.dasboardServiceSummary = {} as DasboardServiceSummary;
        }
